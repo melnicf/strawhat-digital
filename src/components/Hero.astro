@@ -1,8 +1,13 @@
 ---
-// No props needed for now
+import HeroBold from "./hero/HeroBold";
 ---
 
-<section id="hero" class="bg-strawhat-bg relative py-32 md:pt-64 md:pb-48">
+<section
+  id="hero"
+  class="relative overflow-hidden py-32 md:pt-64 md:pb-48"
+  style="min-height: 600px;"
+>
+  <HeroBold client:load />
   <!-- Hat landing spot - decorative anchor on the right -->
   <div
     data-hat-landing="hero"
