@@ -1,0 +1,177 @@
+---
+description: Astro 5.x Development Best Practices and Rules
+globs: src/**/*.{astro,ts,js,mjs,tsx,jsx}
+alwaysApply: true
+---
+
+# Astro 5.x Development Rules
+
+## Performance Best Practices
+
+### Streaming for Better Performance
+- **Use streaming to improve page load performance**: Move data fetches into smaller components to avoid blocking page rendering
+- **Avoid blocking data fetches in page frontmatter**: Instead of awaiting all fetches in the page frontmatter, move them to individual components for parallel loading
+- **Include Promises directly in templates**: Use promises directly in the template for non-blocking data loading
+
+```astro
+---
+// ❌ Blocking: Page waits for all fetches
+const personResponse = await fetch('https://randomuser.me/api/');
+const factResponse = await fetch('https://catfact.ninja/fact');
+---
+
+<!-- ✅ Streaming: Components load in parallel -->
+<RandomName />
+<RandomFact />
+```
+
+### Component Structure
+- **Split large components**: Break down components with data fetches to enable streaming
+- **Use client directives strategically**: Only add `client:` directives when interactivity is needed
+
+## Configuration Best Practices
+
+### Astro Config Structure
+- **Use `defineConfig()` helper**: Always wrap your config in `defineConfig()` for better IntelliSense
+- **Prefer `.mjs` or `.ts` extensions**: Use modern file extensions for better tooling support
+
+```javascript
+// astro.config.mjs
+import { defineConfig } from 'astro/config';
+
+export default defineConfig({
+  // Configuration options here
+});
+```
+
+### TypeScript Configuration
+- **Configure TypeScript properly**: Use `tsconfig.json` for type checking and import aliases
+- **Leverage Astro's built-in types**: Use Astro's utility types for better type safety
+
+## Actions and Data Handling (Astro 5.x)
+
+### Action Error Handling
+- **Use `ActionError` for proper error handling**: Throw structured errors with status codes
+- **Handle errors in components**: Check for `error` property in action results
+
+```typescript
+// src/actions/index.ts
+import { defineAction, ActionError } from 'astro:actions';
+
+export const server = {
+  likePost: defineAction({
+    input: z.object({ postId: z.string() }),
+    handler: async (input, ctx) => {
+      if (!ctx.cookies.has('user-session')) {
+        throw new ActionError({
+          code: 'UNAUTHORIZED',
+          message: 'User must be logged in.',
+        });
+      }
+      // Handle success case
+    },
+  }),
+};
+```
+
+### Form Handling
+- **Use `accept: 'form'` for form data**: Configure actions to accept form submissions
+- **Handle form validation**: Use Zod validators for type-safe form inputs
+- **Preserve input values on error**: Use `transition:persist` directive
+
+## Component Syntax Rules
+
+### Astro vs JSX Differences
+- **Use kebab-case for HTML attributes**: Unlike JSX, use `data-value` instead of `dataValue`
+- **No wrapper elements required**: Astro supports multiple root elements without a wrapper
+- **Use standard HTML comments**: HTML comments are preserved in the DOM
+
+```astro
+---
+// ✅ Astro syntax
+---
+<div class="box" data-value="3">
+  <p>Content</p>
+  <span>More content</span>
+</div>
+
+<!-- ✅ HTML comments -->
+{/* ✅ JS comments */}
+```
+
+### Layout Best Practices
+- **Nest layouts properly**: Combine page layouts with component layouts for consistent structure
+- **Avoid duplicate elements**: Check for duplicated HTML elements when nesting layouts
+- **Use layout composition**: Create reusable layout components
+
+## Session Management (Astro 5.7.0+)
+- **Configure session storage**: Use appropriate drivers for your deployment environment
+- **Set proper cookie options**: Configure session cookies with appropriate security settings
+
+```javascript
+// astro.config.mjs
+export default defineConfig({
+  session: {
+    driver: 'redis',
+    options: { url: process.env.REDIS_URL },
+    cookie: {
+      name: 'astro-session',
+      sameSite: 'lax',
+      httpOnly: true,
+      secure: true
+    }
+  }
+});
+```
+
+## Code Organization
+
+### File Structure
+- **Follow Astro conventions**: Keep pages in `src/pages/`, components in `src/components/`
+- **Use content collections**: Leverage Astro's content collections for structured content
+- **Organize by feature**: Group related components, pages, and utilities together
+
+### Import Best Practices
+- **Use relative imports**: Prefer relative imports over absolute paths for clarity
+- **Leverage TypeScript paths**: Configure path aliases in `tsconfig.json` for cleaner imports
+- **Import components efficiently**: Use `import.meta.glob()` for dynamic imports when appropriate
+
+## Security Considerations
+
+### Environment Variables
+- **Use proper environment variable access**: Access variables through `import.meta.env`
+- **Validate environment variables**: Use TypeScript interfaces for env variable type safety
+- **Never commit secrets**: Ensure sensitive data is properly excluded from version control
+
+```typescript
+// src/env.d.ts
+interface ImportMetaEnv {
+  readonly PUBLIC_API_URL: string;
+  readonly DB_PASSWORD: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+```
+
+## Development Workflow
+
+### Tooling
+- **Use Astro's dev toolbar**: Leverage the built-in development tools
+- **Configure editor extensions**: Set up VS Code extensions for better Astro development
+- **Enable TypeScript checking**: Use strict TypeScript settings for better code quality
+
+### Testing and Debugging
+- **Test components in isolation**: Ensure components work independently
+- **Use Astro's error boundaries**: Handle errors gracefully in production
+- **Monitor performance**: Use streaming and lazy loading to optimize page load times
+
+## Migration and Compatibility
+
+### Astro 5.x Specifics
+- **Leverage new features**: Take advantage of Actions, improved streaming, and session management
+- **Update legacy configurations**: Migrate away from deprecated configuration options
+- **Use modern APIs**: Prefer Astro 5.x APIs over legacy patterns
+
+Remember: These rules are specific to Astro 5.x. Always check the official documentation for the most up-to-date best practices, as Astro is actively developed and improved.

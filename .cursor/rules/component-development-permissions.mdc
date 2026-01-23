@@ -1,0 +1,69 @@
+---
+description: Allow running terminal commands for component development tasks
+alwaysApply: true
+---
+
+# Component Development Permissions
+
+When working on component development tasks, you are allowed to run terminal commands for:
+
+## Package Management
+- Installing dependencies (`npm install`, `pnpm add`)
+- Adding Astro/React integrations (`astro add react`)
+- Running package managers (`pnpm`, `npm`, `yarn`)
+
+## Development Server
+- Starting dev servers (`pnpm dev`, `npm run dev`)
+- Building projects (`pnpm build`, `npm run build`)
+- Running scripts from package.json
+
+## File Operations
+- Creating directories (`mkdir`)
+- File operations when necessary for component setup
+
+## Astro-Specific Commands
+- Adding integrations (`astro add`)
+- Generating new components
+- Running Astro CLI commands
+
+## Examples of Allowed Commands
+```bash
+# Package management
+pnpm add @astrojs/react
+npm install react react-dom
+
+# Development
+pnpm dev
+npm run build
+
+# Directory creation
+mkdir -p src/components/react
+
+# Astro commands
+npx astro add react
+```
+
+## Component Organization
+
+**Organize components by feature, not by framework:**
+- Group related components together (e.g., `src/components/navbar/`, `src/components/hero/`)
+- Mix Astro and React components within the same feature folders
+- Use descriptive naming: `ClassicNavbar.astro`, `ModernHero.tsx`
+- Keep framework-specific logic encapsulated within component files
+
+## Styling Guidelines
+
+**Always use Tailwind CSS for styling:**
+- Use Tailwind utility classes instead of custom CSS when possible
+- Leverage Tailwind's design tokens (colors, spacing, typography)
+- Use responsive utilities (`sm:`, `md:`, `lg:`, `xl:`) for mobile-first design
+- Prefer Tailwind's component patterns over custom CSS classes
+- Only write custom CSS for complex animations or when Tailwind utilities aren't sufficient
+
+## When to Request Permissions
+Only request additional permissions (`network`, `git_write`, `all`) when:
+- Installing packages (usually needs `network`)
+- Making git commits (needs `git_write`)
+- Accessing system-level operations (needs `all`)
+
+For standard component development tasks, no special permissions are needed.
