@@ -10,16 +10,17 @@ Strawhat Digital is a software solutions company currently operated as a solo ve
 
 Single-page design with smooth scroll navigation between sections:
 
-| Section        | Description                                              |
-| :------------- | :------------------------------------------------------- |
-| **Hero**       | Bold introduction with animated elements and 3D effects |
-| **About**      | Company story, mission, and what sets us apart           |
-| **Services**   | Software solutions and capabilities offered              |
-| **Projects**   | Showcase of work with case studies and results           |
-| **Testimonials** | Client feedback and social proof                       |
-| **Contact**    | Get in touch form and contact information                |
+| Section          | Description                                             |
+| :--------------- | :------------------------------------------------------ |
+| **Hero**         | Bold introduction with animated elements and 3D effects |
+| **About**        | Company story, mission, and what sets us apart          |
+| **Services**     | Software solutions and capabilities offered             |
+| **Projects**     | Showcase of work with case studies and results          |
+| **Testimonials** | Client feedback and social proof                        |
+| **Contact**      | Get in touch form and contact information               |
 
 ### Navigation
+
 - Fixed navbar at top
 - Smooth scroll to sections via anchor links (`#about`, `#services`, etc.)
 - Active section highlighting as user scrolls
@@ -28,6 +29,7 @@ Single-page design with smooth scroll navigation between sections:
 ## Design Philosophy
 
 ### Visual Style
+
 - **Dark mode by default** — Modern, sleek aesthetic
 - **Light mode support** — Accessible theme switching
 - **Micro-interactions** — Hover effects, transitions, and feedback
@@ -36,6 +38,7 @@ Single-page design with smooth scroll navigation between sections:
 - **3D elements** — Interactive 3D components and effects
 
 ### Technical Approach
+
 - **Tailwind CSS 4.x** — Utility-first styling with CSS variables for theming
 - **Theme tokens** — Centralized color/spacing tokens for scalability
 - **CSS custom properties** — Easy theme switching without rebuilding
@@ -98,6 +101,7 @@ Using Tailwind CSS 4.x with CSS custom properties for scalable theming:
 ```
 
 This approach allows:
+
 - Easy theme switching via data attribute
 - Consistent design tokens across components
 - Simple color palette updates
@@ -105,12 +109,52 @@ This approach allows:
 
 ## Commands
 
-| Command          | Action                                      |
-| :--------------- | :------------------------------------------ |
-| `pnpm install`   | Install dependencies                        |
-| `pnpm dev`       | Start dev server at `localhost:4321`        |
-| `pnpm build`     | Build production site to `./dist/`          |
-| `pnpm preview`   | Preview production build locally            |
+| Command         | Action                               |
+| :-------------- | :----------------------------------- |
+| `pnpm install`  | Install dependencies                 |
+| `pnpm dev`      | Start dev server at `localhost:4321` |
+| `pnpm build`    | Build production site to `./dist/`   |
+| `pnpm preview`  | Preview production build locally     |
+| `pnpm lint`     | Check for ESLint issues              |
+| `pnpm lint:fix` | Auto-fix ESLint issues               |
+| `pnpm format`   | Format all files with Prettier       |
+
+## Development Workflow
+
+### Code Quality
+
+This project uses automated tools to maintain code quality:
+
+- **ESLint** - Linting with Tailwind CSS best practices
+- **Prettier** - Code formatting
+- **Commitlint** - Enforces conventional commit messages
+- **Husky + lint-staged** - Runs checks automatically before commits
+
+### Pre-commit Hooks
+
+Every commit automatically:
+
+1. ✅ Runs ESLint with auto-fix on staged files
+2. ✅ Formats code with Prettier
+3. ✅ Validates commit message format
+
+### Commit Message Format
+
+This project follows [Conventional Commits](https://www.conventionalcommits.org/):
+
+```bash
+<type>(<scope>): <subject>
+
+# Examples:
+feat: add hero section with animations
+fix(navbar): correct mobile menu toggle
+docs: update README
+style: format with prettier
+```
+
+**Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `ci`, `build`
+
+See [COMMIT_CONVENTION.md](.github/COMMIT_CONVENTION.md) for details.
 
 ## Roadmap
 

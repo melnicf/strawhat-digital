@@ -1,0 +1,52 @@
+---
+description: Conventional commit message format for all commits
+alwaysApply: true
+---
+
+# Commit Message Convention
+
+This project enforces [Conventional Commits](https://www.conventionalcommits.org/) via commitlint.
+
+## Format
+
+```
+<type>(<scope>): <subject>
+```
+
+## Valid Types
+
+- `feat` - New feature
+- `fix` - Bug fix
+- `docs` - Documentation changes
+- `style` - Code style (formatting, semicolons, etc)
+- `refactor` - Code refactoring
+- `perf` - Performance improvements
+- `test` - Adding or updating tests
+- `chore` - Maintenance (dependencies, build, etc)
+- `ci` - CI/CD changes
+- `build` - Build system or dependency changes
+- `revert` - Revert a previous commit
+
+## Examples
+
+```bash
+✅ feat: add hero section with animations
+✅ fix(navbar): correct mobile menu toggle
+✅ docs: update README
+✅ style: format with prettier
+✅ refactor: simplify navbar structure
+
+❌ Added hero section  # Wrong: capitalized, no type
+❌ fix navbar  # Wrong: missing colon
+❌ updated docs.  # Wrong: past tense, period at end
+```
+
+## Rules
+
+- Use present tense: "add" not "added"
+- Don't capitalize first letter
+- No period at the end of subject
+- Keep subject under 50 characters
+- Scope is optional: `feat(scope): message`
+
+**Note:** Commit messages are validated by commitlint on every commit.
