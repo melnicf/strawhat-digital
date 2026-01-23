@@ -1,52 +1,29 @@
 ---
-import { Image } from "astro:assets";
 import ThemeToggle from "./ui/ThemeToggle";
-import hatLogo from "../assets/hat_logo.png";
+import NavbarLogo from "./ui/NavbarLogo";
 ---
 
-<nav class="border-strawhat-red/20 bg-strawhat-bg/95 border-b backdrop-blur-md">
+<nav
+  class="border-strawhat-red/20 bg-strawhat-bg/95 fixed top-0 right-0 left-0 z-40 border-b backdrop-blur-md"
+>
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="flex h-14 items-center justify-between">
       <div class="h-full shrink-0">
         <a
           href="/"
-          class="flex h-full items-center gap-3 transition-opacity hover:opacity-80"
+          class="flex h-full items-center transition-opacity hover:opacity-80"
         >
-          <Image
-            src={hatLogo}
-            alt=""
-            width={88}
-            height={32}
-            class="transition-opacity hover:opacity-60"
-            loading="eager"
-            decoding="async"
-          />
-          <div class="flex -translate-x-4 items-baseline gap-2">
-            <span class="text-strawhat-text text-xl font-bold tracking-tight">
-              STRAW HAT
-            </span>
-            <span
-              class="text-strawhat-yellow text-sm font-light tracking-[0.2em]"
-            >
-              DIGITAL
-            </span>
-          </div>
+          <NavbarLogo client:load />
         </a>
       </div>
 
       <div class="hidden md:flex md:items-center md:space-x-10">
         <div class="ml-10 flex items-center space-x-10">
           <a
-            href="#home"
+            href="#hero"
             class="text-strawhat-text-light hover:text-strawhat-yellow text-sm font-light tracking-wider transition-colors"
           >
             Home
-          </a>
-          <a
-            href="#about"
-            class="text-strawhat-text-light hover:text-strawhat-yellow text-sm font-light tracking-wider transition-colors"
-          >
-            About
           </a>
           <a
             href="#services"
@@ -55,10 +32,10 @@ import hatLogo from "../assets/hat_logo.png";
             Services
           </a>
           <a
-            href="#contact"
+            href="#about"
             class="text-strawhat-text-light hover:text-strawhat-yellow text-sm font-light tracking-wider transition-colors"
           >
-            Contact
+            About
           </a>
           <a
             href="#get-started"
