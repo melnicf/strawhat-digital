@@ -16,8 +16,8 @@ const LineShader = {
   uniforms: {
     uTime: { value: 0 },
     uMouse: { value: new THREE.Vector2(0, 0) },
-    uColor: { value: new THREE.Color("#f59e0b") },
-    uOpacity: { value: 0.1 },
+    uColor: { value: new THREE.Color("#e11d48") }, // Balanced Rose Red
+    uOpacity: { value: 0.15 },
   },
   vertexShader: `
     uniform vec2 uMouse;
@@ -28,7 +28,7 @@ const LineShader = {
       vec2 screenPos = projected.xy / projected.w;
       
       float dist = distance(screenPos, uMouse);
-      vGlow = smoothstep(0.5, 0.0, dist);
+      vGlow = smoothstep(0.4, 0.0, dist);
       
       gl_Position = projected;
     }
@@ -38,8 +38,8 @@ const LineShader = {
     uniform float uOpacity;
     varying float vGlow;
     void main() {
-      float finalOpacity = uOpacity + (vGlow * 0.6);
-      vec3 finalColor = mix(uColor, vec3(1.0), vGlow * 0.4);
+      float finalOpacity = uOpacity + (vGlow * 0.4);
+      vec3 finalColor = mix(uColor, vec3(1.0, 0.6, 0.7), vGlow * 0.4); // Mix with a light pink highlight
       gl_FragColor = vec4(finalColor, finalOpacity);
     }
   `,
@@ -50,8 +50,8 @@ const PointShader = {
   uniforms: {
     uTime: { value: 0 },
     uMouse: { value: new THREE.Vector2(0, 0) },
-    uColor: { value: new THREE.Color("#f59e0b") },
-    uSize: { value: 0.08 },
+    uColor: { value: new THREE.Color("#e11d48") },
+    uSize: { value: 0.07 },
   },
   vertexShader: `
     uniform vec2 uMouse;
@@ -63,9 +63,9 @@ const PointShader = {
       vec2 screenPos = projected.xy / projected.w;
       
       float dist = distance(screenPos, uMouse);
-      vGlow = smoothstep(0.5, 0.0, dist);
+      vGlow = smoothstep(0.4, 0.0, dist);
       
-      gl_PointSize = uSize * (1000.0 / -mvPosition.z) * (1.0 + vGlow * 2.0);
+      gl_PointSize = uSize * (1000.0 / -mvPosition.z) * (1.0 + vGlow * 1.5);
       gl_Position = projected;
     }
   `,
@@ -76,7 +76,7 @@ const PointShader = {
       float dist = distance(gl_PointCoord, vec2(0.5));
       if (dist > 0.5) discard;
       float alpha = smoothstep(0.5, 0.3, dist);
-      vec3 finalColor = mix(uColor, vec3(1.0), vGlow * 0.7);
+      vec3 finalColor = mix(uColor, vec3(1.0, 0.7, 0.8), vGlow * 0.6); // Modern pinkish-white glow
       gl_FragColor = vec4(finalColor, alpha * (0.6 + vGlow * 0.4));
     }
   `,
@@ -97,8 +97,10 @@ function DigitalCore({
   const coreRef = useRef<THREE.Mesh>(null);
   const outerRef = useRef<THREE.Mesh>(null);
   const ringRef = useRef<THREE.Mesh>(null);
-  const color = isDark ? "#f59e0b" : "#78350f";
-  const glowColor = isDark ? "#fbbf24" : "#92400e";
+
+  // Vibrant Rose/Crimson for both modes
+  const color = isDark ? "#dc2626" : "#e11d48";
+  const glowColor = isDark ? "#ef4444" : "#fb7185";
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
@@ -191,14 +193,16 @@ function NeuralField({
   const linesRef = useRef<THREE.LineSegments>(null);
   const lineShaderRef = useRef<THREE.ShaderMaterial>(null);
   const pointShaderRef = useRef<THREE.ShaderMaterial>(null);
-  const color = isDark ? "#f59e0b" : "#78350f";
 
-  const particleCount = 80;
+  // Vibrant Rose/Pinkish-Red for Light Mode, Crimson for Dark Mode
+  const color = isDark ? "#dc2626" : "#e11d48";
+
+  const particleCount = 100;
   const { positions } = useMemo(() => {
     const pos = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount; i++) {
       pos[i * 3] = 2 + (Math.random() - 0.2) * 6; // X
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 8; // Y
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 15; // Y (Increased vertical range)
       pos[i * 3 + 2] = -2 + (Math.random() - 0.5) * 4; // Z
     }
     return { positions: pos };
@@ -307,14 +311,14 @@ function NeuralField({
  * Floating digital fragments.
  */
 function DataPackets({ isDark }: { isDark: boolean }) {
-  const count = 12;
-  const color = isDark ? "#fbbf24" : "#92400e";
+  const count = 20;
+  const color = isDark ? "#ef4444" : "#fb7185"; // Vibrant Rose-Pink for data packets in light mode
 
   const packets = useMemo(() => {
     return Array.from({ length: count }).map(() => ({
       position: [
         2 + Math.random() * 6,
-        (Math.random() - 0.5) * 8,
+        (Math.random() - 0.5) * 15, // Increased vertical range
         -1 + (Math.random() - 0.5) * 4,
       ] as [number, number, number],
       speed: 0.2 + Math.random() * 0.5,
@@ -354,15 +358,23 @@ function DataPackets({ isDark }: { isDark: boolean }) {
 function Scene() {
   const [isDark, setIsDark] = useState(false);
   const mouse = useRef(new THREE.Vector2(0, 0));
+  const scrollY = useRef(0);
   const { viewport } = useThree();
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      // Mouse in normalized device coordinates (-1 to 1)
       mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
       mouse.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
     };
+
+    const handleScroll = () => {
+      scrollY.current =
+        window.scrollY /
+        (document.documentElement.scrollHeight - window.innerHeight);
+    };
+
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     const updateTheme = () => {
       const theme = document.documentElement.getAttribute("data-theme");
@@ -377,9 +389,18 @@ function Scene() {
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", handleScroll);
       observer.disconnect();
     };
   }, []);
+
+  const groupRef = useRef<THREE.Group>(null);
+  useFrame(() => {
+    if (groupRef.current) {
+      // Gentle parallax scroll effect
+      groupRef.current.position.y = scrollY.current * 4;
+    }
+  });
 
   return (
     <>
@@ -388,10 +409,10 @@ function Scene() {
       <pointLight
         position={[-5, 5, 5]}
         intensity={1}
-        color={isDark ? "#f59e0b" : "#78350f"}
+        color={isDark ? "#ef4444" : "#e11d48"}
       />
 
-      <group>
+      <group ref={groupRef}>
         <DigitalCore isDark={isDark} mouse={mouse} />
         <NeuralField isDark={isDark} mouse={mouse} />
         <DataPackets isDark={isDark} />
@@ -413,10 +434,10 @@ function Scene() {
         </bufferGeometry>
         <pointsMaterial
           transparent
-          color={isDark ? "#f59e0b" : "#78350f"}
+          color={isDark ? "#991b1b" : "#e11d48"}
           size={0.03}
           sizeAttenuation={true}
-          opacity={0.1}
+          opacity={0.08}
         />
       </points>
     </>
@@ -425,7 +446,7 @@ function Scene() {
 
 export default function HeroBold() {
   return (
-    <div className="bg-strawhat-bg absolute inset-0 -z-10 overflow-hidden transition-colors duration-700">
+    <div className="bg-strawhat-bg fixed inset-0 -z-10 overflow-hidden transition-colors duration-700">
       <Canvas
         gl={{
           antialias: true,
@@ -437,14 +458,15 @@ export default function HeroBold() {
         <Scene />
       </Canvas>
 
-      {/* Digital Overlay Gradients */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_75%_50%,transparent_0%,var(--color-strawhat-bg)_80%)]" />
+      {/* Digital Overlay Gradients - Strengthened for legibility across page */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_75%_50%,transparent_0%,var(--color-strawhat-bg)_90%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,var(--color-strawhat-bg)_15%,var(--color-strawhat-bg)_85%,transparent_100%)] opacity-20" />
 
       {/* Blueprint Grid */}
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(120,53,15,0.2)_1px,transparent_1px),linear-gradient(90deg,rgba(120,53,15,0.2)_1px,transparent_1px)] bg-size-[60px_60px] opacity-[0.03] dark:opacity-[0.05]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(225,29,72,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(225,29,72,0.05)_1px,transparent_1px)] bg-size-[60px_60px] opacity-[0.03] dark:opacity-[0.05]" />
 
       {/* Scanline Effect */}
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0)_50%,rgba(0,0,0,0.5)_50%)] bg-size-[100%_4px] opacity-[0.02]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0)_50%,rgba(0,0,0,0.5)_50%)] bg-size-[100%_4px] opacity-[0.01]" />
     </div>
   );
 }

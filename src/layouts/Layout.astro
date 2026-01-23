@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import HatAnimation from "../components/ui/HatAnimation";
+import HeroBold from "../components/hero/HeroBold";
 ---
 
 <!doctype html>
@@ -22,6 +23,7 @@ import HatAnimation from "../components/ui/HatAnimation";
     </script>
   </head>
   <body>
+    <HeroBold client:load />
     <HatAnimation client:load />
     <slot />
   </body>
