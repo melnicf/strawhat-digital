@@ -15,10 +15,7 @@ import "../styles/global.css";
       // Set theme immediately to prevent flash
       (function () {
         const theme = localStorage.getItem("theme");
-        const prefersDark = window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        ).matches;
-        const initialTheme = theme || (prefersDark ? "dark" : "light");
+        const initialTheme = theme || "light";
         document.documentElement.setAttribute("data-theme", initialTheme);
       })();
     </script>

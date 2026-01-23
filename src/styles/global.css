@@ -43,21 +43,6 @@ html[data-theme="dark"] {
   --strawhat-text-light: #fde68a;
 }
 
-/* System preference fallback */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) {
-    --strawhat-yellow: #f59e0b;
-    --strawhat-amber: #fbbf24;
-    --strawhat-red: #ea580c;
-    --strawhat-red-light: #fb923c;
-    --strawhat-bg: #1c1917;
-    --strawhat-bg-light: #292524;
-    --strawhat-bg-dark: #0f0f0f;
-    --strawhat-text: #fef3c7;
-    --strawhat-text-light: #fde68a;
-  }
-}
-
 /* Tailwind Theme - Reference CSS custom properties */
 /* This way, when CSS vars change, Tailwind classes automatically update */
 @theme {
