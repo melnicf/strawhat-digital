@@ -1,1 +1,73 @@
 @import "tailwindcss";
+
+/* Configure Tailwind dark mode to use data-theme attribute */
+@custom-variant dark (&&:where([data-theme=dark], [data-theme=dark] *));
+
+/* CSS Custom Properties - These change based on data-theme */
+:root {
+  --strawhat-yellow: #78350f;
+  --strawhat-amber: #92400e;
+  --strawhat-red: #a16207;
+  --strawhat-red-light: #ca8a04;
+  --strawhat-bg: #fffbeb;
+  --strawhat-bg-light: #fefce8;
+  --strawhat-bg-dark: #fef3c7;
+  --strawhat-text: #292524;
+  --strawhat-text-light: #57534e;
+}
+
+/* Light Theme (explicit) */
+html[data-theme="light"],
+html:not([data-theme]) {
+  --strawhat-yellow: #78350f;
+  --strawhat-amber: #92400e;
+  --strawhat-red: #a16207;
+  --strawhat-red-light: #ca8a04;
+  --strawhat-bg: #fffbeb;
+  --strawhat-bg-light: #fefce8;
+  --strawhat-bg-dark: #fef3c7;
+  --strawhat-text: #292524;
+  --strawhat-text-light: #57534e;
+}
+
+/* Dark Mode */
+html[data-theme="dark"] {
+  --strawhat-yellow: #f59e0b;
+  --strawhat-amber: #fbbf24;
+  --strawhat-red: #ea580c;
+  --strawhat-red-light: #fb923c;
+  --strawhat-bg: #1c1917;
+  --strawhat-bg-light: #292524;
+  --strawhat-bg-dark: #0f0f0f;
+  --strawhat-text: #fef3c7;
+  --strawhat-text-light: #fde68a;
+}
+
+/* System preference fallback */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --strawhat-yellow: #f59e0b;
+    --strawhat-amber: #fbbf24;
+    --strawhat-red: #ea580c;
+    --strawhat-red-light: #fb923c;
+    --strawhat-bg: #1c1917;
+    --strawhat-bg-light: #292524;
+    --strawhat-bg-dark: #0f0f0f;
+    --strawhat-text: #fef3c7;
+    --strawhat-text-light: #fde68a;
+  }
+}
+
+/* Tailwind Theme - Reference CSS custom properties */
+/* This way, when CSS vars change, Tailwind classes automatically update */
+@theme {
+  --color-strawhat-yellow: var(--strawhat-yellow);
+  --color-strawhat-amber: var(--strawhat-amber);
+  --color-strawhat-red: var(--strawhat-red);
+  --color-strawhat-red-light: var(--strawhat-red-light);
+  --color-strawhat-bg: var(--strawhat-bg);
+  --color-strawhat-bg-light: var(--strawhat-bg-light);
+  --color-strawhat-bg-dark: var(--strawhat-bg-dark);
+  --color-strawhat-text: var(--strawhat-text);
+  --color-strawhat-text-light: var(--strawhat-text-light);
+}

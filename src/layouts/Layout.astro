@@ -11,6 +11,17 @@ import "../styles/global.css";
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
     <title>Astro Basics</title>
+    <script is:inline>
+      // Set theme immediately to prevent flash
+      (function () {
+        const theme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        const initialTheme = theme || (prefersDark ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", initialTheme);
+      })();
+    </script>
   </head>
   <body>
     <slot />
