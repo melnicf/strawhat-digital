@@ -4,6 +4,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Normalize scroll behavior across all input types (touchpad, mouse wheel, touch)
+// This smooths out discrete mouse wheel events to feel like touchpad scrolling
+ScrollTrigger.normalizeScroll(true);
+
 function cubicBezierPoint(
   t: number,
   p0: number,
