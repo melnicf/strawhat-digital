@@ -4,10 +4,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Normalize scroll behavior across all input types (touchpad, mouse wheel, touch)
-// This smooths out discrete mouse wheel events to feel like touchpad scrolling
-ScrollTrigger.normalizeScroll(true);
-
 function cubicBezierPoint(
   t: number,
   p0: number,
@@ -229,6 +225,10 @@ export default function HatAnimation() {
   useEffect(() => {
     const hat = hatRef.current;
     if (!hat) return;
+
+    // Normalize scroll behavior across all input types (touchpad, mouse wheel, touch)
+    // This smooths out discrete mouse wheel events to feel like touchpad scrolling
+    ScrollTrigger.normalizeScroll(true);
 
     // Detect mobile
     const checkMobile = () => {
@@ -551,6 +551,7 @@ export default function HatAnimation() {
       clearTimeout(timeout);
       if (animationRef.current) animationRef.current.kill();
       ScrollTrigger.getAll().forEach((st) => st.kill());
+      ScrollTrigger.normalizeScroll(false);
       window.removeEventListener("resize", checkMobile);
     };
   }, [checkScrollVelocity, isMobile]);
