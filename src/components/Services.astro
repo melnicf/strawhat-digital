@@ -59,10 +59,10 @@ const services = [
     </div>
   </div>
 
-  <!-- Hat landing spot - decorative hook near heading -->
+  <!-- Hat landing spot - decorative hook near heading (RIGHT on mobile, LEFT on desktop) -->
   <div
     data-hat-landing="services"
-    class="absolute top-24 left-8 flex size-16 items-center justify-center md:top-32 md:left-16"
+    class="absolute top-24 right-8 flex size-16 items-center justify-center sm:right-12 md:top-32 md:right-auto md:left-16"
   >
     <div
       class="border-strawhat-yellow size-4 rotate-45 border-r-2 border-b-2 opacity-60"
@@ -267,6 +267,13 @@ const services = [
     --card-delay: 250ms;
   }
 
+  /* Mobile: add active state for touch */
+  @media (max-width: 767px) {
+    .service-card:active .service-card-inner {
+      transform: scale(0.98);
+    }
+  }
+
   .service-card-inner {
     transform: rotateX(0deg) rotateY(0deg);
     transition:
@@ -275,7 +282,7 @@ const services = [
       box-shadow 0.3s ease;
   }
 
-  /* Themed highlight glow that follows cursor */
+  /* Themed highlight glow that follows cursor - desktop only */
   .service-dim-overlay {
     position: absolute;
     inset: 0;
@@ -291,8 +298,10 @@ const services = [
     );
   }
 
-  .service-card:hover .service-dim-overlay {
-    opacity: 0.08;
+  @media (min-width: 768px) {
+    .service-card:hover .service-dim-overlay {
+      opacity: 0.08;
+    }
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -315,45 +324,48 @@ const services = [
 </style>
 
 <script>
-  // Update highlight position on each service card
-  const serviceCards = document.querySelectorAll(".service-card");
+  // Desktop only - interactive effects
+  if (window.innerWidth >= 768) {
+    // Update highlight position on each service card
+    const serviceCards = document.querySelectorAll(".service-card");
 
-  serviceCards.forEach((card) => {
-    card.addEventListener("mousemove", (e) => {
-      const event = e as MouseEvent;
-      const rect = card.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      (card as HTMLElement).style.setProperty("--spot-x", `${x}px`);
-      (card as HTMLElement).style.setProperty("--spot-y", `${y}px`);
-    });
-  });
-
-  // 3D tilt effect for service cards
-  document.querySelectorAll(".service-card").forEach((card) => {
-    const inner = card.querySelector(".service-card-inner") as HTMLElement;
-    if (!inner) return;
-
-    const maxTilt = 15; // Maximum tilt in degrees
-
-    card.addEventListener("mousemove", (e) => {
-      const event = e as MouseEvent;
-      const rect = card.getBoundingClientRect();
-
-      // Calculate mouse position relative to card center (0 to 1, then -0.5 to 0.5)
-      const x = (event.clientX - rect.left) / rect.width - 0.5;
-      const y = (event.clientY - rect.top) / rect.height - 0.5;
-
-      // Calculate rotation (inverted so card tilts toward cursor)
-      const rotateY = x * maxTilt; // Left/right tilt
-      const rotateX = -y * maxTilt; // Up/down tilt (inverted)
-
-      inner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    serviceCards.forEach((card) => {
+      card.addEventListener("mousemove", (e) => {
+        const event = e as MouseEvent;
+        const rect = card.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        (card as HTMLElement).style.setProperty("--spot-x", `${x}px`);
+        (card as HTMLElement).style.setProperty("--spot-y", `${y}px`);
+      });
     });
 
-    card.addEventListener("mouseleave", () => {
-      // Reset to flat
-      inner.style.transform = "rotateX(0deg) rotateY(0deg)";
+    // 3D tilt effect for service cards
+    document.querySelectorAll(".service-card").forEach((card) => {
+      const inner = card.querySelector(".service-card-inner") as HTMLElement;
+      if (!inner) return;
+
+      const maxTilt = 15; // Maximum tilt in degrees
+
+      card.addEventListener("mousemove", (e) => {
+        const event = e as MouseEvent;
+        const rect = card.getBoundingClientRect();
+
+        // Calculate mouse position relative to card center (0 to 1, then -0.5 to 0.5)
+        const x = (event.clientX - rect.left) / rect.width - 0.5;
+        const y = (event.clientY - rect.top) / rect.height - 0.5;
+
+        // Calculate rotation (inverted so card tilts toward cursor)
+        const rotateY = x * maxTilt; // Left/right tilt
+        const rotateX = -y * maxTilt; // Up/down tilt (inverted)
+
+        inner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+
+      card.addEventListener("mouseleave", () => {
+        // Reset to flat
+        inner.style.transform = "rotateX(0deg) rotateY(0deg)";
+      });
     });
-  });
+  }
 </script>

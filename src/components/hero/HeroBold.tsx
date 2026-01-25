@@ -90,9 +90,11 @@ const PointShader = {
 function DigitalCore({
   isDark,
   mouse,
+  isMobile,
 }: {
   isDark: boolean;
   mouse: React.MutableRefObject<THREE.Vector2>;
+  isMobile: boolean;
 }) {
   const coreRef = useRef<THREE.Mesh>(null);
   const outerRef = useRef<THREE.Mesh>(null);
@@ -102,37 +104,48 @@ function DigitalCore({
   const color = isDark ? "#dc2626" : "#e11d48";
   const glowColor = isDark ? "#ef4444" : "#fb7185";
 
+  // Position adjusted for mobile - more centered and scaled down
+  const baseX = isMobile ? 1.5 : 3.5;
+  const baseScale = isMobile ? 0.6 : 1;
+
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
     if (coreRef.current) {
       coreRef.current.rotation.y = time * 0.5;
       coreRef.current.rotation.z = time * 0.3;
-      const scale = 1 + Math.sin(time * 2) * 0.1;
+      const scale = (1 + Math.sin(time * 2) * 0.1) * baseScale;
       coreRef.current.scale.set(scale, scale, scale);
 
       // Subtle mouse follow
-      coreRef.current.position.x = 3.5 + mouse.current.x * 0.2;
-      coreRef.current.position.y = mouse.current.y * 0.2;
+      coreRef.current.position.x =
+        baseX + (isMobile ? 0 : mouse.current.x * 0.2);
+      coreRef.current.position.y = isMobile ? 0 : mouse.current.y * 0.2;
     }
     if (outerRef.current) {
       outerRef.current.rotation.y = -time * 0.2;
       outerRef.current.rotation.x = time * 0.15;
-      outerRef.current.position.x = 3.5 + mouse.current.x * 0.15;
-      outerRef.current.position.y = mouse.current.y * 0.15;
+      outerRef.current.position.x =
+        baseX + (isMobile ? 0 : mouse.current.x * 0.15);
+      outerRef.current.position.y = isMobile ? 0 : mouse.current.y * 0.15;
     }
     if (ringRef.current) {
       ringRef.current.rotation.x = Math.PI / 2 + Math.sin(time * 0.5) * 0.2;
       ringRef.current.rotation.y = time * 0.8;
-      ringRef.current.position.x = 3.5 + mouse.current.x * 0.1;
-      ringRef.current.position.y = mouse.current.y * 0.1;
+      ringRef.current.position.x =
+        baseX + (isMobile ? 0 : mouse.current.x * 0.1);
+      ringRef.current.position.y = isMobile ? 0 : mouse.current.y * 0.1;
     }
   });
+
+  const coreSize = isMobile ? 0.5 : 0.8;
+  const outerSize = isMobile ? 0.8 : 1.2;
+  const ringSize = isMobile ? 1.0 : 1.5;
 
   return (
     <group>
       {/* Inner pulsing core */}
-      <mesh ref={coreRef} position={[3.5, 0, -1]}>
-        <icosahedronGeometry args={[0.8, 2]} />
+      <mesh ref={coreRef} position={[baseX, 0, -1]}>
+        <icosahedronGeometry args={[coreSize, 2]} />
         <meshStandardMaterial
           color={color}
           emissive={glowColor}
@@ -142,8 +155,8 @@ function DigitalCore({
       </mesh>
 
       {/* Outer distorted shell */}
-      <mesh ref={outerRef} position={[3.5, 0, -1]}>
-        <sphereGeometry args={[1.2, 32, 32]} />
+      <mesh ref={outerRef} position={[baseX, 0, -1]}>
+        <sphereGeometry args={[outerSize, 32, 32]} />
         <MeshDistortMaterial
           color={color}
           speed={2}
@@ -157,8 +170,8 @@ function DigitalCore({
       </mesh>
 
       {/* Orbital Ring */}
-      <mesh ref={ringRef} position={[3.5, 0, -1]}>
-        <torusGeometry args={[1.5, 0.02, 16, 100]} />
+      <mesh ref={ringRef} position={[baseX, 0, -1]}>
+        <torusGeometry args={[ringSize, 0.02, 16, 100]} />
         <meshStandardMaterial
           color={glowColor}
           emissive={glowColor}
@@ -170,9 +183,9 @@ function DigitalCore({
 
       {/* Light coming from the core */}
       <pointLight
-        position={[3.5, 0, -1]}
+        position={[baseX, 0, -1]}
         color={glowColor}
-        intensity={2}
+        intensity={isMobile ? 1.5 : 2}
         distance={5}
       />
     </group>
@@ -185,9 +198,11 @@ function DigitalCore({
 function NeuralField({
   isDark,
   mouse,
+  isMobile,
 }: {
   isDark: boolean;
   mouse: React.MutableRefObject<THREE.Vector2>;
+  isMobile: boolean;
 }) {
   const nodesRef = useRef<THREE.Points>(null);
   const linesRef = useRef<THREE.LineSegments>(null);
@@ -197,16 +212,19 @@ function NeuralField({
   // Vibrant Rose/Pinkish-Red for Light Mode, Crimson for Dark Mode
   const color = isDark ? "#dc2626" : "#e11d48";
 
-  const particleCount = 100;
+  const particleCount = isMobile ? 60 : 100; // Fewer particles on mobile
   const { positions } = useMemo(() => {
     const pos = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount; i++) {
-      pos[i * 3] = 2 + (Math.random() - 0.2) * 6; // X
+      // Adjust X range for mobile - more centered
+      const xRange = isMobile ? 4 : 6;
+      const xOffset = isMobile ? 0 : 2;
+      pos[i * 3] = xOffset + (Math.random() - 0.2) * xRange; // X
       pos[i * 3 + 1] = (Math.random() - 0.5) * 15; // Y (Increased vertical range)
       pos[i * 3 + 2] = -2 + (Math.random() - 0.5) * 4; // Z
     }
     return { positions: pos };
-  }, []);
+  }, [isMobile, particleCount]);
 
   useFrame((state) => {
     if (!nodesRef.current || !linesRef.current) return;
@@ -310,21 +328,31 @@ function NeuralField({
 /**
  * Floating digital fragments.
  */
-function DataPackets({ isDark }: { isDark: boolean }) {
-  const count = 20;
+function DataPackets({
+  isDark,
+  isMobile,
+}: {
+  isDark: boolean;
+  isMobile: boolean;
+}) {
+  const count = isMobile ? 12 : 20; // Fewer packets on mobile
   const color = isDark ? "#ef4444" : "#fb7185"; // Vibrant Rose-Pink for data packets in light mode
 
   const packets = useMemo(() => {
-    return Array.from({ length: count }).map(() => ({
-      position: [
-        2 + Math.random() * 6,
-        (Math.random() - 0.5) * 15, // Increased vertical range
-        -1 + (Math.random() - 0.5) * 4,
-      ] as [number, number, number],
-      speed: 0.2 + Math.random() * 0.5,
-      size: 0.03 + Math.random() * 0.07,
-    }));
-  }, []);
+    return Array.from({ length: count }).map(() => {
+      const xRange = isMobile ? 4 : 6;
+      const xOffset = isMobile ? 0 : 2;
+      return {
+        position: [
+          xOffset + Math.random() * xRange,
+          (Math.random() - 0.5) * 15, // Increased vertical range
+          -1 + (Math.random() - 0.5) * 4,
+        ] as [number, number, number],
+        speed: 0.2 + Math.random() * 0.5,
+        size: 0.03 + Math.random() * 0.07,
+      };
+    });
+  }, [isMobile, count]);
 
   return (
     <>
@@ -357,14 +385,24 @@ function DataPackets({ isDark }: { isDark: boolean }) {
  */
 function Scene() {
   const [isDark, setIsDark] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const mouse = useRef(new THREE.Vector2(0, 0));
   const scrollY = useRef(0);
   const { viewport } = useThree();
 
   useEffect(() => {
+    // Check if mobile
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
     const handleMouseMove = (e: MouseEvent) => {
-      mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
-      mouse.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+      if (!isMobile) {
+        mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mouse.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+      }
     };
 
     const handleScroll = () => {
@@ -390,15 +428,16 @@ function Scene() {
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", checkMobile);
       observer.disconnect();
     };
-  }, []);
+  }, [isMobile]);
 
   const groupRef = useRef<THREE.Group>(null);
   useFrame(() => {
     if (groupRef.current) {
-      // Gentle parallax scroll effect
-      groupRef.current.position.y = scrollY.current * 4;
+      // Gentle parallax scroll effect (less on mobile)
+      groupRef.current.position.y = scrollY.current * (isMobile ? 2 : 4);
     }
   });
 
@@ -413,9 +452,9 @@ function Scene() {
       />
 
       <group ref={groupRef}>
-        <DigitalCore isDark={isDark} mouse={mouse} />
-        <NeuralField isDark={isDark} mouse={mouse} />
-        <DataPackets isDark={isDark} />
+        <DigitalCore isDark={isDark} mouse={mouse} isMobile={isMobile} />
+        <NeuralField isDark={isDark} mouse={mouse} isMobile={isMobile} />
+        <DataPackets isDark={isDark} isMobile={isMobile} />
       </group>
 
       {/* Background stars */}
@@ -425,11 +464,14 @@ function Scene() {
             attach="attributes-position"
             args={[
               new Float32Array(
-                Array.from({ length: 600 }, () => (Math.random() - 0.5) * 20)
+                Array.from(
+                  { length: isMobile ? 400 : 600 },
+                  () => (Math.random() - 0.5) * 20
+                )
               ),
               3,
             ]}
-            count={200}
+            count={isMobile ? 133 : 200}
           />
         </bufferGeometry>
         <pointsMaterial

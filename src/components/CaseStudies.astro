@@ -23,10 +23,10 @@ const caseStudies = (await getCollection("case-studies"))
     </div>
   </div>
 
-  <!-- Hat landing spot - decorative hook near heading -->
+  <!-- Hat landing spot - decorative hook near heading (LEFT on mobile, RIGHT on desktop) -->
   <div
     data-hat-landing="case-studies"
-    class="absolute top-24 right-8 flex size-16 items-center justify-center md:top-32 md:right-16"
+    class="absolute top-24 left-8 flex size-16 items-center justify-center sm:left-12 md:top-32 md:right-16 md:left-auto"
   >
     <div
       class="border-strawhat-yellow size-4 rotate-45 border-t-2 border-l-2 opacity-60"
@@ -36,9 +36,9 @@ const caseStudies = (await getCollection("case-studies"))
 
   <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
     <div class="space-y-16">
-      <!-- Section Header -->
-      <div class="relative space-y-6">
-        <div class="flex items-center gap-4">
+      <!-- Section Header (RIGHT on mobile, LEFT on desktop) -->
+      <div class="relative space-y-6 text-right sm:text-left">
+        <div class="flex items-center justify-end gap-4 sm:justify-start">
           <div class="bg-strawhat-yellow h-px w-12"></div>
           <span
             class="text-strawhat-yellow text-sm font-medium tracking-widest uppercase"
@@ -51,7 +51,7 @@ const caseStudies = (await getCollection("case-studies"))
           Selected work
         </h2>
         <p
-          class="text-strawhat-text-light max-w-2xl text-lg/relaxed font-light"
+          class="text-strawhat-text-light ml-auto max-w-2xl text-lg/relaxed font-light sm:ml-0"
         >
           A glimpse into some of our recent projects. Each one represents a
           unique challenge and a tailored solution.
@@ -97,17 +97,19 @@ const caseStudies = (await getCollection("case-studies"))
 </section>
 
 <script>
-  // Update highlight position on each card
-  const caseStudyCards = document.querySelectorAll(".case-study-card");
+  // Update highlight position on each card - desktop only
+  if (window.innerWidth >= 768) {
+    const caseStudyCards = document.querySelectorAll(".case-study-card");
 
-  caseStudyCards.forEach((card) => {
-    card.addEventListener("mousemove", (e) => {
-      const event = e as MouseEvent;
-      const rect = card.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      (card as HTMLElement).style.setProperty("--spot-x", `${x}px`);
-      (card as HTMLElement).style.setProperty("--spot-y", `${y}px`);
+    caseStudyCards.forEach((card) => {
+      card.addEventListener("mousemove", (e) => {
+        const event = e as MouseEvent;
+        const rect = card.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        (card as HTMLElement).style.setProperty("--spot-x", `${x}px`);
+        (card as HTMLElement).style.setProperty("--spot-y", `${y}px`);
+      });
     });
-  });
+  }
 </script>

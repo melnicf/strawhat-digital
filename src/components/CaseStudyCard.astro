@@ -109,6 +109,13 @@ const { slug, title, client, description, image, tags } = Astro.props;
     z-index: 10;
   }
 
+  /* Mobile: add active state for touch */
+  @media (max-width: 767px) {
+    .case-study-card:active .card-inner {
+      transform: scale(0.98);
+    }
+  }
+
   .card-inner {
     transform: rotateX(0deg) rotateY(0deg);
     transition:
@@ -117,7 +124,7 @@ const { slug, title, client, description, image, tags } = Astro.props;
       box-shadow 0.3s ease;
   }
 
-  /* Themed highlight glow that follows cursor */
+  /* Themed highlight glow that follows cursor - desktop only */
   .card-dim-overlay {
     position: absolute;
     inset: 0;
@@ -133,8 +140,10 @@ const { slug, title, client, description, image, tags } = Astro.props;
     );
   }
 
-  .case-study-card:hover .card-dim-overlay {
-    opacity: 0.08;
+  @media (min-width: 768px) {
+    .case-study-card:hover .card-dim-overlay {
+      opacity: 0.08;
+    }
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -157,31 +166,33 @@ const { slug, title, client, description, image, tags } = Astro.props;
 </style>
 
 <script>
-  // 3D tilt effect for case study cards
-  document.querySelectorAll(".case-study-card").forEach((card) => {
-    const inner = card.querySelector(".card-inner") as HTMLElement;
-    if (!inner) return;
+  // 3D tilt effect for case study cards - desktop only
+  if (window.innerWidth >= 768) {
+    document.querySelectorAll(".case-study-card").forEach((card) => {
+      const inner = card.querySelector(".card-inner") as HTMLElement;
+      if (!inner) return;
 
-    const maxTilt = 15; // Maximum tilt in degrees
+      const maxTilt = 15; // Maximum tilt in degrees
 
-    card.addEventListener("mousemove", (e) => {
-      const event = e as MouseEvent;
-      const rect = card.getBoundingClientRect();
+      card.addEventListener("mousemove", (e) => {
+        const event = e as MouseEvent;
+        const rect = card.getBoundingClientRect();
 
-      // Calculate mouse position relative to card center (0 to 1, then -0.5 to 0.5)
-      const x = (event.clientX - rect.left) / rect.width - 0.5;
-      const y = (event.clientY - rect.top) / rect.height - 0.5;
+        // Calculate mouse position relative to card center (0 to 1, then -0.5 to 0.5)
+        const x = (event.clientX - rect.left) / rect.width - 0.5;
+        const y = (event.clientY - rect.top) / rect.height - 0.5;
 
-      // Calculate rotation (inverted so card tilts toward cursor)
-      const rotateY = x * maxTilt; // Left/right tilt
-      const rotateX = -y * maxTilt; // Up/down tilt (inverted)
+        // Calculate rotation (inverted so card tilts toward cursor)
+        const rotateY = x * maxTilt; // Left/right tilt
+        const rotateX = -y * maxTilt; // Up/down tilt (inverted)
 
-      inner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        inner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+
+      card.addEventListener("mouseleave", () => {
+        // Reset to flat
+        inner.style.transform = "rotateX(0deg) rotateY(0deg)";
+      });
     });
-
-    card.addEventListener("mouseleave", () => {
-      // Reset to flat
-      inner.style.transform = "rotateX(0deg) rotateY(0deg)";
-    });
-  });
+  }
 </script>

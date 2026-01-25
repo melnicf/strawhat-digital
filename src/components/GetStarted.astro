@@ -3,42 +3,44 @@
 ---
 
 <section id="get-started" class="relative py-32 md:py-48">
-  <!-- Hat landing spot - final resting place -->
+  <!-- Hat landing spot - final resting place (LEFT on mobile, LEFT on desktop) -->
   <div
     data-hat-landing="get-started"
-    class="absolute top-28 left-12 flex size-16 items-center justify-center md:top-36 md:left-20"
+    class="absolute top-28 left-8 flex size-16 items-center justify-center sm:left-12 md:top-36 md:left-20"
   >
     <div class="border-strawhat-amber size-4 rounded border-2 opacity-60"></div>
   </div>
 
   <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <div class="space-y-12">
-      <div class="space-y-4">
+      <div class="space-y-4 text-right sm:text-left">
         <h2
           class="text-strawhat-text text-4xl/tight font-light tracking-tight md:text-6xl"
         >
           Start a project
         </h2>
         <p
-          class="text-strawhat-text-light max-w-2xl text-lg/relaxed font-light"
+          class="text-strawhat-text-light ml-auto max-w-2xl text-lg/relaxed font-light sm:ml-0"
         >
           Ready to bring your idea to life? Let's talk about how we can help.
         </p>
       </div>
 
-      <div class="space-y-8">
+      <div class="space-y-8 text-right sm:text-left">
         <div class="space-y-4">
           <h3 class="text-strawhat-text text-2xl font-light tracking-tight">
             Get in touch
           </h3>
-          <p class="text-strawhat-text-light text-base/relaxed font-light">
+          <p
+            class="text-strawhat-text-light ml-auto text-base/relaxed font-light sm:ml-0"
+          >
             Whether you have a clear vision or just a rough idea, we'd love to
             hear from you. Send us a message and we'll get back to you within 24
             hours.
           </p>
         </div>
 
-        <div class="flex flex-col gap-6 sm:flex-row">
+        <div class="flex flex-col items-end gap-6 sm:flex-row sm:items-start">
           <a
             href="mailto:hello@strawhat.digital"
             class="border-strawhat-yellow text-strawhat-yellow hover:border-strawhat-amber hover:text-strawhat-amber border-b-2 pb-2 text-lg font-light tracking-wider transition-all"

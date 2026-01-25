@@ -178,6 +178,7 @@ export default function HatAnimation() {
   const lastScrollTime = useRef(Date.now());
   const hatPositionRef = useRef({ x: 0, y: 0 });
   const lastImpactTime = useRef(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   const [impactEffect, setImpactEffect] = useState({
     active: false,
@@ -224,6 +225,13 @@ export default function HatAnimation() {
   useEffect(() => {
     const hat = hatRef.current;
     if (!hat) return;
+
+    // Detect mobile
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
 
     const initAnimation = () => {
       const navbar = document.querySelector("nav");
@@ -279,14 +287,17 @@ export default function HatAnimation() {
             arrivalScroll / totalScrollHeight
           );
 
+          // Adjust offset based on mobile/desktop hat size (smaller hat)
+          const hatWidthOffset = isMobile ? 32 : 35;
+
           waypoints.push({
             id: sectionId || "",
-            x: elRect.left + elRect.width / 2 - 56,
+            x: elRect.left + elRect.width / 2 - hatWidthOffset,
             docY:
               sectionTop +
               (elRect.top - section.getBoundingClientRect().top) +
               elRect.height / 2 -
-              20,
+              (isMobile ? 13 : 14),
             isFixed: false,
             progress: Math.min(0.95, arrivalProgress),
           });
@@ -295,11 +306,12 @@ export default function HatAnimation() {
 
       waypoints.sort((a, b) => a.progress - b.progress);
 
+      // Initial scale should match the anchored scale (1.3)
       gsap.set(hat, {
         x: waypoints[0].x,
         y: waypoints[0].docY,
         rotation: 0,
-        scale: 1,
+        scale: 1.3,
         opacity: 1,
       });
 
@@ -326,14 +338,16 @@ export default function HatAnimation() {
         trigger: document.body,
         start: "top top",
         end: "bottom bottom",
-        scrub: 1.2, // Smoother, more controlled following
+        scrub: isMobile ? 0.5 : 1.2, // Faster, less smooth on mobile for better performance
         onUpdate: (self) => {
           const currentScrollY = window.scrollY;
           const progress = self.progress;
           const viewportHeight = window.innerHeight;
 
-          // Check scroll velocity for impact effect
-          checkScrollVelocity();
+          // Check scroll velocity for impact effect (only on desktop)
+          if (!isMobile) {
+            checkScrollVelocity();
+          }
 
           let fromWaypoint = waypoints[0];
           let toWaypoint = waypoints[1] || waypoints[0];
@@ -365,7 +379,7 @@ export default function HatAnimation() {
               x: last.x,
               y: lastY,
               rotation: 0,
-              scale: 1,
+              scale: 1.3,
               opacity: 1,
             });
             hatPositionRef.current = { x: last.x, y: lastY };
@@ -407,81 +421,91 @@ export default function HatAnimation() {
             x = fromX + dx * easedT + swingOffset;
             y = clampedFromY + dy * easedT;
           } else {
-            // SECTION TO SECTION: Cursive loop in the middle of the path
-            // Continuous path with no jumps - loop fades in and out smoothly
-            const loopRadius = 140; // Controlled loop size
+            // SECTION TO SECTION: Simplified on mobile, full loop on desktop
+            const loopRadius = isMobile ? 40 : 140; // Much smaller loop on mobile
 
             // Base path: smooth travel from A to B
             const baseX = fromX + dx * easedT;
             const baseY = clampedFromY + dy * easedT;
 
-            // Loop is centered at 50% of the journey
-            // Use a bell curve to fade the loop in and out
-            const loopCenter = 0.5;
-            const loopWidth = 0.35; // How wide the loop effect extends
+            if (isMobile) {
+              // Mobile: Simple straight line with minimal arc
+              const arcHeight = Math.sin(easedT * Math.PI) * 20; // Small gentle arc
+              x = baseX;
+              y = baseY - arcHeight; // Slight upward arc
+            } else {
+              // Desktop: Full loop animation
+              // Loop is centered at 50% of the journey
+              // Use a bell curve to fade the loop in and out
+              const loopCenter = 0.5;
+              const loopWidth = 0.35; // How wide the loop effect extends
 
-            // Bell curve: peaks at loopCenter, fades to 0 at edges
-            const distFromCenter = Math.abs(t - loopCenter);
-            const loopStrength = Math.max(0, 1 - distFromCenter / loopWidth);
-            const smoothStrength =
-              loopStrength * loopStrength * (3 - 2 * loopStrength);
+              // Bell curve: peaks at loopCenter, fades to 0 at edges
+              const distFromCenter = Math.abs(t - loopCenter);
+              const loopStrength = Math.max(0, 1 - distFromCenter / loopWidth);
+              const smoothStrength =
+                loopStrength * loopStrength * (3 - 2 * loopStrength);
 
-            // The loop angle goes from 0 to 2*PI as t goes from (center-width) to (center+width)
-            const loopStartT = loopCenter - loopWidth;
-            const loopEndT = loopCenter + loopWidth;
-            let loopAngle = 0;
+              // The loop angle goes from 0 to 2*PI as t goes from (center-width) to (center+width)
+              const loopStartT = loopCenter - loopWidth;
+              const loopEndT = loopCenter + loopWidth;
+              let loopAngle = 0;
 
-            if (t >= loopStartT && t <= loopEndT) {
-              const loopProgress = (t - loopStartT) / (loopEndT - loopStartT);
-              loopAngle = loopProgress * Math.PI * 2;
-            } else if (t > loopEndT) {
-              loopAngle = Math.PI * 2;
+              if (t >= loopStartT && t <= loopEndT) {
+                const loopProgress = (t - loopStartT) / (loopEndT - loopStartT);
+                loopAngle = loopProgress * Math.PI * 2;
+              } else if (t > loopEndT) {
+                loopAngle = Math.PI * 2;
+              }
+
+              // Loop offset - starts and ends at 0 due to smoothStrength fade
+              // sin for horizontal swing, -cos+1 for vertical (goes UP then DOWN)
+              const loopOffsetX =
+                Math.sin(loopAngle) * loopRadius * swingDir * smoothStrength;
+              const loopOffsetY =
+                -(1 - Math.cos(loopAngle)) * loopRadius * smoothStrength;
+
+              x = baseX + loopOffsetX;
+              y = baseY + loopOffsetY;
             }
-
-            // Loop offset - starts and ends at 0 due to smoothStrength fade
-            // sin for horizontal swing, -cos+1 for vertical (goes UP then DOWN)
-            const loopOffsetX =
-              Math.sin(loopAngle) * loopRadius * swingDir * smoothStrength;
-            const loopOffsetY =
-              -(1 - Math.cos(loopAngle)) * loopRadius * smoothStrength;
-
-            x = baseX + loopOffsetX;
-            y = baseY + loopOffsetY;
           }
 
-          // Subtle wind movement - reduced for smoother feel
+          // Subtle wind movement - reduced on mobile for performance
+          const turbulenceStrength = isMobile ? 0 : 0.5;
           const turbulencePhase = segmentProgress * Math.PI * 2;
           const endpointFade = Math.sin(segmentProgress * Math.PI);
-          const turbulenceStrength = endpointFade * 0.5; // Reduced strength
 
           // Gentle floating motion
           const swirl1 = Math.sin(turbulencePhase) * 8;
           const swirl2 = Math.cos(turbulencePhase * 1.3) * 6;
 
-          const turbX = (swirl1 + swirl2) * turbulenceStrength;
+          const turbX = (swirl1 + swirl2) * turbulenceStrength * endpointFade;
           const turbY =
-            (swirl2 + Math.sin(turbulencePhase * 0.8) * 4) * turbulenceStrength;
+            (swirl2 + Math.sin(turbulencePhase * 0.8) * 4) *
+            turbulenceStrength *
+            endpointFade;
 
-          // ONE FULL ROTATION (360°) per segment - clean spin
-          const rotationStrength = endpointFade;
-          const baseRotation = swingDir * 360 * easedT; // One full spin
-          const wobble = Math.sin(turbulencePhase * 0.7) * 8; // Subtle wobble
+          // Rotation - full rotation on mobile, dramatic spin on desktop
+          const rotationStrength = isMobile ? 1 : endpointFade; // Full rotation strength on mobile
+          const baseRotation = isMobile
+            ? swingDir * 360 * easedT // Full 360° rotation on mobile
+            : swingDir * 360 * easedT; // Full 360° spin on desktop
+          const wobble = isMobile ? 0 : Math.sin(turbulencePhase * 0.7) * 8;
           const rotation =
-            baseRotation * rotationStrength + wobble * turbulenceStrength;
+            baseRotation * rotationStrength +
+            wobble * turbulenceStrength * endpointFade;
 
-          // Depth effect - dramatic size changes during flight for 3D feel
-          const flightIntensity = Math.sin(segmentProgress * Math.PI); // 0 at endpoints, 1 in middle
+          // Depth effect - minimal on mobile
+          const flightIntensity = isMobile
+            ? 0
+            : Math.sin(segmentProgress * Math.PI); // No depth change on mobile
+          const depthWave = isMobile
+            ? 0
+            : Math.sin(segmentProgress * Math.PI * 3);
 
-          // During flight: oscillate between very close (big) and very far (small)
-          // Use a wave that goes through multiple cycles during the flight
-          const depthWave = Math.sin(segmentProgress * Math.PI * 3); // 3 depth pulses during flight
-
-          // Base scale: 1.3 when anchored
-          // During flight: oscillates from 0.5 (far) to 2.2 (very close)
           const anchoredScale = 1.3;
-          const flightScale = 1.35 + depthWave * 0.85; // Range: 0.5 to 2.2
+          const flightScale = isMobile ? 1.3 : 1.35 + depthWave * 0.85; // Keep constant scale on mobile
 
-          // Blend between anchored and flight based on how far into flight we are
           const scale =
             anchoredScale + (flightScale - anchoredScale) * flightIntensity;
 
@@ -506,11 +530,15 @@ export default function HatAnimation() {
 
       const handleResize = () => {
         if (animationRef.current) animationRef.current.kill();
+        checkMobile();
         setTimeout(initAnimation, 100);
       };
 
       window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
+      return () => {
+        window.removeEventListener("resize", handleResize);
+        window.removeEventListener("resize", checkMobile);
+      };
     };
 
     const timeout = setTimeout(initAnimation, 200);
@@ -519,26 +547,32 @@ export default function HatAnimation() {
       clearTimeout(timeout);
       if (animationRef.current) animationRef.current.kill();
       ScrollTrigger.getAll().forEach((st) => st.kill());
+      window.removeEventListener("resize", checkMobile);
     };
-  }, [checkScrollVelocity]);
+  }, [checkScrollVelocity, isMobile]);
 
   return (
     <>
-      <ImpactStars
-        active={impactEffect.active}
-        x={impactEffect.x}
-        y={impactEffect.y}
-      />
+      {!isMobile && (
+        <ImpactStars
+          active={impactEffect.active}
+          x={impactEffect.x}
+          y={impactEffect.y}
+        />
+      )}
 
       <img
         ref={hatRef}
         src="/hat_logo.png"
         alt=""
-        className="pointer-events-none fixed top-0 left-0 z-50 h-12 w-28 object-contain"
+        className="pointer-events-none fixed top-0 left-0 z-50 object-contain"
         style={{
+          width: isMobile ? "65px" : "70px",
+          height: isMobile ? "26px" : "28px",
           willChange: "transform",
           transformOrigin: "center center",
           opacity: 0,
+          marginLeft: "0",
         }}
       />
     </>

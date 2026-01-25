@@ -28,7 +28,7 @@ const { Content } = await render(study);
 
   <article class="relative">
     <!-- Hero Section -->
-    <section class="relative py-32 md:py-48">
+    <section class="relative py-16 sm:py-24 md:py-32 lg:py-48">
       <!-- Subtle background pattern -->
       <div
         class="pointer-events-none absolute inset-0 overflow-hidden opacity-[0.015]"
@@ -123,20 +123,20 @@ const { Content } = await render(study);
     <!-- Media Gallery: MacBook Slideshow (Flowbite-style CSS mockup) -->
     {
       study.data.media && study.data.media.length > 0 && (
-        <section class="pb-16 md:pb-24">
+        <section class="pt-0 pb-16 sm:pt-4 md:pt-8 md:pb-24">
           <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
             <div class="slideshow relative">
               {/* Devices.css MacBook Mockup */}
-              <div class="group/slideshow relative px-16 md:px-20">
+              <div class="group/slideshow relative px-1 sm:px-8 md:px-16 lg:px-20">
                 {/* Left navigation arrow */}
                 <button
                   type="button"
                   id="slide-prev"
-                  class="hover:bg-strawhat-yellow dark:hover:bg-strawhat-yellow absolute top-1/2 left-0 z-30 flex size-12 -translate-y-1/2 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 opacity-0 shadow-md transition-all duration-300 group-hover/slideshow:opacity-100 hover:text-white hover:opacity-100 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:text-white"
+                  class="hover:bg-strawhat-yellow dark:hover:bg-strawhat-yellow absolute top-1/2 -left-1 z-30 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 opacity-0 shadow-md transition-all duration-300 group-hover/slideshow:opacity-100 hover:text-white hover:opacity-100 sm:left-0 sm:size-10 md:size-12 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:text-white"
                   aria-label="Previous slide"
                 >
                   <svg
-                    class="size-5"
+                    class="size-3 sm:size-4 md:size-5"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -150,11 +150,11 @@ const { Content } = await render(study);
                 <button
                   type="button"
                   id="slide-next"
-                  class="hover:bg-strawhat-yellow dark:hover:bg-strawhat-yellow absolute top-1/2 right-0 z-30 flex size-12 -translate-y-1/2 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 opacity-0 shadow-md transition-all duration-300 group-hover/slideshow:opacity-100 hover:text-white hover:opacity-100 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:text-white"
+                  class="hover:bg-strawhat-yellow dark:hover:bg-strawhat-yellow absolute top-1/2 -right-1 z-30 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 opacity-0 shadow-md transition-all duration-300 group-hover/slideshow:opacity-100 hover:text-white hover:opacity-100 sm:right-0 sm:size-10 md:size-12 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:text-white"
                   aria-label="Next slide"
                 >
                   <svg
-                    class="size-5"
+                    class="size-3 sm:size-4 md:size-5"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -166,12 +166,12 @@ const { Content } = await render(study);
 
                 {/* MacBook */}
                 <div
-                  class="flex justify-center"
+                  class="flex justify-center md:block"
                   style="transform: perspective(1500px) rotateX(2deg) rotateY(-1deg);"
                 >
                   <div
                     class="device device-macbook"
-                    style="transform: scale(1.3);"
+                    style="transform: scale(0.8); transform-origin: center center;"
                   >
                     <div class="device-frame">
                       <div class="device-screen relative overflow-hidden">
@@ -222,16 +222,16 @@ const { Content } = await render(study);
                 </div>
               </div>
 
-              {/* Shadow beneath laptop */}
-              <div class="relative mx-auto mt-6 h-8 w-[35%] rounded-full bg-black/10 blur-2xl dark:bg-black/20" />
+              {/* Shadow beneath laptop - removed on mobile for tighter spacing */}
+              <div class="relative mx-auto hidden h-4 w-[35%] rounded-full bg-black/10 blur-2xl sm:mt-3 sm:block sm:h-6 md:mt-6 md:h-8 dark:bg-black/20" />
 
               {/* Caption area */}
-              <div class="mt-16 flex items-center justify-between">
-                <div class="min-h-12">
+              <div class="mt-2 flex flex-col items-start gap-3 sm:mt-0 md:mt-12 md:flex-row md:items-center md:justify-between md:gap-6">
+                <div class="min-h-12 flex-1">
                   {study.data.media.map((item: MediaItem, index: number) => (
                     <p
                       class:list={[
-                        "slide-caption text-strawhat-text-light text-base/relaxed font-light transition-opacity duration-300",
+                        "slide-caption text-strawhat-text-light text-sm/relaxed font-light transition-opacity duration-300 md:text-base/relaxed",
                         index === 0 ? "block" : "hidden",
                       ]}
                       data-caption-index={index}
@@ -241,20 +241,20 @@ const { Content } = await render(study);
                   ))}
                 </div>
 
-                {/* Dot navigation */}
-                <div class="flex items-center gap-3">
+                {/* Dot navigation - bigger on mobile */}
+                <div class="flex items-center gap-3 md:gap-3">
                   {study.data.media.map((item: MediaItem, index: number) => (
                     <button
                       type="button"
                       class:list={[
                         "slide-dot flex items-center justify-center transition-all duration-300",
                         item.type === "video"
-                          ? "size-3.5 rounded"
-                          : "size-2 rounded-full",
+                          ? "size-5 rounded sm:size-4 md:size-3.5"
+                          : "size-3 rounded-full sm:size-2.5 md:size-2",
                         index === 0
                           ? item.type === "video"
                             ? "bg-strawhat-yellow text-white"
-                            : "bg-strawhat-yellow w-6"
+                            : "bg-strawhat-yellow w-8 sm:w-7 md:w-6"
                           : "bg-zinc-300 text-zinc-500 hover:bg-zinc-400 dark:bg-zinc-600 dark:text-zinc-400 dark:hover:bg-zinc-500",
                       ]}
                       data-dot-index={index}
@@ -263,7 +263,7 @@ const { Content } = await render(study);
                     >
                       {item.type === "video" && (
                         <svg
-                          class="size-2"
+                          class="size-3 sm:size-2.5 md:size-2"
                           fill="currentColor"
                           viewBox="0 0 24 24"
                         >
@@ -328,6 +328,42 @@ const { Content } = await render(study);
 </Layout>
 
 <style is:global>
+  /* Responsive MacBook mockup scaling */
+  @media (max-width: 1024px) {
+    .device-macbook {
+      transform: scale(1) !important;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .device-macbook {
+      transform: scale(0.85) !important;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .device-macbook {
+      transform: scale(0.75) !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .device-macbook {
+      transform: scale(0.65) !important;
+    }
+  }
+
+  /* Make navigation arrows visible on mobile for easier navigation */
+  @media (max-width: 768px) {
+    .group\/slideshow button {
+      opacity: 0.7 !important;
+    }
+
+    .group\/slideshow button:hover {
+      opacity: 1 !important;
+    }
+  }
+
   /* Case study content styling - minimal, on-theme */
   .case-study-content h2 {
     color: var(--strawhat-text);

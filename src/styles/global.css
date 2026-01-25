@@ -3,13 +3,22 @@
 /* Smooth scrolling for anchor links */
 html {
   scroll-behavior: smooth;
-  scroll-snap-type: y proximity; /* Snap when near section edges, allows scrolling tall sections */
+}
+
+/* Enable scroll snap only on desktop */
+@media (min-width: 768px) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+
+  section[id] {
+    scroll-snap-align: start;
+  }
 }
 
 /* Offset for fixed navbar when scrolling to sections */
 section[id] {
   scroll-margin-top: 4rem;
-  scroll-snap-align: start; /* Snap to top of section */
 }
 
 /* Configure Tailwind dark mode to use data-theme attribute */
