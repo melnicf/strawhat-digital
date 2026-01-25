@@ -28,7 +28,7 @@ const { Content } = await render(study);
 
   <article class="relative">
     <!-- Hero Section -->
-    <section class="relative py-16 sm:py-24 md:py-32 lg:py-48">
+    <section class="relative py-16 sm:py-24 md:py-32 lg:py-32">
       <!-- Subtle background pattern -->
       <div
         class="pointer-events-none absolute inset-0 overflow-hidden opacity-[0.015]"
@@ -123,16 +123,16 @@ const { Content } = await render(study);
     <!-- Media Gallery: MacBook Slideshow (Flowbite-style CSS mockup) -->
     {
       study.data.media && study.data.media.length > 0 && (
-        <section class="pt-0 pb-16 sm:pt-4 md:pt-8 md:pb-24">
-          <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <section class="pt-8 pb-12 sm:pt-12 md:py-16 lg:py-20">
+          <div class="mx-auto max-w-5xl overflow-visible px-4 sm:px-6 lg:px-8">
             <div class="slideshow relative">
               {/* Devices.css MacBook Mockup */}
-              <div class="group/slideshow relative px-1 sm:px-8 md:px-16 lg:px-20">
+              <div class="group/slideshow relative px-1 sm:px-8 md:px-16 lg:px-4">
                 {/* Left navigation arrow */}
                 <button
                   type="button"
                   id="slide-prev"
-                  class="hover:bg-strawhat-yellow dark:hover:bg-strawhat-yellow absolute top-1/2 -left-1 z-30 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 opacity-0 shadow-md transition-all duration-300 group-hover/slideshow:opacity-100 hover:text-white hover:opacity-100 sm:left-0 sm:size-10 md:size-12 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:text-white"
+                  class="hover:bg-strawhat-yellow dark:hover:bg-strawhat-yellow absolute top-1/2 -left-4 z-30 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 opacity-0 shadow-md transition-all duration-300 group-hover/slideshow:opacity-100 hover:text-white hover:opacity-100 sm:-left-6 sm:size-10 md:-left-8 md:size-12 lg:-left-10 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:text-white"
                   aria-label="Previous slide"
                 >
                   <svg
@@ -150,7 +150,7 @@ const { Content } = await render(study);
                 <button
                   type="button"
                   id="slide-next"
-                  class="hover:bg-strawhat-yellow dark:hover:bg-strawhat-yellow absolute top-1/2 -right-1 z-30 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 opacity-0 shadow-md transition-all duration-300 group-hover/slideshow:opacity-100 hover:text-white hover:opacity-100 sm:right-0 sm:size-10 md:size-12 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:text-white"
+                  class="hover:bg-strawhat-yellow dark:hover:bg-strawhat-yellow absolute top-1/2 -right-4 z-30 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 opacity-0 shadow-md transition-all duration-300 group-hover/slideshow:opacity-100 hover:text-white hover:opacity-100 sm:-right-6 sm:size-10 md:-right-8 md:size-12 lg:-right-10 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:text-white"
                   aria-label="Next slide"
                 >
                   <svg
@@ -166,13 +166,10 @@ const { Content } = await render(study);
 
                 {/* MacBook */}
                 <div
-                  class="flex justify-center md:block"
+                  class="macbook-wrapper flex justify-center md:block"
                   style="transform: perspective(1500px) rotateX(2deg) rotateY(-1deg);"
                 >
-                  <div
-                    class="device device-macbook"
-                    style="transform: scale(0.8); transform-origin: center center;"
-                  >
+                  <div class="device device-macbook">
                     <div class="device-frame">
                       <div class="device-screen relative overflow-hidden">
                         {study.data.media.map(
@@ -226,7 +223,7 @@ const { Content } = await render(study);
               <div class="relative mx-auto hidden h-4 w-[35%] rounded-full bg-black/10 blur-2xl sm:mt-3 sm:block sm:h-6 md:mt-6 md:h-8 dark:bg-black/20" />
 
               {/* Caption area */}
-              <div class="mt-2 flex flex-col items-start gap-3 sm:mt-0 md:mt-12 md:flex-row md:items-center md:justify-between md:gap-6">
+              <div class="mt-6 flex flex-col items-start gap-3 sm:mt-8 md:mt-16 md:flex-row md:items-center md:justify-between md:gap-6 lg:mt-20">
                 <div class="min-h-12 flex-1">
                   {study.data.media.map((item: MediaItem, index: number) => (
                     <p
@@ -298,7 +295,7 @@ const { Content } = await render(study);
     }
 
     <!-- Content -->
-    <section class="pb-32 md:pb-48">
+    <section class="pt-8 pb-32 md:pt-12 md:pb-48">
       <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div class="case-study-content space-y-8">
           <Content />
@@ -329,6 +326,34 @@ const { Content } = await render(study);
 
 <style is:global>
   /* Responsive MacBook mockup scaling */
+  /* Desktop: scale to fill section width */
+  @media (min-width: 1024px) {
+    .macbook-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Scale to fill container width - MacBook base width is ~1280px */
+    /* Scale significantly larger to fill the section width */
+    .device-macbook {
+      transform: scale(1.3) !important;
+      transform-origin: center center;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .device-macbook {
+      transform: scale(1.5) !important;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .device-macbook {
+      transform: scale(1.7) !important;
+    }
+  }
+
   @media (max-width: 1024px) {
     .device-macbook {
       transform: scale(1) !important;
