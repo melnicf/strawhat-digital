@@ -1,0 +1,187 @@
+---
+interface Props {
+  slug: string;
+  title: string;
+  client: string;
+  description: string;
+  image: string;
+  tags: string[];
+}
+
+const { slug, title, client, description, image, tags } = Astro.props;
+---
+
+<a
+  href={`/case-studies/${slug}`}
+  class="case-study-card group relative block"
+  style="perspective: 1000px;"
+>
+  <article
+    class="card-inner relative flex h-full flex-col overflow-hidden rounded-2xl border border-zinc-200/60 bg-white/70 backdrop-blur-sm transition-all duration-300 hover:border-zinc-300/80 hover:bg-white/90 hover:shadow-xl hover:shadow-zinc-200/50 hover:backdrop-blur-xl hover:backdrop-saturate-150 dark:border-zinc-800/60 dark:bg-zinc-900/70 dark:hover:border-zinc-700/80 dark:hover:bg-zinc-900/90 dark:hover:shadow-zinc-900/50"
+    style="transform-style: preserve-3d; will-change: transform;"
+  >
+    <!-- Spotlight dim overlay - confined to card -->
+    <div class="card-dim-overlay"></div>
+    <!-- Image thumbnail -->
+    <div class="relative h-48 overflow-hidden">
+      <img
+        src={image}
+        alt={title}
+        loading="lazy"
+        class="size-full object-cover"
+      />
+      <!-- Subtle overlay on hover -->
+      <div
+        class="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/5"
+      >
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="flex flex-1 flex-col p-6 md:p-8">
+      <!-- Client name -->
+      <span
+        class="text-strawhat-yellow mb-3 text-xs font-medium tracking-widest uppercase"
+      >
+        {client}
+      </span>
+
+      <!-- Title -->
+      <h3 class="text-strawhat-text mb-3 text-xl font-medium tracking-tight">
+        {title}
+      </h3>
+
+      <!-- Description -->
+      <p
+        class="text-strawhat-text-light mb-6 line-clamp-2 flex-1 text-sm/relaxed font-light"
+      >
+        {description}
+      </p>
+
+      <!-- Tags -->
+      <div class="mb-4 flex flex-wrap gap-2">
+        {
+          tags
+            .slice(0, 3)
+            .map((tag) => (
+              <span class="bg-strawhat-bg-dark text-strawhat-text-light rounded-full px-2.5 py-0.5 text-xs">
+                {tag}
+              </span>
+            ))
+        }
+      </div>
+
+      <!-- Bottom accent -->
+      <div class="pt-2">
+        <div
+          class="bg-strawhat-yellow/20 group-hover:bg-strawhat-yellow/40 h-px w-12 transition-all duration-300 group-hover:w-20"
+        >
+        </div>
+      </div>
+    </div>
+  </article>
+</a>
+
+<style>
+  .case-study-card {
+    --card-delay: 0ms;
+    --spot-x: 50%;
+    --spot-y: 50%;
+    position: relative;
+    z-index: 1;
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .case-study-card:nth-child(1) {
+    --card-delay: 0ms;
+  }
+  .case-study-card:nth-child(2) {
+    --card-delay: 100ms;
+  }
+  .case-study-card:nth-child(3) {
+    --card-delay: 200ms;
+  }
+
+  /* When hovered, bring to front */
+  .case-study-card:hover {
+    z-index: 10;
+  }
+
+  .card-inner {
+    transform: rotateX(0deg) rotateY(0deg);
+    transition:
+      transform 0.15s ease-out,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  /* Themed highlight glow that follows cursor */
+  .card-dim-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: radial-gradient(
+      circle 150px at var(--spot-x) var(--spot-y),
+      var(--strawhat-yellow) 0%,
+      transparent 70%
+    );
+  }
+
+  .case-study-card:hover .card-dim-overlay {
+    opacity: 0.08;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .case-study-card {
+      animation: fadeInUp 0.6s ease-out both;
+      animation-delay: var(--card-delay);
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script>
+  // 3D tilt effect for case study cards
+  document.querySelectorAll(".case-study-card").forEach((card) => {
+    const inner = card.querySelector(".card-inner") as HTMLElement;
+    if (!inner) return;
+
+    const maxTilt = 15; // Maximum tilt in degrees
+
+    card.addEventListener("mousemove", (e) => {
+      const event = e as MouseEvent;
+      const rect = card.getBoundingClientRect();
+
+      // Calculate mouse position relative to card center (0 to 1, then -0.5 to 0.5)
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+
+      // Calculate rotation (inverted so card tilts toward cursor)
+      const rotateY = x * maxTilt; // Left/right tilt
+      const rotateX = -y * maxTilt; // Up/down tilt (inverted)
+
+      inner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+
+    card.addEventListener("mouseleave", () => {
+      // Reset to flat
+      inner.style.transform = "rotateX(0deg) rotateY(0deg)";
+    });
+  });
+</script>

@@ -95,12 +95,20 @@ const services = [
       </div>
 
       <!-- Services Grid -->
-      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div class="services-grid grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {
           services.map((service) => (
-            <article class="service-card group relative">
+            <article
+              class="service-card group relative"
+              style="perspective: 1000px;"
+            >
               {/* Card container */}
-              <div class="bg-strawhat-bg-light/50 relative flex h-full flex-col rounded-2xl border border-zinc-200/60 p-8 transition-all duration-300 hover:border-zinc-300/80 hover:shadow-lg hover:shadow-zinc-200/50 dark:border-zinc-800/60 dark:hover:border-zinc-700/80 dark:hover:shadow-zinc-900/50">
+              <div
+                class="service-card-inner relative flex h-full flex-col rounded-2xl border border-zinc-200/60 bg-white/70 p-8 backdrop-blur-sm transition-all duration-300 hover:border-zinc-300/80 hover:bg-white/90 hover:shadow-xl hover:shadow-zinc-200/50 hover:backdrop-blur-xl hover:backdrop-saturate-150 dark:border-zinc-800/60 dark:bg-zinc-900/70 dark:hover:border-zinc-700/80 dark:hover:bg-zinc-900/90 dark:hover:shadow-zinc-900/50"
+                style="transform-style: preserve-3d; will-change: transform;"
+              >
+                {/* Spotlight dim overlay - confined to card */}
+                <div class="service-dim-overlay" />
                 {/* Number & Icon row */}
                 <div class="mb-6 flex items-start justify-between">
                   <span class="text-strawhat-yellow/40 group-hover:text-strawhat-yellow/70 text-5xl font-extralight tracking-tighter transition-colors duration-300">
@@ -236,6 +244,8 @@ const services = [
 <style>
   .service-card {
     --card-delay: 0ms;
+    --spot-x: 50%;
+    --spot-y: 50%;
   }
 
   .service-card:nth-child(1) {
@@ -257,6 +267,34 @@ const services = [
     --card-delay: 250ms;
   }
 
+  .service-card-inner {
+    transform: rotateX(0deg) rotateY(0deg);
+    transition:
+      transform 0.15s ease-out,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  /* Themed highlight glow that follows cursor */
+  .service-dim-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: radial-gradient(
+      circle 150px at var(--spot-x) var(--spot-y),
+      var(--strawhat-yellow) 0%,
+      transparent 70%
+    );
+  }
+
+  .service-card:hover .service-dim-overlay {
+    opacity: 0.08;
+  }
+
   @media (prefers-reduced-motion: no-preference) {
     .service-card {
       animation: fadeInUp 0.6s ease-out both;
@@ -275,3 +313,47 @@ const services = [
     }
   }
 </style>
+
+<script>
+  // Update highlight position on each service card
+  const serviceCards = document.querySelectorAll(".service-card");
+
+  serviceCards.forEach((card) => {
+    card.addEventListener("mousemove", (e) => {
+      const event = e as MouseEvent;
+      const rect = card.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      (card as HTMLElement).style.setProperty("--spot-x", `${x}px`);
+      (card as HTMLElement).style.setProperty("--spot-y", `${y}px`);
+    });
+  });
+
+  // 3D tilt effect for service cards
+  document.querySelectorAll(".service-card").forEach((card) => {
+    const inner = card.querySelector(".service-card-inner") as HTMLElement;
+    if (!inner) return;
+
+    const maxTilt = 15; // Maximum tilt in degrees
+
+    card.addEventListener("mousemove", (e) => {
+      const event = e as MouseEvent;
+      const rect = card.getBoundingClientRect();
+
+      // Calculate mouse position relative to card center (0 to 1, then -0.5 to 0.5)
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+
+      // Calculate rotation (inverted so card tilts toward cursor)
+      const rotateY = x * maxTilt; // Left/right tilt
+      const rotateX = -y * maxTilt; // Up/down tilt (inverted)
+
+      inner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+
+    card.addEventListener("mouseleave", () => {
+      // Reset to flat
+      inner.style.transform = "rotateX(0deg) rotateY(0deg)";
+    });
+  });
+</script>

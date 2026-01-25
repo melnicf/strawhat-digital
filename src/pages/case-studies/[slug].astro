@@ -1,0 +1,238 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+
+type CaseStudy = CollectionEntry<"case-studies">;
+
+export async function getStaticPaths() {
+  const caseStudies = await getCollection("case-studies");
+  return caseStudies.map((study: CaseStudy) => ({
+    params: { slug: study.id },
+    props: { study },
+  }));
+}
+
+interface Props {
+  study: CaseStudy;
+}
+
+const { study } = Astro.props;
+const { Content } = await render(study);
+---
+
+<Layout>
+  <Navbar />
+
+  <article class="relative">
+    <!-- Hero Section -->
+    <section class="relative py-32 md:py-48">
+      <!-- Subtle background pattern -->
+      <div
+        class="pointer-events-none absolute inset-0 overflow-hidden opacity-[0.015]"
+      >
+        <div
+          class="absolute inset-0"
+          style="background-image: radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0); background-size: 48px 48px;"
+        >
+        </div>
+      </div>
+
+      <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div class="space-y-12">
+          <!-- Back link -->
+          <a
+            href="/#case-studies"
+            class="group text-strawhat-text-light hover:text-strawhat-yellow inline-flex items-center gap-2 text-sm transition-colors"
+          >
+            <svg
+              class="size-4 transition-transform duration-300 group-hover:-translate-x-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M19 12H5M12 19l-7-7 7-7"></path>
+            </svg>
+            Back
+          </a>
+
+          <!-- Header -->
+          <div class="space-y-6">
+            <div class="flex items-center gap-4">
+              <div class="bg-strawhat-yellow h-px w-12"></div>
+              <span
+                class="text-strawhat-yellow text-sm font-medium tracking-widest uppercase"
+              >
+                {study.data.client}
+              </span>
+            </div>
+
+            <h1
+              class="text-strawhat-text text-4xl/tight font-light tracking-tight md:text-6xl"
+            >
+              {study.data.title}
+            </h1>
+
+            <p
+              class="text-strawhat-text-light max-w-2xl text-xl/relaxed font-light"
+            >
+              {study.data.description}
+            </p>
+          </div>
+
+          <!-- Meta row -->
+          <div
+            class="border-strawhat-text/10 flex flex-wrap items-center gap-8 border-t pt-8"
+          >
+            {
+              study.data.year && (
+                <div class="space-y-1">
+                  <span class="text-strawhat-text-light block text-xs font-medium tracking-widest uppercase">
+                    Year
+                  </span>
+                  <span class="text-strawhat-text text-sm font-light">
+                    {study.data.year}
+                  </span>
+                </div>
+              )
+            }
+            <div class="space-y-1">
+              <span
+                class="text-strawhat-text-light block text-xs font-medium tracking-widest uppercase"
+              >
+                Technologies
+              </span>
+              <div class="flex flex-wrap gap-2">
+                {
+                  study.data.tags.map((tag: string) => (
+                    <span class="text-strawhat-text text-sm font-light">
+                      {tag}
+                    </span>
+                  ))
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Image -->
+    <section class="pb-16 md:pb-24">
+      <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div
+          class="overflow-hidden rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60"
+        >
+          <img
+            src={study.data.image}
+            alt={study.data.title}
+            class="h-64 w-full object-cover md:h-80"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Content -->
+    <section class="pb-32 md:pb-48">
+      <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <div class="case-study-content space-y-8">
+          <Content />
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="border-strawhat-text/10 border-t py-24 md:py-32">
+      <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div class="space-y-8 text-center">
+          <h2
+            class="text-strawhat-text text-2xl font-light tracking-tight md:text-3xl"
+          >
+            Interested in working together?
+          </h2>
+          <a
+            href="/#get-started"
+            class="border-strawhat-yellow text-strawhat-yellow hover:border-strawhat-amber hover:text-strawhat-amber inline-block border-b-2 pb-2 text-lg font-light tracking-wider transition-all"
+          >
+            Start a project
+          </a>
+        </div>
+      </div>
+    </section>
+  </article>
+</Layout>
+
+<style is:global>
+  /* Case study content styling - minimal, on-theme */
+  .case-study-content h2 {
+    color: var(--strawhat-text);
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: -0.025em;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .case-study-content h2:first-child {
+    margin-top: 0;
+  }
+
+  .case-study-content h3 {
+    color: var(--strawhat-text);
+    font-size: 1.125rem;
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .case-study-content p {
+    color: var(--strawhat-text-light);
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  .case-study-content ul {
+    color: var(--strawhat-text-light);
+    font-weight: 300;
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .case-study-content li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.7;
+  }
+
+  .case-study-content li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 6px;
+    height: 1px;
+    background: var(--strawhat-yellow);
+  }
+
+  .case-study-content strong {
+    color: var(--strawhat-text);
+    font-weight: 500;
+  }
+
+  .case-study-content a {
+    color: var(--strawhat-yellow);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    transition: opacity 0.2s;
+  }
+
+  .case-study-content a:hover {
+    opacity: 0.7;
+  }
+</style>
