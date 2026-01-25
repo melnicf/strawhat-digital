@@ -5,17 +5,6 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Enable scroll snap only on desktop */
-@media (min-width: 768px) {
-  html {
-    scroll-snap-type: y proximity;
-  }
-
-  section[id] {
-    scroll-snap-align: start;
-  }
-}
-
 /* Offset for fixed navbar when scrolling to sections */
 section[id] {
   scroll-margin-top: 4rem;
