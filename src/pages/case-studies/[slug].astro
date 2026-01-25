@@ -2,8 +2,10 @@
 import { getCollection, render, type CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import Navbar from "../../components/Navbar.astro";
+import "devices.css/dist/devices.min.css";
 
 type CaseStudy = CollectionEntry<"case-studies">;
+type MediaItem = NonNullable<CaseStudy["data"]["media"]>[number];
 
 export async function getStaticPaths() {
   const caseStudies = await getCollection("case-studies");
@@ -118,20 +120,182 @@ const { Content } = await render(study);
       </div>
     </section>
 
-    <!-- Image -->
-    <section class="pb-16 md:pb-24">
-      <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <div
-          class="overflow-hidden rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60"
-        >
-          <img
-            src={study.data.image}
-            alt={study.data.title}
-            class="h-64 w-full object-cover md:h-80"
-          />
-        </div>
-      </div>
-    </section>
+    <!-- Media Gallery: MacBook Slideshow (Flowbite-style CSS mockup) -->
+    {
+      study.data.media && study.data.media.length > 0 && (
+        <section class="pb-16 md:pb-24">
+          <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div class="slideshow relative">
+              {/* Devices.css MacBook Mockup */}
+              <div class="group/slideshow relative px-16 md:px-20">
+                {/* Left navigation arrow */}
+                <button
+                  type="button"
+                  id="slide-prev"
+                  class="hover:bg-strawhat-yellow dark:hover:bg-strawhat-yellow absolute top-1/2 left-0 z-30 flex size-12 -translate-y-1/2 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 opacity-0 shadow-md transition-all duration-300 group-hover/slideshow:opacity-100 hover:text-white hover:opacity-100 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:text-white"
+                  aria-label="Previous slide"
+                >
+                  <svg
+                    class="size-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+
+                {/* Right navigation arrow */}
+                <button
+                  type="button"
+                  id="slide-next"
+                  class="hover:bg-strawhat-yellow dark:hover:bg-strawhat-yellow absolute top-1/2 right-0 z-30 flex size-12 -translate-y-1/2 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 opacity-0 shadow-md transition-all duration-300 group-hover/slideshow:opacity-100 hover:text-white hover:opacity-100 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:text-white"
+                  aria-label="Next slide"
+                >
+                  <svg
+                    class="size-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+
+                {/* MacBook */}
+                <div
+                  class="flex justify-center"
+                  style="transform: perspective(1500px) rotateX(2deg) rotateY(-1deg);"
+                >
+                  <div
+                    class="device device-macbook"
+                    style="transform: scale(1.3);"
+                  >
+                    <div class="device-frame">
+                      <div class="device-screen relative overflow-hidden">
+                        {study.data.media.map(
+                          (item: MediaItem, index: number) => (
+                            <div
+                              class:list={[
+                                "slide absolute inset-0 transition-opacity duration-500",
+                                index === 0
+                                  ? "opacity-100"
+                                  : "pointer-events-none opacity-0",
+                              ]}
+                              data-slide-index={index}
+                            >
+                              {item.type === "video" ? (
+                                <video
+                                  controls
+                                  muted
+                                  preload="metadata"
+                                  playsinline
+                                  poster={item.poster}
+                                  class="slideshow-video size-full object-cover"
+                                >
+                                  <source src={item.src} type="video/mp4" />
+                                </video>
+                              ) : (
+                                <img
+                                  src={item.src}
+                                  alt={item.alt}
+                                  class="size-full object-cover"
+                                />
+                              )}
+                            </div>
+                          )
+                        )}
+
+                        {/* Screen shine/glare effect */}
+                        <div class="pointer-events-none absolute inset-0 bg-linear-to-br from-white/10 via-transparent via-40% to-transparent" />
+                        <div class="pointer-events-none absolute inset-0 bg-linear-to-tr from-transparent via-transparent via-60% to-white/5" />
+                      </div>
+                    </div>
+                    <div class="device-stripe" />
+                    <div class="device-header" />
+                    <div class="device-sensors" />
+                    <div class="device-btns" />
+                    <div class="device-power" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Shadow beneath laptop */}
+              <div class="relative mx-auto mt-6 h-8 w-[35%] rounded-full bg-black/10 blur-2xl dark:bg-black/20" />
+
+              {/* Caption area */}
+              <div class="mt-16 flex items-center justify-between">
+                <div class="min-h-12">
+                  {study.data.media.map((item: MediaItem, index: number) => (
+                    <p
+                      class:list={[
+                        "slide-caption text-strawhat-text-light text-base/relaxed font-light transition-opacity duration-300",
+                        index === 0 ? "block" : "hidden",
+                      ]}
+                      data-caption-index={index}
+                    >
+                      {item.caption || item.alt}
+                    </p>
+                  ))}
+                </div>
+
+                {/* Dot navigation */}
+                <div class="flex items-center gap-3">
+                  {study.data.media.map((item: MediaItem, index: number) => (
+                    <button
+                      type="button"
+                      class:list={[
+                        "slide-dot flex items-center justify-center transition-all duration-300",
+                        item.type === "video"
+                          ? "size-3.5 rounded"
+                          : "size-2 rounded-full",
+                        index === 0
+                          ? item.type === "video"
+                            ? "bg-strawhat-yellow text-white"
+                            : "bg-strawhat-yellow w-6"
+                          : "bg-zinc-300 text-zinc-500 hover:bg-zinc-400 dark:bg-zinc-600 dark:text-zinc-400 dark:hover:bg-zinc-500",
+                      ]}
+                      data-dot-index={index}
+                      data-type={item.type}
+                      aria-label={`Go to ${item.type === "video" ? "video" : "image"} ${index + 1}`}
+                    >
+                      {item.type === "video" && (
+                        <svg
+                          class="size-2"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    {/* Fallback: Show hero image if no media gallery */}
+    {
+      (!study.data.media || study.data.media.length === 0) && (
+        <section class="pb-16 md:pb-24">
+          <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div class="overflow-hidden rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60">
+              <img
+                src={study.data.image}
+                alt={study.data.title}
+                class="h-64 w-full object-cover md:h-80"
+              />
+            </div>
+          </div>
+        </section>
+      )
+    }
 
     <!-- Content -->
     <section class="pb-32 md:pb-48">
@@ -171,7 +335,7 @@ const { Content } = await render(study);
     font-weight: 300;
     letter-spacing: -0.025em;
     margin-top: 3rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
   }
 
   .case-study-content h2:first-child {
@@ -183,8 +347,8 @@ const { Content } = await render(study);
     font-size: 1.125rem;
     font-weight: 400;
     letter-spacing: -0.025em;
-    margin-top: 2rem;
-    margin-bottom: 0.75rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
   }
 
   .case-study-content p {
@@ -200,24 +364,36 @@ const { Content } = await render(study);
     font-weight: 300;
     list-style: none;
     padding-left: 0;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem 2rem;
   }
 
   .case-study-content li {
     position: relative;
-    padding-left: 1.5rem;
-    margin-bottom: 0.5rem;
-    line-height: 1.7;
+    padding-left: 1rem;
+    line-height: 1.6;
+    font-size: 0.9375rem;
   }
 
   .case-study-content li::before {
     content: "";
     position: absolute;
     left: 0;
-    top: 0.7em;
-    width: 6px;
-    height: 1px;
+    top: 0.55em;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
     background: var(--strawhat-yellow);
+  }
+
+  /* Responsive: single column on mobile */
+  @media (max-width: 640px) {
+    .case-study-content ul {
+      grid-template-columns: 1fr;
+      gap: 0.625rem;
+    }
   }
 
   .case-study-content strong {
@@ -235,4 +411,230 @@ const { Content } = await render(study);
   .case-study-content a:hover {
     opacity: 0.7;
   }
+
+  /* Minimal video controls - only play button and progress bar */
+  .slideshow-video {
+    background: #000;
+  }
+
+  .slideshow-video::-webkit-media-controls-panel {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, transparent 50%);
+    padding: 0 8px 6px;
+  }
+
+  /* Hide unwanted controls */
+  .slideshow-video::-webkit-media-controls-mute-button,
+  .slideshow-video::-webkit-media-controls-volume-slider,
+  .slideshow-video::-webkit-media-controls-fullscreen-button,
+  .slideshow-video::-webkit-media-controls-current-time-display,
+  .slideshow-video::-webkit-media-controls-time-remaining-display,
+  .slideshow-video::-webkit-media-controls-toggle-closed-captions-button,
+  .slideshow-video::-webkit-media-controls-picture-in-picture-button,
+  .slideshow-video::-webkit-media-controls-overflow-button {
+    display: none !important;
+  }
+
+  /* Style play button */
+  .slideshow-video::-webkit-media-controls-play-button {
+    opacity: 0.9;
+    transform: scale(0.9);
+  }
+
+  /* Style progress bar */
+  .slideshow-video::-webkit-media-controls-timeline {
+    height: 3px;
+    border-radius: 3px;
+    margin: 0 8px;
+  }
 </style>
+
+<script>
+  // Minimal Slideshow with Auto-advance
+  document.addEventListener("DOMContentLoaded", () => {
+    const slideshow = document.querySelector<HTMLElement>(".slideshow");
+    if (!slideshow) return;
+
+    const slides = slideshow.querySelectorAll<HTMLElement>(".slide");
+    const captions = slideshow.querySelectorAll<HTMLElement>(".slide-caption");
+    const dots = slideshow.querySelectorAll<HTMLButtonElement>(".slide-dot");
+    const prevBtn = document.getElementById("slide-prev");
+    const nextBtn = document.getElementById("slide-next");
+
+    if (slides.length === 0) return;
+
+    let currentIndex = 0;
+    const totalSlides = slides.length;
+    const AUTO_ADVANCE_INTERVAL = 5000; // 5 seconds
+    let autoAdvanceTimer: ReturnType<typeof setInterval> | null = null;
+    let isHovering = false;
+    let isVideoPlaying = false;
+
+    function shouldPause() {
+      return isHovering || isVideoPlaying;
+    }
+
+    function showSlide(index: number) {
+      // Pause all videos
+      slides.forEach((slide) => {
+        const video = slide.querySelector("video");
+        if (video) video.pause();
+      });
+
+      // Update slides
+      slides.forEach((slide, i) => {
+        if (i === index) {
+          slide.classList.remove("opacity-0", "pointer-events-none");
+          slide.classList.add("opacity-100");
+        } else {
+          slide.classList.add("opacity-0", "pointer-events-none");
+          slide.classList.remove("opacity-100");
+        }
+      });
+
+      // Update captions
+      captions.forEach((caption, i) => {
+        caption.classList.toggle("hidden", i !== index);
+        caption.classList.toggle("block", i === index);
+      });
+
+      // Update dots
+      dots.forEach((dot, i) => {
+        const isVideo = dot.dataset.type === "video";
+        if (i === index) {
+          dot.classList.add("bg-strawhat-yellow");
+          if (isVideo) {
+            dot.classList.add("text-white");
+          } else {
+            dot.classList.add("w-6");
+          }
+          dot.classList.remove(
+            "bg-zinc-300",
+            "dark:bg-zinc-600",
+            "text-zinc-500",
+            "dark:text-zinc-400"
+          );
+        } else {
+          dot.classList.remove("bg-strawhat-yellow", "text-white");
+          if (!isVideo) {
+            dot.classList.remove("w-6");
+          }
+          dot.classList.add(
+            "bg-zinc-300",
+            "dark:bg-zinc-600",
+            "text-zinc-500",
+            "dark:text-zinc-400"
+          );
+        }
+      });
+
+      currentIndex = index;
+    }
+
+    function nextSlide() {
+      showSlide((currentIndex + 1) % totalSlides);
+    }
+
+    function prevSlide() {
+      showSlide((currentIndex - 1 + totalSlides) % totalSlides);
+    }
+
+    // Auto-advance functions
+    function startAutoAdvance() {
+      if (autoAdvanceTimer) return;
+      autoAdvanceTimer = setInterval(() => {
+        if (!shouldPause()) nextSlide();
+      }, AUTO_ADVANCE_INTERVAL);
+    }
+
+    function stopAutoAdvance() {
+      if (autoAdvanceTimer) {
+        clearInterval(autoAdvanceTimer);
+        autoAdvanceTimer = null;
+      }
+    }
+
+    function resetAutoAdvance() {
+      stopAutoAdvance();
+      startAutoAdvance();
+    }
+
+    // Pause on hover
+    slideshow.addEventListener("mouseenter", () => {
+      isHovering = true;
+    });
+
+    slideshow.addEventListener("mouseleave", () => {
+      isHovering = false;
+    });
+
+    // Pause when video is playing, auto-advance when ended
+    slides.forEach((slide) => {
+      const video = slide.querySelector("video");
+      if (video) {
+        video.addEventListener("play", () => {
+          isVideoPlaying = true;
+        });
+        video.addEventListener("pause", () => {
+          isVideoPlaying = false;
+        });
+        video.addEventListener("ended", () => {
+          isVideoPlaying = false;
+          // Auto-advance to next slide when video ends
+          nextSlide();
+          resetAutoAdvance();
+        });
+      }
+    });
+
+    // Navigation event listeners (reset timer on manual navigation)
+    prevBtn?.addEventListener("click", () => {
+      prevSlide();
+      resetAutoAdvance();
+    });
+
+    nextBtn?.addEventListener("click", () => {
+      nextSlide();
+      resetAutoAdvance();
+    });
+
+    dots.forEach((dot) => {
+      dot.addEventListener("click", () => {
+        const index = parseInt(dot.dataset.dotIndex || "0", 10);
+        showSlide(index);
+        resetAutoAdvance();
+      });
+    });
+
+    // Keyboard navigation
+    document.addEventListener("keydown", (e) => {
+      const rect = slideshow.getBoundingClientRect();
+      const inView = rect.top < window.innerHeight && rect.bottom > 0;
+      if (!inView) return;
+
+      if (e.key === "ArrowRight") {
+        nextSlide();
+        resetAutoAdvance();
+      }
+      if (e.key === "ArrowLeft") {
+        prevSlide();
+        resetAutoAdvance();
+      }
+    });
+
+    // Start auto-advance when slideshow is in viewport
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            startAutoAdvance();
+          } else {
+            stopAutoAdvance();
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(slideshow);
+  });
+</script>

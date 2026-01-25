@@ -13,6 +13,17 @@ const caseStudies = defineCollection({
     featured: z.boolean().default(false),
     order: z.number().default(0),
     year: z.string().optional(),
+    media: z
+      .array(
+        z.object({
+          type: z.enum(["image", "video"]),
+          src: z.string(),
+          poster: z.string().optional(),
+          alt: z.string(),
+          caption: z.string().optional(),
+        })
+      )
+      .optional(),
   }),
 });
 
