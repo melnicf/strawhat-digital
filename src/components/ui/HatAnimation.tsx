@@ -226,10 +226,6 @@ export default function HatAnimation() {
     const hat = hatRef.current;
     if (!hat) return;
 
-    // Normalize scroll behavior across all input types (touchpad, mouse wheel, touch)
-    // This smooths out discrete mouse wheel events to feel like touchpad scrolling
-    ScrollTrigger.normalizeScroll(true);
-
     // Detect mobile
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -551,7 +547,6 @@ export default function HatAnimation() {
       clearTimeout(timeout);
       if (animationRef.current) animationRef.current.kill();
       ScrollTrigger.getAll().forEach((st) => st.kill());
-      ScrollTrigger.normalizeScroll(false);
       window.removeEventListener("resize", checkMobile);
     };
   }, [checkScrollVelocity, isMobile]);

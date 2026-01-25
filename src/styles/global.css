@@ -15,7 +15,8 @@ section[id] {
 
 /* CSS Custom Properties - These change based on data-theme */
 :root {
-  --strawhat-yellow: #e11d48; /* Vibrant Rose/Pinkish-Red to match graph */
+  --strawhat-yellow: #e11d48;
+  /* Vibrant Rose/Pinkish-Red to match graph */
   --strawhat-amber: #be123c;
   --strawhat-red: #9f1239;
   --strawhat-red-light: #fb7185;
@@ -42,15 +43,20 @@ html:not([data-theme]) {
 
 /* Dark Mode - Sophisticated Zinc/Red */
 html[data-theme="dark"] {
-  --strawhat-yellow: #dc2626; /* Clean Red */
+  --strawhat-yellow: #dc2626;
+  /* Clean Red */
   --strawhat-amber: #ef4444;
   --strawhat-red: #991b1b;
   --strawhat-red-light: #f87171;
-  --strawhat-bg: #09090b; /* Modern Zinc 950 */
-  --strawhat-bg-light: #18181b; /* Zinc 900 */
-  --strawhat-bg-dark: #020617; /* Slate 950 depth */
+  --strawhat-bg: #09090b;
+  /* Modern Zinc 950 */
+  --strawhat-bg-light: #18181b;
+  /* Zinc 900 */
+  --strawhat-bg-dark: #020617;
+  /* Slate 950 depth */
   --strawhat-text: #fafafa;
-  --strawhat-text-light: #a1a1aa; /* Zinc 400 */
+  --strawhat-text-light: #a1a1aa;
+  /* Zinc 400 */
 }
 
 /* Tailwind Theme - Reference CSS custom properties */

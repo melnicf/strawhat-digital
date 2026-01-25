@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import HatAnimation from "../components/ui/HatAnimation";
 import HeroBold from "../components/hero/HeroBold";
+import SmoothScroll from "../components/ui/SmoothScroll";
 ---
 
 <!doctype html>
@@ -23,6 +24,7 @@ import HeroBold from "../components/hero/HeroBold";
     </script>
   </head>
   <body>
+    <SmoothScroll client:load />
     <HeroBold client:load />
     <HatAnimation client:load />
     <slot />
