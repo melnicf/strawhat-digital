@@ -2,7 +2,6 @@
 import { getCollection, render, type CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import Navbar from "../../components/Navbar.astro";
-import "devices.css/dist/devices.min.css";
 
 type CaseStudy = CollectionEntry<"case-studies">;
 type MediaItem = NonNullable<CaseStudy["data"]["media"]>[number];
@@ -28,248 +27,237 @@ const { Content } = await render(study);
 
   <article class="relative">
     <!-- Hero Section -->
-    <section class="relative py-16 sm:py-24 md:py-32 lg:py-32">
-      <!-- Subtle background pattern -->
-      <div
-        class="pointer-events-none absolute inset-0 overflow-hidden opacity-[0.015]"
-      >
-        <div
-          class="absolute inset-0"
-          style="background-image: radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0); background-size: 48px 48px;"
-        >
-        </div>
-      </div>
-
+    <section class="relative pt-12 pb-10 sm:pt-16 sm:pb-12 md:pt-20 md:pb-16">
       <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <div class="space-y-12">
-          <!-- Back link -->
-          <a
-            href="/#case-studies"
-            class="group text-strawhat-text-light hover:text-strawhat-yellow inline-flex items-center gap-2 text-sm transition-colors"
+        <!-- Back link -->
+        <a
+          href="/#case-studies"
+          class="group text-strawhat-text-light hover:text-strawhat-yellow mb-6 inline-flex items-center gap-2 text-sm transition-colors sm:mb-8"
+        >
+          <svg
+            class="size-4 transition-transform duration-300 group-hover:-translate-x-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
           >
-            <svg
-              class="size-4 transition-transform duration-300 group-hover:-translate-x-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M19 12H5M12 19l-7-7 7-7"></path>
-            </svg>
-            Back
-          </a>
+            <path d="M19 12H5M12 19l-7-7 7-7"></path>
+          </svg>
+          Back
+        </a>
 
-          <!-- Header -->
-          <div class="space-y-6">
-            <div class="flex items-center gap-4">
-              <div class="bg-strawhat-yellow h-px w-12"></div>
-              <span
-                class="text-strawhat-yellow text-sm font-medium tracking-widest uppercase"
-              >
-                {study.data.client}
-              </span>
-            </div>
-
-            <h1
-              class="text-strawhat-text text-4xl/tight font-light tracking-tight md:text-6xl"
+        <!-- Header -->
+        <div class="space-y-4 sm:space-y-5">
+          <div class="flex items-center gap-3">
+            <div class="bg-strawhat-yellow h-px w-8 sm:w-12"></div>
+            <span
+              class="text-strawhat-yellow text-sm font-medium tracking-widest uppercase"
             >
-              {study.data.title}
-            </h1>
-
-            <p
-              class="text-strawhat-text-light max-w-2xl text-xl/relaxed font-light"
-            >
-              {study.data.description}
-            </p>
+              {study.data.client}
+            </span>
           </div>
 
-          <!-- Meta row -->
-          <div
-            class="border-strawhat-text/10 flex flex-wrap items-center gap-8 border-t pt-8"
+          <h1
+            class="text-strawhat-text text-3xl/tight font-light tracking-tight sm:text-4xl md:text-5xl lg:text-6xl"
           >
-            {
-              study.data.year && (
-                <div class="space-y-1">
-                  <span class="text-strawhat-text-light block text-xs font-medium tracking-widest uppercase">
-                    Year
-                  </span>
-                  <span class="text-strawhat-text text-sm font-light">
-                    {study.data.year}
-                  </span>
-                </div>
-              )
-            }
-            <div class="space-y-1">
-              <span
-                class="text-strawhat-text-light block text-xs font-medium tracking-widest uppercase"
-              >
-                Technologies
-              </span>
-              <div class="flex flex-wrap gap-2">
-                {
-                  study.data.tags.map((tag: string) => (
-                    <span class="text-strawhat-text text-sm font-light">
-                      {tag}
-                    </span>
-                  ))
-                }
+            {study.data.title}
+          </h1>
+
+          <p
+            class="text-strawhat-text-light max-w-2xl text-lg/relaxed font-light sm:text-xl/relaxed"
+          >
+            {study.data.description}
+          </p>
+        </div>
+
+        <!-- Meta row -->
+        <div
+          class="border-strawhat-text/10 mt-6 flex flex-wrap items-center gap-6 border-t pt-4 sm:mt-8 sm:gap-8"
+        >
+          {
+            study.data.year && (
+              <div>
+                <span class="text-strawhat-text-light block text-xs font-medium tracking-widest uppercase">
+                  Year
+                </span>
+                <span class="text-strawhat-text mt-1 block text-sm font-light">
+                  {study.data.year}
+                </span>
               </div>
+            )
+          }
+          <div>
+            <span
+              class="text-strawhat-text-light block text-xs font-medium tracking-widest uppercase"
+            >
+              Technologies
+            </span>
+            <div class="mt-1 flex flex-wrap gap-x-2 gap-y-1">
+              {
+                study.data.tags.map((tag: string, i: number) => (
+                  <span class="text-strawhat-text text-sm font-light">
+                    {tag}
+                    {i < study.data.tags.length - 1 ? "," : ""}
+                  </span>
+                ))
+              }
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Media Gallery: MacBook Slideshow (Flowbite-style CSS mockup) -->
+    <!-- Media Gallery Slideshow -->
     {
       study.data.media && study.data.media.length > 0 && (
-        <section class="pt-8 pb-12 sm:pt-12 md:py-16 lg:py-20">
-          <div class="mx-auto max-w-5xl overflow-visible px-4 sm:px-6 lg:px-8">
-            <div class="slideshow relative">
-              {/* Devices.css MacBook Mockup */}
-              <div class="group/slideshow relative px-1 sm:px-8 md:px-16 lg:px-4">
-                {/* Left navigation arrow */}
-                <button
-                  type="button"
-                  id="slide-prev"
-                  class="hover:bg-strawhat-yellow dark:hover:bg-strawhat-yellow absolute top-1/2 -left-4 z-30 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 opacity-0 shadow-md transition-all duration-300 group-hover/slideshow:opacity-100 hover:text-white hover:opacity-100 sm:-left-6 sm:size-10 md:-left-8 md:size-12 lg:-left-10 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:text-white"
-                  aria-label="Previous slide"
+        <section class="pb-16 sm:pb-20 md:pb-24">
+          <div class="slideshow mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
+            {/* Screen mockup with nav arrows */}
+            <div class="group/slideshow relative flex items-center">
+              {/* Left arrow */}
+              <button
+                type="button"
+                id="slide-prev"
+                class="hover:bg-strawhat-yellow absolute -left-4 z-30 flex size-11 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 shadow-md transition-all duration-200 hover:scale-110 hover:border-transparent hover:text-white hover:shadow-lg sm:-left-6 md:-left-8 md:size-12 md:opacity-0 md:group-hover/slideshow:opacity-100 lg:-left-12 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
+                aria-label="Previous slide"
+              >
+                <svg
+                  class="size-5 md:size-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
                 >
-                  <svg
-                    class="size-3 sm:size-4 md:size-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <path d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
+                  <path d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
 
-                {/* Right navigation arrow */}
-                <button
-                  type="button"
-                  id="slide-next"
-                  class="hover:bg-strawhat-yellow dark:hover:bg-strawhat-yellow absolute top-1/2 -right-4 z-30 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 opacity-0 shadow-md transition-all duration-300 group-hover/slideshow:opacity-100 hover:text-white hover:opacity-100 sm:-right-6 sm:size-10 md:-right-8 md:size-12 lg:-right-10 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:text-white"
-                  aria-label="Next slide"
-                >
-                  <svg
-                    class="size-3 sm:size-4 md:size-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <path d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-
-                {/* MacBook */}
-                <div
-                  class="macbook-wrapper flex justify-center md:block"
-                  style="transform: perspective(1500px) rotateX(2deg) rotateY(-1deg);"
-                >
-                  <div class="device device-macbook">
-                    <div class="device-frame">
-                      <div class="device-screen relative overflow-hidden">
-                        {study.data.media.map(
-                          (item: MediaItem, index: number) => (
-                            <div
-                              class:list={[
-                                "slide absolute inset-0 transition-opacity duration-500",
-                                index === 0
-                                  ? "opacity-100"
-                                  : "pointer-events-none opacity-0",
-                              ]}
-                              data-slide-index={index}
-                            >
-                              {item.type === "video" ? (
-                                <video
-                                  controls
-                                  muted
-                                  preload="metadata"
-                                  playsinline
-                                  poster={item.poster}
-                                  class="slideshow-video size-full object-cover"
-                                >
-                                  <source src={item.src} type="video/mp4" />
-                                </video>
-                              ) : (
-                                <img
-                                  src={item.src}
-                                  alt={item.alt}
-                                  class="size-full object-cover"
-                                />
-                              )}
-                            </div>
-                          )
-                        )}
-
-                        {/* Screen shine/glare effect */}
-                        <div class="pointer-events-none absolute inset-0 bg-linear-to-br from-white/10 via-transparent via-40% to-transparent" />
-                        <div class="pointer-events-none absolute inset-0 bg-linear-to-tr from-transparent via-transparent via-60% to-white/5" />
-                      </div>
+              {/* MacBook frame */}
+              <div class="w-full">
+                {/* Lid / Screen assembly */}
+                <div class="relative rounded-t-2xl bg-linear-to-b from-zinc-700 to-zinc-800 p-[3px] shadow-xl sm:rounded-t-3xl sm:p-1 dark:from-zinc-800 dark:to-zinc-900">
+                  {/* Inner bezel */}
+                  <div class="rounded-t-[13px] bg-zinc-900 p-2 sm:rounded-t-[20px] sm:p-2.5 md:p-3">
+                    {/* Camera notch */}
+                    <div class="mx-auto mb-1.5 flex items-center justify-center gap-1 sm:mb-2">
+                      <div class="size-1.5 rounded-full bg-zinc-800 ring-1 ring-zinc-700 sm:size-2" />
                     </div>
-                    <div class="device-stripe" />
-                    <div class="device-header" />
-                    <div class="device-sensors" />
-                    <div class="device-btns" />
-                    <div class="device-power" />
+                    {/* Screen */}
+                    <div class="relative aspect-video w-full overflow-hidden rounded bg-black sm:rounded-md">
+                      {study.data.media.map(
+                        (item: MediaItem, index: number) => (
+                          <div
+                            class:list={[
+                              "slide absolute inset-0 transition-opacity duration-500",
+                              index === 0
+                                ? "opacity-100"
+                                : "pointer-events-none opacity-0",
+                            ]}
+                            data-slide-index={index}
+                          >
+                            {item.type === "video" ? (
+                              <video
+                                controls
+                                muted
+                                preload="metadata"
+                                playsinline
+                                poster={item.poster}
+                                class="slideshow-video size-full object-contain"
+                              >
+                                <source src={item.src} type="video/mp4" />
+                              </video>
+                            ) : (
+                              <img
+                                src={item.src}
+                                alt={item.alt}
+                                class="size-full object-contain"
+                              />
+                            )}
+                          </div>
+                        )
+                      )}
+                      {/* Screen reflection */}
+                      <div class="pointer-events-none absolute inset-0 bg-linear-to-br from-white/[0.07] via-transparent to-transparent" />
+                    </div>
                   </div>
                 </div>
+
+                {/* Base / Keyboard deck */}
+                <div class="relative">
+                  {/* Hinge */}
+                  <div class="h-1.5 bg-linear-to-b from-zinc-500 to-zinc-400 sm:h-2 dark:from-zinc-700 dark:to-zinc-600" />
+                  {/* Notch indent */}
+                  <div class="absolute top-0 left-1/2 h-1.5 w-14 -translate-x-1/2 rounded-b bg-zinc-400 sm:h-2 sm:w-20 dark:bg-zinc-600" />
+                  {/* Keyboard base */}
+                  <div class="h-3 rounded-b-lg border-x border-b border-zinc-300 bg-linear-to-b from-zinc-200 to-zinc-100 shadow-sm sm:h-4 sm:rounded-b-xl md:h-5 dark:border-zinc-800 dark:from-zinc-700 dark:to-zinc-800" />
+                </div>
+
+                {/* Shadow */}
+                <div class="mx-auto mt-4 h-4 w-4/5 rounded-full bg-black/15 blur-xl sm:mt-5 dark:bg-black/30" />
               </div>
 
-              {/* Shadow beneath laptop - removed on mobile for tighter spacing */}
-              <div class="relative mx-auto hidden h-4 w-[35%] rounded-full bg-black/10 blur-2xl sm:mt-3 sm:block sm:h-6 md:mt-6 md:h-8 dark:bg-black/20" />
+              {/* Right arrow */}
+              <button
+                type="button"
+                id="slide-next"
+                class="hover:bg-strawhat-yellow absolute -right-4 z-30 flex size-11 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 shadow-md transition-all duration-200 hover:scale-110 hover:border-transparent hover:text-white hover:shadow-lg sm:-right-6 md:-right-8 md:size-12 md:opacity-0 md:group-hover/slideshow:opacity-100 lg:-right-12 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
+                aria-label="Next slide"
+              >
+                <svg
+                  class="size-5 md:size-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
 
-              {/* Caption area */}
-              <div class="mt-6 flex flex-col items-start gap-3 sm:mt-8 md:mt-16 md:flex-row md:items-center md:justify-between md:gap-6 lg:mt-20">
-                <div class="min-h-12 flex-1">
-                  {study.data.media.map((item: MediaItem, index: number) => (
-                    <p
-                      class:list={[
-                        "slide-caption text-strawhat-text-light text-sm/relaxed font-light transition-opacity duration-300 md:text-base/relaxed",
-                        index === 0 ? "block" : "hidden",
-                      ]}
-                      data-caption-index={index}
-                    >
-                      {item.caption || item.alt}
-                    </p>
-                  ))}
-                </div>
+            {/* Caption + dots */}
+            <div class="mt-8 flex flex-col gap-4 sm:mt-10 sm:flex-row sm:items-center sm:justify-between">
+              <div class="flex-1">
+                {study.data.media.map((item: MediaItem, index: number) => (
+                  <p
+                    class:list={[
+                      "slide-caption text-strawhat-text-light text-sm/relaxed font-light md:text-base/relaxed",
+                      index === 0 ? "block" : "hidden",
+                    ]}
+                    data-caption-index={index}
+                  >
+                    {item.caption || item.alt}
+                  </p>
+                ))}
+              </div>
 
-                {/* Dot navigation - bigger on mobile */}
-                <div class="flex items-center gap-3 md:gap-3">
-                  {study.data.media.map((item: MediaItem, index: number) => (
-                    <button
-                      type="button"
-                      class:list={[
-                        "slide-dot flex items-center justify-center transition-all duration-300",
-                        item.type === "video"
-                          ? "size-5 rounded sm:size-4 md:size-3.5"
-                          : "size-3 rounded-full sm:size-2.5 md:size-2",
-                        index === 0
-                          ? item.type === "video"
-                            ? "bg-strawhat-yellow text-white"
-                            : "bg-strawhat-yellow w-8 sm:w-7 md:w-6"
-                          : "bg-zinc-300 text-zinc-500 hover:bg-zinc-400 dark:bg-zinc-600 dark:text-zinc-400 dark:hover:bg-zinc-500",
-                      ]}
-                      data-dot-index={index}
-                      data-type={item.type}
-                      aria-label={`Go to ${item.type === "video" ? "video" : "image"} ${index + 1}`}
-                    >
-                      {item.type === "video" && (
-                        <svg
-                          class="size-3 sm:size-2.5 md:size-2"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M8 5v14l11-7z" />
-                        </svg>
-                      )}
-                    </button>
-                  ))}
-                </div>
+              {/* Dots */}
+              <div class="flex shrink-0 items-center gap-2">
+                {study.data.media.map((item: MediaItem, index: number) => (
+                  <button
+                    type="button"
+                    class:list={[
+                      "slide-dot flex items-center justify-center rounded-full transition-all",
+                      item.type === "video" ? "size-4" : "size-2",
+                      index === 0
+                        ? "bg-strawhat-yellow text-white"
+                        : "bg-zinc-300 hover:bg-zinc-400 dark:bg-zinc-600 dark:hover:bg-zinc-500",
+                    ]}
+                    data-dot-index={index}
+                    data-type={item.type}
+                    aria-label={`Go to slide ${index + 1}`}
+                  >
+                    {item.type === "video" && (
+                      <svg
+                        class="size-2"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    )}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
@@ -280,13 +268,13 @@ const { Content } = await render(study);
     {/* Fallback: Show hero image if no media gallery */}
     {
       (!study.data.media || study.data.media.length === 0) && (
-        <section class="pb-16 md:pb-24">
+        <section class="pb-16 sm:pb-20 md:pb-24">
           <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-            <div class="overflow-hidden rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60">
+            <div class="overflow-hidden rounded-xl border border-zinc-200/60 sm:rounded-2xl dark:border-zinc-800/60">
               <img
                 src={study.data.image}
                 alt={study.data.title}
-                class="h-64 w-full object-cover md:h-80"
+                class="aspect-video w-full object-cover"
               />
             </div>
           </div>
@@ -295,26 +283,26 @@ const { Content } = await render(study);
     }
 
     <!-- Content -->
-    <section class="pt-8 pb-32 md:pt-12 md:pb-48">
+    <section class="py-12 sm:py-16 md:py-20">
       <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <div class="case-study-content space-y-8">
+        <div class="case-study-content">
           <Content />
         </div>
       </div>
     </section>
 
     <!-- CTA -->
-    <section class="border-strawhat-text/10 border-t py-24 md:py-32">
+    <section class="border-strawhat-text/10 border-t py-16 sm:py-20 md:py-24">
       <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <div class="space-y-8 text-center">
+        <div class="space-y-6 text-center">
           <h2
-            class="text-strawhat-text text-2xl font-light tracking-tight md:text-3xl"
+            class="text-strawhat-text text-xl font-light tracking-tight sm:text-2xl md:text-3xl"
           >
             Interested in working together?
           </h2>
           <a
             href="/#get-started"
-            class="border-strawhat-yellow text-strawhat-yellow hover:border-strawhat-amber hover:text-strawhat-amber inline-block border-b-2 pb-2 text-lg font-light tracking-wider transition-all"
+            class="border-strawhat-yellow text-strawhat-yellow hover:border-strawhat-amber hover:text-strawhat-amber inline-block border-b-2 pb-1 text-base font-light tracking-wider transition-all sm:text-lg"
           >
             Start a project
           </a>
@@ -325,70 +313,6 @@ const { Content } = await render(study);
 </Layout>
 
 <style is:global>
-  /* Responsive MacBook mockup scaling */
-  /* Desktop: scale to fill section width */
-  @media (min-width: 1024px) {
-    .macbook-wrapper {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-    }
-
-    /* Scale to fill container width - MacBook base width is ~1280px */
-    /* Scale significantly larger to fill the section width */
-    .device-macbook {
-      transform: scale(1.3) !important;
-      transform-origin: center center;
-    }
-  }
-
-  @media (min-width: 1280px) {
-    .device-macbook {
-      transform: scale(1.5) !important;
-    }
-  }
-
-  @media (min-width: 1536px) {
-    .device-macbook {
-      transform: scale(1.7) !important;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    .device-macbook {
-      transform: scale(1) !important;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .device-macbook {
-      transform: scale(0.85) !important;
-    }
-  }
-
-  @media (max-width: 640px) {
-    .device-macbook {
-      transform: scale(0.75) !important;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .device-macbook {
-      transform: scale(0.65) !important;
-    }
-  }
-
-  /* Make navigation arrows visible on mobile for easier navigation */
-  @media (max-width: 768px) {
-    .group\/slideshow button {
-      opacity: 0.7 !important;
-    }
-
-    .group\/slideshow button:hover {
-      opacity: 1 !important;
-    }
-  }
-
   /* Case study content styling - minimal, on-theme */
   .case-study-content h2 {
     color: var(--strawhat-text);
