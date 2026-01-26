@@ -18,6 +18,7 @@ const caseStudies = defineCollection({
         z.object({
           type: z.enum(["image", "video"]),
           src: z.string(),
+          srcMobile: z.string().optional(),
           poster: z.string().optional(),
           alt: z.string(),
           caption: z.string().optional(),

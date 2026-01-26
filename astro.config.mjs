@@ -7,7 +7,24 @@ import react from '@astrojs/react';
 // https://astro.build/config
 export default defineConfig({
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: (id) => {
+            // Split Three.js and related libraries into separate chunks
+            if (id.includes('three') || id.includes('@react-three')) {
+              return 'three';
+            }
+            // Split other large dependencies
+            if (id.includes('node_modules')) {
+              return 'vendor';
+            }
+          },
+        },
+      },
+      chunkSizeWarningLimit: 1000, // Increase limit to 1MB to reduce warnings
+    },
   },
 
   integrations: [react()]

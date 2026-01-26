@@ -97,19 +97,79 @@ const caseStudies = (await getCollection("case-studies"))
 </section>
 
 <script>
-  // Update highlight position on each card - desktop only
-  if (window.innerWidth >= 768) {
+  // Desktop only - interactive effects (optimized with RAF and throttling)
+  function initCaseStudyEffects() {
+    if (window.innerWidth < 768) return;
+
     const caseStudyCards = document.querySelectorAll(".case-study-card");
+    const maxTilt = 15;
 
     caseStudyCards.forEach((card) => {
-      card.addEventListener("mousemove", (e) => {
+      // Check if already initialized
+      if ((card as any).__effectsInitialized) return;
+      (card as any).__effectsInitialized = true;
+
+      const inner = card.querySelector(".card-inner") as HTMLElement;
+      if (!inner) return;
+
+      // Cache rect to avoid recalculating on every mousemove
+      let rect = card.getBoundingClientRect();
+      let rafId: number | null = null;
+      let pendingUpdate = false;
+
+      // Throttle updates using requestAnimationFrame for smooth 60fps
+      const updateCard = (e: Event) => {
         const event = e as MouseEvent;
-        const rect = card.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-        (card as HTMLElement).style.setProperty("--spot-x", `${x}px`);
-        (card as HTMLElement).style.setProperty("--spot-y", `${y}px`);
+        if (!pendingUpdate) {
+          pendingUpdate = true;
+          rafId = requestAnimationFrame(() => {
+            rect = card.getBoundingClientRect();
+
+            // Update highlight position
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            (card as HTMLElement).style.setProperty("--spot-x", `${x}px`);
+            (card as HTMLElement).style.setProperty("--spot-y", `${y}px`);
+
+            // Calculate mouse position relative to card center
+            const xRel = (event.clientX - rect.left) / rect.width - 0.5;
+            const yRel = (event.clientY - rect.top) / rect.height - 0.5;
+
+            // Calculate rotation
+            const rotateY = xRel * maxTilt;
+            const rotateX = -yRel * maxTilt;
+
+            inner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            pendingUpdate = false;
+          });
+        }
+      };
+
+      // Use passive listener for better scroll performance
+      card.addEventListener("mousemove", updateCard, { passive: true });
+
+      card.addEventListener("mouseleave", () => {
+        // Cancel pending animation frame
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+          pendingUpdate = false;
+        }
+        // Reset to flat
+        inner.style.transform = "rotateX(0deg) rotateY(0deg)";
       });
+
+      // Recalculate rect on resize
+      const handleResize = () => {
+        rect = card.getBoundingClientRect();
+      };
+      window.addEventListener("resize", handleResize, { passive: true });
     });
+  }
+
+  // Wait for DOM to be ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initCaseStudyEffects);
+  } else {
+    initCaseStudyEffects();
   }
 </script>
