@@ -1,6 +1,7 @@
 import { useEffect, useRef, useCallback, memo, useMemo, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import hatLogo from "../../assets/hat_logo.png";
 
 // Register GSAP plugin once at module level
 gsap.registerPlugin(ScrollTrigger);
@@ -671,7 +672,7 @@ export default function HatAnimation() {
 
       <img
         ref={hatRef}
-        src="/hat_logo.png"
+        src={hatLogo.src}
         alt=""
         className="pointer-events-none fixed top-0 left-0 z-50 object-contain"
         style={hatStyle}

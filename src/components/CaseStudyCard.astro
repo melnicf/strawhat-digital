@@ -1,4 +1,7 @@
 ---
+import { Image } from "astro:assets";
+import { resolveImage } from "../utils/imageMap";
+
 interface Props {
   slug: string;
   title: string;
@@ -9,6 +12,7 @@ interface Props {
 }
 
 const { slug, title, client, description, image, tags } = Astro.props;
+const resolvedImage = resolveImage(image);
 ---
 
 <a
@@ -24,11 +28,13 @@ const { slug, title, client, description, image, tags } = Astro.props;
     <div class="card-dim-overlay"></div>
     <!-- Image thumbnail -->
     <div class="relative h-48 overflow-hidden">
-      <img
-        src={image}
+      <Image
+        src={resolvedImage}
         alt={title}
         loading="lazy"
         class="size-full object-cover"
+        width={800}
+        height={450}
       />
       <!-- Subtle overlay on hover -->
       <div

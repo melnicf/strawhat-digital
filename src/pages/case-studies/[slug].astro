@@ -1,8 +1,10 @@
 ---
 import { getCollection, render, type CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
 import Layout from "../../layouts/Layout.astro";
 import Navbar from "../../components/Navbar.astro";
 import CaseStudySlideshow from "../../components/ui/CaseStudySlideshow";
+import { resolveImage } from "../../utils/imageMap";
 
 type CaseStudy = CollectionEntry<"case-studies">;
 
@@ -20,6 +22,40 @@ interface Props {
 
 const { study } = Astro.props;
 const { Content } = await render(study);
+
+// Resolve media images for optimization
+const resolvedMedia = study.data.media?.map((item) => {
+  const resolved = { ...item };
+  if (item.type === "image") {
+    const resolvedSrc = resolveImage(item.src);
+    resolved.src =
+      typeof resolvedSrc === "string" ? resolvedSrc : resolvedSrc.src;
+    if (item.srcMobile) {
+      const resolvedMobile = resolveImage(item.srcMobile);
+      resolved.srcMobile =
+        typeof resolvedMobile === "string"
+          ? resolvedMobile
+          : resolvedMobile.src;
+    }
+    if (item.poster) {
+      const resolvedPoster = resolveImage(item.poster);
+      resolved.poster =
+        typeof resolvedPoster === "string"
+          ? resolvedPoster
+          : resolvedPoster.src;
+    }
+  } else if (item.type === "video") {
+    // Videos stay as paths (they're in public/), but resolve poster images
+    if (item.poster) {
+      const resolvedPoster = resolveImage(item.poster);
+      resolved.poster =
+        typeof resolvedPoster === "string"
+          ? resolvedPoster
+          : resolvedPoster.src;
+    }
+  }
+  return resolved;
+});
 ---
 
 <Layout>
@@ -109,9 +145,9 @@ const { Content } = await render(study);
 
     <!-- Media Gallery Slideshow -->
     {
-      study.data.media && study.data.media.length > 0 && (
+      resolvedMedia && resolvedMedia.length > 0 && (
         <section class="pb-16 sm:pb-20 md:pb-24">
-          <CaseStudySlideshow media={study.data.media} client:load />
+          <CaseStudySlideshow media={resolvedMedia} client:load />
         </section>
       )
     }
@@ -122,10 +158,12 @@ const { Content } = await render(study);
         <section class="pb-16 sm:pb-20 md:pb-24">
           <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
             <div class="overflow-hidden rounded-xl border border-zinc-200/60 sm:rounded-2xl dark:border-zinc-800/60">
-              <img
-                src={study.data.image}
+              <Image
+                src={resolveImage(study.data.image)}
                 alt={study.data.title}
                 class="aspect-video w-full object-cover"
+                width={1600}
+                height={900}
               />
             </div>
           </div>
