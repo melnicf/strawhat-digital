@@ -27,7 +27,7 @@ const { Content } = await render(study);
 
   <article class="relative">
     <!-- Hero Section -->
-    <section class="relative pt-12 pb-10 sm:pt-16 sm:pb-12 md:pt-20 md:pb-16">
+    <section class="relative pt-20 pb-10 sm:pt-16 sm:pb-12 md:pt-20 md:pb-16">
       <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <!-- Back link -->
         <a
@@ -112,17 +112,99 @@ const { Content } = await render(study);
       study.data.media && study.data.media.length > 0 && (
         <section class="pb-16 sm:pb-20 md:pb-24">
           <div class="slideshow mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
-            {/* Screen mockup with nav arrows */}
-            <div class="group/slideshow relative flex items-center">
+            {/* Mobile: Simple full-width media without frame */}
+            <div class="group/slideshow relative flex items-center md:hidden">
+              {/* Left arrow */}
+              <button
+                type="button"
+                id="slide-prev-mobile"
+                class="hidden"
+                aria-label="Previous slide"
+              >
+                <svg
+                  class="size-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+
+              {/* Full-width media container */}
+              <div class="relative w-full overflow-hidden rounded-lg">
+                <div
+                  class="relative aspect-video w-full bg-black"
+                  data-mobile-swipe-container
+                >
+                  {study.data.media.map((item: MediaItem, index: number) => (
+                    <div
+                      class:list={[
+                        "slide absolute inset-0 transition-opacity duration-500",
+                        index === 0
+                          ? "opacity-100"
+                          : "pointer-events-none opacity-0",
+                      ]}
+                      data-slide-index={index}
+                      style={index === 0 ? undefined : "will-change: opacity;"}
+                    >
+                      {item.type === "video" ? (
+                        <video
+                          controls
+                          muted
+                          preload="metadata"
+                          playsinline
+                          poster={item.poster}
+                          class="slideshow-video size-full object-contain"
+                        >
+                          <source src={item.src} type="video/mp4" />
+                        </video>
+                      ) : (
+                        <img
+                          src={item.src}
+                          alt={item.alt}
+                          loading={index === 0 ? "eager" : "lazy"}
+                          fetchpriority={index === 0 ? "high" : "auto"}
+                          decoding="async"
+                          class="size-full object-contain"
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right arrow */}
+              <button
+                type="button"
+                id="slide-next-mobile"
+                class="hidden"
+                aria-label="Next slide"
+              >
+                <svg
+                  class="size-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Desktop: Screen mockup with nav arrows */}
+            <div class="group/slideshow relative hidden items-center md:flex">
               {/* Left arrow */}
               <button
                 type="button"
                 id="slide-prev"
-                class="hover:bg-strawhat-yellow absolute -left-4 z-30 flex size-11 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 shadow-md transition-all duration-200 hover:scale-110 hover:border-transparent hover:text-white hover:shadow-lg sm:-left-6 md:-left-8 md:size-12 md:opacity-0 md:group-hover/slideshow:opacity-100 lg:-left-12 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
+                class="hover:bg-strawhat-yellow absolute -left-6 z-30 flex size-12 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 opacity-0 shadow-md transition-all duration-200 group-hover/slideshow:opacity-100 hover:scale-110 hover:border-transparent hover:text-white hover:shadow-lg lg:-left-12 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
                 aria-label="Previous slide"
               >
                 <svg
-                  class="size-5 md:size-6"
+                  class="size-6"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -154,6 +236,9 @@ const { Content } = await render(study);
                                 : "pointer-events-none opacity-0",
                             ]}
                             data-slide-index={index}
+                            style={
+                              index === 0 ? undefined : "will-change: opacity;"
+                            }
                           >
                             {item.type === "video" ? (
                               <video
@@ -200,11 +285,11 @@ const { Content } = await render(study);
               <button
                 type="button"
                 id="slide-next"
-                class="hover:bg-strawhat-yellow absolute -right-4 z-30 flex size-11 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 shadow-md transition-all duration-200 hover:scale-110 hover:border-transparent hover:text-white hover:shadow-lg sm:-right-6 md:-right-8 md:size-12 md:opacity-0 md:group-hover/slideshow:opacity-100 lg:-right-12 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
+                class="hover:bg-strawhat-yellow absolute -right-6 z-30 flex size-12 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 opacity-0 shadow-md transition-all duration-200 group-hover/slideshow:opacity-100 hover:scale-110 hover:border-transparent hover:text-white hover:shadow-lg lg:-right-12 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
                 aria-label="Next slide"
               >
                 <svg
-                  class="size-5 md:size-6"
+                  class="size-6"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -217,7 +302,7 @@ const { Content } = await render(study);
 
             {/* Caption + dots */}
             <div class="mt-8 flex flex-col gap-4 sm:mt-10 sm:flex-row sm:items-center sm:justify-between">
-              <div class="flex-1">
+              <div class="min-h-12 flex-1 sm:min-h-14">
                 {study.data.media.map((item: MediaItem, index: number) => (
                   <p
                     class:list={[
@@ -232,15 +317,17 @@ const { Content } = await render(study);
               </div>
 
               {/* Dots */}
-              <div class="flex shrink-0 items-center gap-2">
+              <div class="flex shrink-0 items-center gap-2 sm:gap-3">
                 {study.data.media.map((item: MediaItem, index: number) => (
                   <button
                     type="button"
                     class:list={[
                       "slide-dot flex items-center justify-center rounded-full transition-all",
-                      item.type === "video" ? "size-4" : "size-2",
+                      item.type === "video"
+                        ? "size-6 sm:size-4"
+                        : "size-4 sm:size-2",
                       index === 0
-                        ? "bg-strawhat-yellow text-white"
+                        ? "active bg-strawhat-yellow text-white"
                         : "bg-zinc-300 hover:bg-zinc-400 dark:bg-zinc-600 dark:hover:bg-zinc-500",
                     ]}
                     data-dot-index={index}
@@ -249,7 +336,7 @@ const { Content } = await render(study);
                   >
                     {item.type === "video" && (
                       <svg
-                        class="size-2"
+                        class="size-3 sm:size-2"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                       >
@@ -402,6 +489,11 @@ const { Content } = await render(study);
     background: #000;
   }
 
+  /* Optimize slide transitions */
+  .slide {
+    contain: layout style paint;
+  }
+
   .slideshow-video::-webkit-media-controls-panel {
     background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, transparent 50%);
     padding: 0 8px 6px;
@@ -431,6 +523,19 @@ const { Content } = await render(study);
     border-radius: 3px;
     margin: 0 8px;
   }
+
+  /* Active dot sizing - larger on mobile for better touch targets */
+  .slide-dot[data-type="image"].active {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .slide-dot[data-type="image"].active {
+      width: 1.5rem;
+      height: 0.5rem;
+    }
+  }
 </style>
 
 <script>
@@ -439,16 +544,29 @@ const { Content } = await render(study);
     const slideshow = document.querySelector<HTMLElement>(".slideshow");
     if (!slideshow) return;
 
-    const slides = slideshow.querySelectorAll<HTMLElement>(".slide");
+    // Get all slides - we have duplicates in mobile and desktop containers
+    // Use data-slide-index to get unique slides by grouping them
+    const allSlides = slideshow.querySelectorAll<HTMLElement>(".slide");
     const captions = slideshow.querySelectorAll<HTMLElement>(".slide-caption");
     const dots = slideshow.querySelectorAll<HTMLButtonElement>(".slide-dot");
     const prevBtn = document.getElementById("slide-prev");
     const nextBtn = document.getElementById("slide-next");
+    const prevBtnMobile = document.getElementById("slide-prev-mobile");
+    const nextBtnMobile = document.getElementById("slide-next-mobile");
 
-    if (slides.length === 0) return;
+    if (allSlides.length === 0) return;
 
+    // Group slides by their data-slide-index to get unique slides
+    // Since we have mobile and desktop versions, we need to work with both
+    // but calculate the actual number of unique slides
+    const uniqueSlideIndices = new Set<number>();
+    allSlides.forEach((slide) => {
+      const index = parseInt(slide.getAttribute("data-slide-index") || "0", 10);
+      uniqueSlideIndices.add(index);
+    });
+
+    const totalSlides = uniqueSlideIndices.size;
     let currentIndex = 0;
-    const totalSlides = slides.length;
     const AUTO_ADVANCE_INTERVAL = 5000; // 5 seconds
     let autoAdvanceTimer: ReturnType<typeof setInterval> | null = null;
     let isHovering = false;
@@ -459,60 +577,68 @@ const { Content } = await render(study);
     }
 
     function showSlide(index: number) {
-      // Pause all videos
-      slides.forEach((slide) => {
-        const video = slide.querySelector("video");
-        if (video) video.pause();
-      });
+      // Use requestAnimationFrame for smooth transitions
+      requestAnimationFrame(() => {
+        // Pause all videos
+        allSlides.forEach((slide) => {
+          const video = slide.querySelector("video");
+          if (video) video.pause();
+        });
 
-      // Update slides
-      slides.forEach((slide, i) => {
-        if (i === index) {
-          slide.classList.remove("opacity-0", "pointer-events-none");
-          slide.classList.add("opacity-100");
-        } else {
-          slide.classList.add("opacity-0", "pointer-events-none");
-          slide.classList.remove("opacity-100");
-        }
-      });
-
-      // Update captions
-      captions.forEach((caption, i) => {
-        caption.classList.toggle("hidden", i !== index);
-        caption.classList.toggle("block", i === index);
-      });
-
-      // Update dots
-      dots.forEach((dot, i) => {
-        const isVideo = dot.dataset.type === "video";
-        if (i === index) {
-          dot.classList.add("bg-strawhat-yellow");
-          if (isVideo) {
-            dot.classList.add("text-white");
+        // Update slides - find all slides with matching data-slide-index
+        allSlides.forEach((slide) => {
+          const slideIndex = parseInt(
+            slide.getAttribute("data-slide-index") || "0",
+            10
+          );
+          if (slideIndex === index) {
+            slide.classList.remove("opacity-0", "pointer-events-none");
+            slide.classList.add("opacity-100");
+            // Remove will-change after transition starts
+            slide.style.willChange = "";
           } else {
-            dot.classList.add("w-6");
+            slide.classList.add("opacity-0", "pointer-events-none");
+            slide.classList.remove("opacity-100");
+            // Add will-change for upcoming slides
+            if (Math.abs(slideIndex - index) === 1) {
+              slide.style.willChange = "opacity";
+            }
           }
-          dot.classList.remove(
-            "bg-zinc-300",
-            "dark:bg-zinc-600",
-            "text-zinc-500",
-            "dark:text-zinc-400"
-          );
-        } else {
-          dot.classList.remove("bg-strawhat-yellow", "text-white");
-          if (!isVideo) {
-            dot.classList.remove("w-6");
-          }
-          dot.classList.add(
-            "bg-zinc-300",
-            "dark:bg-zinc-600",
-            "text-zinc-500",
-            "dark:text-zinc-400"
-          );
-        }
-      });
+        });
 
-      currentIndex = index;
+        // Update captions
+        captions.forEach((caption, i) => {
+          caption.classList.toggle("hidden", i !== index);
+          caption.classList.toggle("block", i === index);
+        });
+
+        // Update dots
+        dots.forEach((dot, i) => {
+          const isVideo = dot.dataset.type === "video";
+          if (i === index) {
+            dot.classList.add("bg-strawhat-yellow", "active");
+            if (isVideo) {
+              dot.classList.add("text-white");
+            }
+            dot.classList.remove(
+              "bg-zinc-300",
+              "dark:bg-zinc-600",
+              "text-zinc-500",
+              "dark:text-zinc-400"
+            );
+          } else {
+            dot.classList.remove("bg-strawhat-yellow", "text-white", "active");
+            dot.classList.add(
+              "bg-zinc-300",
+              "dark:bg-zinc-600",
+              "text-zinc-500",
+              "dark:text-zinc-400"
+            );
+          }
+        });
+
+        currentIndex = index;
+      });
     }
 
     function nextSlide() {
@@ -553,7 +679,7 @@ const { Content } = await render(study);
     });
 
     // Pause when video is playing, auto-advance when ended
-    slides.forEach((slide) => {
+    allSlides.forEach((slide) => {
       const video = slide.querySelector("video");
       if (video) {
         video.addEventListener("play", () => {
@@ -572,12 +698,23 @@ const { Content } = await render(study);
     });
 
     // Navigation event listeners (reset timer on manual navigation)
+    // showSlide already uses requestAnimationFrame internally
     prevBtn?.addEventListener("click", () => {
       prevSlide();
       resetAutoAdvance();
     });
 
     nextBtn?.addEventListener("click", () => {
+      nextSlide();
+      resetAutoAdvance();
+    });
+
+    prevBtnMobile?.addEventListener("click", () => {
+      prevSlide();
+      resetAutoAdvance();
+    });
+
+    nextBtnMobile?.addEventListener("click", () => {
       nextSlide();
       resetAutoAdvance();
     });
@@ -605,6 +742,97 @@ const { Content } = await render(study);
         resetAutoAdvance();
       }
     });
+
+    // Touch/swipe navigation for mobile
+    // Find the media container where users will swipe
+    const mobileSwipeContainer = slideshow.querySelector<HTMLElement>(
+      "[data-mobile-swipe-container]"
+    );
+
+    if (mobileSwipeContainer) {
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchEndX = 0;
+      let touchEndY = 0;
+      const minSwipeDistance = 50; // Minimum distance in pixels to trigger a swipe
+      let touchMoveHandled = false;
+
+      mobileSwipeContainer.addEventListener(
+        "touchstart",
+        (e) => {
+          touchStartX = e.touches[0].clientX;
+          touchStartY = e.touches[0].clientY;
+          touchMoveHandled = false;
+        },
+        { passive: true }
+      );
+
+      mobileSwipeContainer.addEventListener(
+        "touchmove",
+        (e) => {
+          if (!touchStartX || !touchStartY) return;
+
+          // Prevent scrolling while swiping horizontally
+          const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
+          const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
+
+          // If horizontal movement is greater than vertical, we're swiping
+          if (deltaX > deltaY && deltaX > 10) {
+            if (!touchMoveHandled) {
+              e.preventDefault();
+              touchMoveHandled = true;
+            }
+          }
+        },
+        { passive: false }
+      );
+
+      mobileSwipeContainer.addEventListener(
+        "touchend",
+        (e) => {
+          if (!touchStartX || !touchStartY) return;
+
+          touchEndX = e.changedTouches[0].clientX;
+          touchEndY = e.changedTouches[0].clientY;
+
+          const deltaX = touchEndX - touchStartX;
+          const deltaY = touchEndY - touchStartY;
+          const absDeltaX = Math.abs(deltaX);
+          const absDeltaY = Math.abs(deltaY);
+
+          // Only trigger swipe if horizontal movement is greater than vertical (horizontal swipe)
+          // and the distance is greater than the minimum threshold
+          if (absDeltaX > absDeltaY && absDeltaX > minSwipeDistance) {
+            if (deltaX > 0) {
+              // Swipe right - go to previous slide
+              prevSlide();
+              resetAutoAdvance();
+            } else {
+              // Swipe left - go to next slide
+              nextSlide();
+              resetAutoAdvance();
+            }
+          }
+
+          // Reset touch state
+          touchStartX = 0;
+          touchStartY = 0;
+          touchMoveHandled = false;
+        },
+        { passive: true }
+      );
+
+      mobileSwipeContainer.addEventListener(
+        "touchcancel",
+        () => {
+          // Reset touch state on cancel
+          touchStartX = 0;
+          touchStartY = 0;
+          touchMoveHandled = false;
+        },
+        { passive: true }
+      );
+    }
 
     // Start auto-advance when slideshow is in viewport
     const observer = new IntersectionObserver(

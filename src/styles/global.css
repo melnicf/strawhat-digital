@@ -3,6 +3,20 @@
 /* Smooth scrolling for anchor links */
 html {
   scroll-behavior: smooth;
+  /* Transparent to allow 3D background to show through */
+  background-color: transparent;
+  min-height: 100dvh;
+  /* Use dynamic viewport height for mobile browsers */
+  min-height: 100vh;
+  /* Fallback for browsers that don't support dvh */
+}
+
+body {
+  background-color: var(--strawhat-bg);
+  min-height: 100dvh;
+  min-height: 100vh;
+  /* Fallback */
+  /* Ensure background extends beyond viewport to prevent white space during browser UI transitions */
 }
 
 /* Offset for fixed navbar when scrolling to sections */
