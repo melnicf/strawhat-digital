@@ -113,7 +113,7 @@ function NavbarLogoComponent() {
 
     const isMobile = isMobileRef.current;
     const hatWidth = isMobile ? 26 : 28;
-    const gapWidth = isMobile ? 36 : 44;
+    const gapWidth = isMobile ? 28 : 32;
 
     // Kill previous timeline to prevent conflicts
     if (timelineRef.current) {
@@ -162,17 +162,14 @@ function NavbarLogoComponent() {
 
   const gapStyle = useMemo(
     () => ({
-      width: initialIsMobile ? 36 : 44,
+      width: initialIsMobile ? 28 : 32,
       willChange: "width" as const,
     }),
     [initialIsMobile]
   );
 
   return (
-    <div
-      className="flex h-full items-center"
-      style={{ contain: "layout style paint" }}
-    >
+    <div className="flex h-full min-w-0 items-center">
       {/* Placeholder for hat - takes up space but hat is rendered by HatAnimation */}
       <div
         ref={logoPlaceholderRef}
@@ -187,13 +184,13 @@ function NavbarLogoComponent() {
       {/* Company name text */}
       <div
         ref={textContainerRef}
-        className="flex shrink-0 flex-col items-start gap-0 md:flex-row md:items-baseline md:gap-2"
-        style={{ willChange: "transform", contain: "layout style" }}
+        className="flex shrink-0 flex-col items-start gap-0 whitespace-nowrap md:flex-row md:items-baseline md:gap-2"
+        style={{ willChange: "transform", minWidth: "fit-content" }}
       >
-        <span className="text-strawhat-text text-base leading-tight font-bold tracking-tight md:text-xl">
+        <span className="text-strawhat-text shrink-0 text-base leading-tight font-bold tracking-tight whitespace-nowrap md:text-xl">
           STRAW HAT
         </span>
-        <span className="text-strawhat-yellow text-xs leading-tight font-light tracking-[0.2em] md:text-sm">
+        <span className="text-strawhat-yellow shrink-0 text-xs leading-tight font-light tracking-[0.2em] whitespace-nowrap md:text-sm">
           DIGITAL
         </span>
       </div>

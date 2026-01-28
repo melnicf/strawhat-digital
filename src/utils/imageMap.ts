@@ -38,6 +38,19 @@ import yonduurIphoneAccountListings from "../assets/yonduur/iphone/account-listi
 import yonduurIphoneAccountFavorites from "../assets/yonduur/iphone/account-favorites-iphone.png";
 import yonduurIphoneAccountSavedSearches from "../assets/yonduur/iphone/account-saved-searches-iphone.png";
 
+// INVNT desktop images
+import invntDesktopHome from "../assets/invnt/desktop/home.png";
+import invntDesktopLogin from "../assets/invnt/desktop/login.png";
+import invntDesktopAnalytics from "../assets/invnt/desktop/analytics.png";
+import invntDesktopCalendar from "../assets/invnt/desktop/calendar.png";
+import invntDesktopSpace from "../assets/invnt/desktop/space.png";
+
+// INVNT iPhone images
+import invntIphoneHome from "../assets/invnt/iphone/home-phone.png";
+import invntIphoneLogin from "../assets/invnt/iphone/login-phone.png";
+import invntIphoneAnalytics from "../assets/invnt/iphone/analytics-phone.png";
+import invntIphoneSpace from "../assets/invnt/iphone/space-phone.png";
+
 // Other images
 import hatLogo from "../assets/hat_logo.png";
 
@@ -82,6 +95,17 @@ const imageMap: Record<string, any> = {
   "/yonduur/iphone/account-favorites-iphone.png": yonduurIphoneAccountFavorites,
   "/yonduur/iphone/account-saved-searches-iphone.png":
     yonduurIphoneAccountSavedSearches,
+  // INVNT desktop
+  "/invnt/desktop/home.png": invntDesktopHome,
+  "/invnt/desktop/login.png": invntDesktopLogin,
+  "/invnt/desktop/analytics.png": invntDesktopAnalytics,
+  "/invnt/desktop/calendar.png": invntDesktopCalendar,
+  "/invnt/desktop/space.png": invntDesktopSpace,
+  // INVNT iPhone
+  "/invnt/iphone/home-phone.png": invntIphoneHome,
+  "/invnt/iphone/login-phone.png": invntIphoneLogin,
+  "/invnt/iphone/analytics-phone.png": invntIphoneAnalytics,
+  "/invnt/iphone/space-phone.png": invntIphoneSpace,
   // Other
   "/hat_logo.png": hatLogo,
 };

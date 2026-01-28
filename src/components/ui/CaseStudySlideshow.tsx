@@ -26,13 +26,24 @@ export default function CaseStudySlideshow({ media }: CaseStudySlideshowProps) {
   const AUTO_ADVANCE_INTERVAL = 5000; // 5 seconds
   const totalSlides = media.length;
 
-  // Check if any media items have mobile versions
+  // Check if current slide has a mobile version
+  const currentMediaItem = media[currentIndex];
+  const currentHasMobileVersion = Boolean(currentMediaItem.srcMobile);
+
+  // Check if any media items have mobile versions (for showing toggle buttons)
   const hasMobileVersions = media.some((item) => item.srcMobile);
+
+  // Determine button states based on current slide
+  const isMobileDisabled = !currentHasMobileVersion;
 
   const shouldPause = () => isHovering || isVideoPlaying;
 
   const showSlide = (index: number) => {
     setCurrentIndex(index);
+    // If switching to a slide without mobile version while in mobile view, switch to desktop
+    if (currentDevice === "mobile" && !media[index].srcMobile) {
+      setCurrentDevice("desktop");
+    }
     // Pause all videos
     const videos = slideshowRef.current?.querySelectorAll("video");
     videos?.forEach((video) => video.pause());
@@ -74,6 +85,10 @@ export default function CaseStudySlideshow({ media }: CaseStudySlideshowProps) {
   };
 
   const switchDevice = (device: "desktop" | "mobile") => {
+    // Only allow switching to mobile if current slide has mobile version
+    if (device === "mobile" && !currentHasMobileVersion) {
+      return;
+    }
     setCurrentDevice(device);
   };
 
@@ -192,12 +207,16 @@ export default function CaseStudySlideshow({ media }: CaseStudySlideshowProps) {
           <button
             type="button"
             onClick={() => switchDevice("mobile")}
+            disabled={isMobileDisabled}
             className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all ${
-              currentDevice === "mobile"
-                ? "border-strawhat-yellow bg-strawhat-yellow hover:border-strawhat-amber hover:bg-strawhat-amber text-white"
-                : "border-zinc-200 bg-white text-zinc-500 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
+              isMobileDisabled
+                ? "cursor-not-allowed border-zinc-200 bg-zinc-100 text-zinc-400 opacity-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-600"
+                : currentDevice === "mobile"
+                  ? "border-strawhat-yellow bg-strawhat-yellow hover:border-strawhat-amber hover:bg-strawhat-amber text-white"
+                  : "border-zinc-200 bg-white text-zinc-500 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
             }`}
             aria-label="Show mobile view"
+            aria-disabled={isMobileDisabled}
           >
             <svg
               className="size-5"
@@ -378,7 +397,7 @@ export default function CaseStudySlideshow({ media }: CaseStudySlideshowProps) {
                 </div>
 
                 {/* Outer frame / Bezel */}
-                <div className="relative rounded-[3rem] bg-gradient-to-br from-zinc-800 via-zinc-900 to-black p-3 shadow-2xl ring-1 ring-white/10 dark:from-zinc-900 dark:via-black dark:to-zinc-950">
+                <div className="relative rounded-[3rem] bg-linear-to-br from-zinc-800 via-zinc-900 to-black p-3 shadow-2xl ring-1 ring-white/10 dark:from-zinc-900 dark:via-black dark:to-zinc-950">
                   {/* Screen container */}
                   <div className="relative overflow-hidden rounded-[2.5rem] bg-black">
                     {/* Screen content */}
@@ -421,7 +440,7 @@ export default function CaseStudySlideshow({ media }: CaseStudySlideshowProps) {
                     </div>
 
                     {/* Screen reflection/glare */}
-                    <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/[0.05] via-transparent to-transparent" />
+                    <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/5 via-transparent to-transparent" />
                   </div>
                 </div>
 
