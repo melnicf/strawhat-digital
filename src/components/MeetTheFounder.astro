@@ -1,0 +1,143 @@
+---
+import { Image } from "astro:assets";
+import founderPhoto from "../assets/founder-photo.jpg";
+
+// Meet the Founder section component
+const founder = {
+  name: "Filip Melnic",
+  role: "Founder & Developer",
+  image: founderPhoto,
+  intro:
+    "I'm a software developer who believes great work comes from genuine collaboration. After years of working in agencies and startups, I founded Strawhat Digital to do things differently—to build software with care, transparency, and a personal touch.",
+  philosophy:
+    "Every project I take on gets my full attention. I don't juggle dozens of clients or hand your work off to junior developers. When you work with Strawhat Digital, you work with me directly, from the first conversation to the final launch.",
+  personalTouch:
+    "When I'm not coding, you'll find me exploring new technologies, contributing to open source, or enjoying a good cup of coffee. The straw hat? It's a reminder not to take things too seriously—even when the work absolutely is.",
+  specialties: [
+    "Full-Stack",
+    "Mobile",
+    "Frontend",
+    "Backend",
+    "DevOps & Infrastructure",
+  ],
+};
+---
+
+<section id="founder" class="relative py-32 md:py-48">
+  <!-- Subtle background pattern -->
+  <div
+    class="pointer-events-none absolute inset-0 overflow-hidden opacity-[0.015]"
+  >
+    <div
+      class="absolute inset-0"
+      style="background-image: radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0); background-size: 48px 48px;"
+    >
+    </div>
+  </div>
+
+  <!-- Hat landing spot - decorative element -->
+  <div
+    data-hat-landing="founder"
+    class="absolute top-24 left-8 flex size-16 items-center justify-center sm:left-12 md:top-32 md:left-16"
+  >
+    <div
+      class="border-strawhat-yellow size-4 rotate-45 border-t-2 border-l-2 opacity-60"
+    >
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <div class="space-y-16">
+      <!-- Section Header - label right on mobile for alternation, title left -->
+      <div class="relative space-y-6">
+        <div class="flex items-center justify-end gap-4 md:justify-start">
+          <div class="bg-strawhat-yellow h-px w-12"></div>
+          <span
+            class="text-strawhat-yellow text-sm font-medium tracking-widest uppercase"
+            >Meet the Founder</span
+          >
+        </div>
+        <h2
+          class="text-strawhat-text text-4xl/tight font-light tracking-tight md:text-6xl"
+        >
+          The person behind<br />the pixels
+        </h2>
+      </div>
+
+      <!-- Content Grid -->
+      <div class="grid items-center gap-12 lg:grid-cols-5 lg:gap-16">
+        <!-- Text Content (3 cols) -->
+        <div class="space-y-8 lg:col-span-3">
+          <!-- Introduction -->
+          <div class="space-y-4">
+            <p class="text-strawhat-text text-lg/relaxed font-light">
+              {founder.intro}
+            </p>
+          </div>
+
+          <!-- Philosophy -->
+          <div class="space-y-4">
+            <p class="text-strawhat-text-light text-base/relaxed font-light">
+              {founder.philosophy}
+            </p>
+          </div>
+
+          <!-- Personal Touch -->
+          <div class="space-y-4">
+            <p class="text-strawhat-text-light text-base/relaxed font-light">
+              {founder.personalTouch}
+            </p>
+          </div>
+
+          <!-- Specialties -->
+          <div class="flex flex-wrap gap-2 pt-4">
+            {
+              founder.specialties.map((specialty) => (
+                <span class="border-strawhat-yellow/30 text-strawhat-text-light rounded-full border px-4 py-1.5 text-sm font-light">
+                  {specialty}
+                </span>
+              ))
+            }
+          </div>
+        </div>
+
+        <!-- Photo (2 cols) -->
+        <div class="lg:col-span-2">
+          <div class="relative">
+            <!-- Photo container with decorative elements -->
+            <div
+              class="relative aspect-4/5 overflow-hidden rounded-2xl border border-zinc-200/60 bg-zinc-100 dark:border-zinc-800/60 dark:bg-zinc-800"
+            >
+              <Image
+                src={founder.image}
+                alt={founder.name}
+                class="size-full object-cover"
+                width={600}
+                height={750}
+                loading="lazy"
+              />
+            </div>
+
+            <!-- Decorative accent -->
+            <div
+              class="bg-strawhat-yellow/20 absolute -right-4 -bottom-4 -z-10 h-full w-full rounded-2xl"
+            >
+            </div>
+
+            <!-- Name and role card -->
+            <div
+              class="absolute right-4 -bottom-6 left-4 rounded-xl border border-zinc-200/80 bg-white/90 px-6 py-4 shadow-lg backdrop-blur-sm dark:border-zinc-700/80 dark:bg-zinc-900/90"
+            >
+              <h3 class="text-strawhat-text text-lg font-medium tracking-tight">
+                {founder.name}
+              </h3>
+              <p class="text-strawhat-text-light text-sm font-light">
+                {founder.role}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

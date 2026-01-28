@@ -367,9 +367,12 @@ export default function HatAnimation() {
           // Adjust offset based on mobile/desktop hat size (smaller hat)
           const hatWidthOffset = isMobile ? 26 : 28;
 
+          // Use anchor element position so hat lands exactly on it (alternation is from section layout: founder left, testimonials right).
+          const waypointX = elRect.left + elRect.width / 2 - hatWidthOffset;
+
           waypoints.push({
             id: sectionId || "",
-            x: elRect.left + elRect.width / 2 - hatWidthOffset,
+            x: waypointX,
             docY:
               sectionTop +
               (elRect.top - section.getBoundingClientRect().top) +

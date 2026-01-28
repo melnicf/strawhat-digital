@@ -1,0 +1,9 @@
+{
+  "name": "Another Client",
+  "role": "Product Manager",
+  "company": "Tech Startup",
+  "quote": "The direct communication with the founder made all the difference. No endless meetings or miscommunication—just efficient, high-quality work delivered on time.",
+  "image": "/testimonials/placeholder-2.jpg",
+  "featured": true,
+  "order": 2
+}

@@ -1,6 +1,14 @@
 ---
 import ThemeToggle from "./ui/ThemeToggle";
 import NavbarLogo from "./ui/NavbarLogo";
+
+const navLinks = [
+  { href: "#hero", label: "Home", number: "01" },
+  { href: "#services", label: "Services", number: "02" },
+  { href: "#case-studies", label: "Work", number: "03" },
+  { href: "#why-us", label: "Why Us", number: "04" },
+  { href: "#founder", label: "About", number: "05" },
+];
 ---
 
 <nav
@@ -18,26 +26,18 @@ import NavbarLogo from "./ui/NavbarLogo";
       </div>
 
       <!-- Desktop Navigation -->
-      <div class="hidden md:flex md:items-center md:space-x-10">
-        <div class="ml-10 flex items-center space-x-10">
-          <a
-            href="#hero"
-            class="text-strawhat-text-light hover:text-strawhat-yellow text-sm font-light tracking-wider transition-colors"
-          >
-            Home
-          </a>
-          <a
-            href="#services"
-            class="text-strawhat-text-light hover:text-strawhat-yellow text-sm font-light tracking-wider transition-colors"
-          >
-            Services
-          </a>
-          <a
-            href="#about"
-            class="text-strawhat-text-light hover:text-strawhat-yellow text-sm font-light tracking-wider transition-colors"
-          >
-            About
-          </a>
+      <div class="hidden md:flex md:items-center md:space-x-8">
+        <div class="ml-10 flex items-center space-x-8">
+          {
+            navLinks.map((link) => (
+              <a
+                href={link.href}
+                class="text-strawhat-text-light hover:text-strawhat-yellow text-sm font-light tracking-wider transition-colors"
+              >
+                {link.label}
+              </a>
+            ))
+          }
           <a
             href="#get-started"
             class="border-strawhat-yellow text-strawhat-yellow hover:border-strawhat-amber hover:text-strawhat-amber border-b pb-1 text-sm font-light tracking-wider transition-all"
@@ -54,116 +54,257 @@ import NavbarLogo from "./ui/NavbarLogo";
         <button
           id="mobile-menu-button"
           type="button"
-          class="text-strawhat-text hover:text-strawhat-yellow inline-flex items-center justify-center rounded-md p-2 transition-colors focus:outline-none"
+          class="relative z-70 flex size-10 items-center justify-center focus:outline-none"
           aria-expanded="false"
           aria-label="Toggle menu"
         >
-          <svg
-            id="menu-icon-open"
-            class="size-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
-          <svg
-            id="menu-icon-close"
-            class="hidden size-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
+          <div class="hamburger-icon">
+            <span class="hamburger-line hamburger-line-1"></span>
+            <span class="hamburger-line hamburger-line-2"></span>
+            <span class="hamburger-line hamburger-line-3"></span>
+          </div>
         </button>
       </div>
     </div>
   </div>
-
-  <!-- Mobile Menu -->
-  <div
-    id="mobile-menu"
-    class="border-strawhat-text/10 bg-strawhat-bg/95 hidden border-t backdrop-blur-xl md:hidden"
-  >
-    <div class="space-y-1 px-4 pt-2 pb-3">
-      <a
-        href="#hero"
-        class="text-strawhat-text-light hover:bg-strawhat-bg-dark hover:text-strawhat-yellow block rounded-md px-3 py-2 text-base font-light tracking-wider transition-colors"
-      >
-        Home
-      </a>
-      <a
-        href="#services"
-        class="text-strawhat-text-light hover:bg-strawhat-bg-dark hover:text-strawhat-yellow block rounded-md px-3 py-2 text-base font-light tracking-wider transition-colors"
-      >
-        Services
-      </a>
-      <a
-        href="#about"
-        class="text-strawhat-text-light hover:bg-strawhat-bg-dark hover:text-strawhat-yellow block rounded-md px-3 py-2 text-base font-light tracking-wider transition-colors"
-      >
-        About
-      </a>
-      <a
-        href="#get-started"
-        class="text-strawhat-yellow hover:bg-strawhat-bg-dark block rounded-md px-3 py-2 text-base font-medium tracking-wider transition-colors"
-      >
-        Get Started
-      </a>
-    </div>
-  </div>
 </nav>
 
+<!-- Full-screen Mobile Menu Overlay -->
+<div
+  id="mobile-menu"
+  class="mobile-menu-overlay pointer-events-none fixed inset-0 z-60 opacity-0 md:hidden"
+>
+  <!-- Backdrop -->
+  <div class="bg-strawhat-bg/98 absolute inset-0 backdrop-blur-2xl"></div>
+
+  <!-- Menu Content -->
+  <div class="relative flex h-full flex-col justify-center px-8 sm:px-12">
+    <!-- Navigation Links -->
+    <nav class="space-y-2">
+      {
+        navLinks.map((link, index) => (
+          <a
+            href={link.href}
+            class="mobile-menu-link group flex items-center gap-6 py-4"
+            style={`--link-delay: ${index * 50}ms`}
+          >
+            <span class="text-strawhat-yellow/40 group-hover:text-strawhat-yellow text-sm font-light tracking-wider tabular-nums transition-colors duration-300">
+              {link.number}
+            </span>
+            <span class="text-strawhat-text group-hover:text-strawhat-yellow text-4xl font-light tracking-tight transition-colors duration-300 sm:text-5xl">
+              {link.label}
+            </span>
+            <div class="bg-strawhat-yellow/0 group-hover:bg-strawhat-yellow/60 ml-4 h-px w-0 transition-all duration-300 group-hover:w-12" />
+          </a>
+        ))
+      }
+
+      <!-- Get Started CTA -->
+      <div class="mobile-menu-link pt-8" style="--link-delay: 250ms">
+        <div class="flex items-center gap-4 pb-4">
+          <div class="bg-strawhat-yellow h-px w-8"></div>
+          <span
+            class="text-strawhat-yellow text-xs font-medium tracking-widest uppercase"
+            >Start a project</span
+          >
+        </div>
+        <a href="#get-started" class="group inline-flex items-center gap-4">
+          <span
+            class="text-strawhat-yellow group-hover:text-strawhat-amber text-3xl font-light tracking-tight transition-colors sm:text-4xl"
+          >
+            Get Started
+          </span>
+          <svg
+            class="text-strawhat-yellow group-hover:text-strawhat-amber size-6 transition-all duration-300 group-hover:translate-x-2"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <path d="M5 12h14M12 5l7 7-7 7"></path>
+          </svg>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Bottom info -->
+    <div
+      class="mobile-menu-link absolute right-8 bottom-8 left-8 sm:inset-x-12"
+      style="--link-delay: 300ms"
+    >
+      <div
+        class="border-strawhat-text/10 flex items-center justify-between border-t pt-6"
+      >
+        <a
+          href="mailto:hello@strawhat.digital"
+          class="text-strawhat-text-light hover:text-strawhat-yellow text-sm font-light tracking-wider transition-colors"
+        >
+          hello@strawhat.digital
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Animated hamburger icon */
+  .hamburger-icon {
+    width: 24px;
+    height: 18px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .hamburger-line {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: var(--strawhat-text);
+    border-radius: 2px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+  }
+
+  .hamburger-line-2 {
+    width: 75%;
+    margin-left: auto;
+  }
+
+  /* Hamburger to X animation */
+  .menu-open .hamburger-line-1 {
+    transform: translateY(8px) rotate(45deg);
+  }
+
+  .menu-open .hamburger-line-2 {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+
+  .menu-open .hamburger-line-3 {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  .menu-open .hamburger-line {
+    background-color: var(--strawhat-yellow);
+  }
+
+  /* Mobile menu overlay transitions */
+  .mobile-menu-overlay {
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .mobile-menu-overlay.menu-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Menu link animations */
+  .mobile-menu-link {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition:
+      opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: var(--link-delay, 0ms);
+  }
+
+  .menu-visible .mobile-menu-link {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* Prevent body scroll when menu is open */
+  :global(body.menu-open) {
+    overflow: hidden;
+  }
+</style>
+
 <script>
-  // Mobile menu toggle
+  // Mobile menu toggle with animations
   const menuButton = document.getElementById("mobile-menu-button");
   const mobileMenu = document.getElementById("mobile-menu");
-  const menuIconOpen = document.getElementById("menu-icon-open");
-  const menuIconClose = document.getElementById("menu-icon-close");
 
-  if (menuButton && mobileMenu && menuIconOpen && menuIconClose) {
+  if (menuButton && mobileMenu) {
+    let isOpen = false;
+
+    const openMenu = () => {
+      isOpen = true;
+      menuButton.classList.add("menu-open");
+      mobileMenu.classList.add("menu-visible");
+      document.body.classList.add("menu-open");
+      menuButton.setAttribute("aria-expanded", "true");
+    };
+
+    const closeMenu = () => {
+      isOpen = false;
+      menuButton.classList.remove("menu-open");
+      mobileMenu.classList.remove("menu-visible");
+      document.body.classList.remove("menu-open");
+      menuButton.setAttribute("aria-expanded", "false");
+    };
+
     menuButton.addEventListener("click", () => {
-      const isOpen = mobileMenu.classList.contains("hidden");
-
       if (isOpen) {
-        mobileMenu.classList.remove("hidden");
-        menuIconOpen.classList.add("hidden");
-        menuIconClose.classList.remove("hidden");
-        menuButton.setAttribute("aria-expanded", "true");
+        closeMenu();
       } else {
-        mobileMenu.classList.add("hidden");
-        menuIconOpen.classList.remove("hidden");
-        menuIconClose.classList.add("hidden");
-        menuButton.setAttribute("aria-expanded", "false");
+        openMenu();
       }
     });
 
-    // Close menu when clicking a link
-    const mobileMenuLinks = mobileMenu.querySelectorAll("a");
+    // Close menu when clicking a link and handle navigation
+    const mobileMenuLinks = mobileMenu.querySelectorAll("a[href^='#']");
     mobileMenuLinks.forEach((link) => {
-      link.addEventListener("click", () => {
-        mobileMenu.classList.add("hidden");
-        menuIconOpen.classList.remove("hidden");
-        menuIconClose.classList.add("hidden");
-        menuButton.setAttribute("aria-expanded", "false");
+      link.addEventListener("click", (e) => {
+        const href = link.getAttribute("href");
+        if (href && href.startsWith("#")) {
+          e.preventDefault();
+
+          // Remove overflow hidden first to allow scrolling
+          document.body.classList.remove("menu-open");
+
+          // Get target element
+          const targetId = href.substring(1);
+          const targetElement = document.getElementById(targetId);
+
+          if (targetElement) {
+            // Calculate scroll position accounting for navbar + breathing room
+            const scrollOffset = 64; // 4rem to match scroll-margin-top
+            const targetPosition = targetElement.offsetTop - scrollOffset;
+
+            // Scroll to calculated position
+            window.scrollTo({
+              top: Math.max(0, targetPosition),
+              behavior: "smooth",
+            });
+          }
+
+          // Close menu visually after a short delay
+          setTimeout(() => {
+            closeMenu();
+          }, 100);
+        }
       });
     });
 
-    // Close menu when clicking outside
-    document.addEventListener("click", (e) => {
-      const target = e.target as Node;
-      if (
-        !mobileMenu.classList.contains("hidden") &&
-        !mobileMenu.contains(target) &&
-        !menuButton.contains(target)
-      ) {
-        mobileMenu.classList.add("hidden");
-        menuIconOpen.classList.remove("hidden");
-        menuIconClose.classList.add("hidden");
-        menuButton.setAttribute("aria-expanded", "false");
+    // Handle non-anchor links (like mailto)
+    const externalLinks = mobileMenu.querySelectorAll("a:not([href^='#'])");
+    externalLinks.forEach((link) => {
+      link.addEventListener("click", closeMenu);
+    });
+
+    // Close menu on escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && isOpen) {
+        closeMenu();
+      }
+    });
+
+    // Close menu when resizing to desktop
+    window.addEventListener("resize", () => {
+      if (window.innerWidth >= 768 && isOpen) {
+        closeMenu();
       }
     });
   }

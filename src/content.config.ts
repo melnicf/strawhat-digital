@@ -31,4 +31,20 @@ const caseStudies = defineCollection({
     }),
 });
 
-export const collections = { "case-studies": caseStudies };
+const testimonials = defineCollection({
+  loader: glob({ pattern: "**/*.json", base: "./src/content/testimonials" }),
+  schema: z.object({
+    name: z.string(),
+    role: z.string(),
+    company: z.string(),
+    quote: z.string(),
+    image: z.string().optional(),
+    featured: z.boolean().default(true),
+    order: z.number().default(0),
+  }),
+});
+
+export const collections = {
+  "case-studies": caseStudies,
+  testimonials,
+};

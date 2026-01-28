@@ -1,8 +1,20 @@
 ---
 // Get Started / Contact section component
+import ContactForm from "./ui/ContactForm";
 ---
 
 <section id="get-started" class="relative py-32 md:py-48">
+  <!-- Subtle background pattern -->
+  <div
+    class="pointer-events-none absolute inset-0 overflow-hidden opacity-[0.015]"
+  >
+    <div
+      class="absolute inset-0"
+      style="background-image: radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0); background-size: 48px 48px;"
+    >
+    </div>
+  </div>
+
   <!-- Hat landing spot - final resting place (LEFT on mobile, LEFT on desktop) -->
   <div
     data-hat-landing="get-started"
@@ -11,10 +23,11 @@
     <div class="border-strawhat-amber size-4 rounded border-2 opacity-60"></div>
   </div>
 
-  <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <div class="space-y-12">
-      <div class="space-y-4">
-        <div class="flex items-center justify-end gap-4 sm:justify-start">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <div class="space-y-16">
+      <!-- Section Header -->
+      <div class="relative space-y-6">
+        <div class="flex w-fit items-center gap-4 justify-self-end md:w-full">
           <div class="bg-strawhat-yellow h-px w-12"></div>
           <span
             class="text-strawhat-yellow text-sm font-medium tracking-widest uppercase"
@@ -33,31 +46,70 @@
         </p>
       </div>
 
-      <div class="space-y-8">
-        <div class="space-y-4">
-          <h3 class="text-strawhat-text text-2xl font-light tracking-tight">
-            Get in touch
-          </h3>
-          <p class="text-strawhat-text-light text-base/relaxed font-light">
-            Whether you have a clear vision or just a rough idea, we'd love to
-            hear from you. Send us a message and we'll get back to you within 24
-            hours.
-          </p>
+      <!-- Two column layout -->
+      <div class="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
+        <!-- Left column - Info -->
+        <div class="space-y-12">
+          <!-- What to expect - simplified timeline -->
+          <div class="space-y-8">
+            <h3 class="text-strawhat-text text-lg font-medium tracking-tight">
+              What happens next
+            </h3>
+
+            <div class="relative space-y-6 pl-6">
+              <!-- Timeline line -->
+              <div
+                class="absolute top-2 bottom-2 left-[3px] w-px bg-zinc-200 dark:bg-zinc-800"
+              >
+              </div>
+
+              <div class="relative">
+                <div
+                  class="bg-strawhat-yellow absolute top-1.5 -left-6 size-1.5 rounded-full"
+                >
+                </div>
+                <p class="text-strawhat-text text-sm font-medium">
+                  Response within 24 hours
+                </p>
+              </div>
+
+              <div class="relative">
+                <div
+                  class="bg-strawhat-yellow/60 absolute top-1.5 -left-6 size-1.5 rounded-full"
+                >
+                </div>
+                <p class="text-strawhat-text text-sm font-medium">
+                  Discovery call
+                </p>
+              </div>
+
+              <div class="relative">
+                <div
+                  class="bg-strawhat-yellow/30 absolute top-1.5 -left-6 size-1.5 rounded-full"
+                >
+                </div>
+                <p class="text-strawhat-text text-sm font-medium">
+                  Custom proposal
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alternative contact -->
+          <div class="space-y-3">
+            <p class="text-strawhat-text-light text-sm">Prefer email?</p>
+            <a
+              href="mailto:hello@strawhat.digital"
+              class="border-strawhat-yellow text-strawhat-yellow hover:border-strawhat-amber hover:text-strawhat-amber inline-block border-b pb-0.5 text-base font-light tracking-wide transition-all"
+            >
+              hello@strawhat.digital
+            </a>
+          </div>
         </div>
 
-        <div class="flex flex-col gap-6 sm:flex-row">
-          <a
-            href="mailto:hello@strawhat.digital"
-            class="border-strawhat-yellow text-strawhat-yellow hover:border-strawhat-amber hover:text-strawhat-amber border-b-2 pb-2 text-lg font-light tracking-wider transition-all"
-          >
-            hello@strawhat.digital
-          </a>
-          <a
-            href="#contact-form"
-            class="border-strawhat-red/50 text-strawhat-text-light hover:border-strawhat-red hover:text-strawhat-yellow border-b-2 pb-2 text-lg font-light tracking-wider transition-all"
-          >
-            Fill out a form
-          </a>
+        <!-- Right column - Form -->
+        <div id="contact-form" class="scroll-mt-24">
+          <ContactForm client:visible />
         </div>
       </div>
     </div>
