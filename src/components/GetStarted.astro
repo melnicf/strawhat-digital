@@ -46,70 +46,72 @@ import ContactForm from "./ui/ContactForm";
         </p>
       </div>
 
-      <!-- Two column layout -->
-      <div class="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
-        <!-- Left column - Info -->
-        <div class="space-y-12">
-          <!-- What to expect - simplified timeline -->
-          <div class="space-y-8">
-            <h3 class="text-strawhat-text text-lg font-medium tracking-tight">
-              What happens next
-            </h3>
+      <!-- Two column layout: mobile = timeline, form, prefer email; desktop = (timeline + prefer email) | form -->
+      <div
+        class="grid auto-rows-min grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:gap-16"
+      >
+        <!-- What to expect - simplified timeline (mobile: 1st, desktop: left col row 1) -->
+        <div class="order-1 space-y-8 lg:col-start-1 lg:row-start-1">
+          <h3 class="text-strawhat-text text-lg font-medium tracking-tight">
+            What happens next
+          </h3>
 
-            <div class="relative space-y-6 pl-6">
-              <!-- Timeline line -->
+          <div class="relative space-y-6 pl-6">
+            <!-- Timeline line -->
+            <div
+              class="absolute inset-y-2 left-[3px] w-px bg-zinc-200 dark:bg-zinc-800"
+            >
+            </div>
+
+            <div class="relative">
               <div
-                class="absolute top-2 bottom-2 left-[3px] w-px bg-zinc-200 dark:bg-zinc-800"
+                class="bg-strawhat-yellow absolute top-1.5 -left-6 size-1.5 rounded-full"
               >
               </div>
-
-              <div class="relative">
-                <div
-                  class="bg-strawhat-yellow absolute top-1.5 -left-6 size-1.5 rounded-full"
-                >
-                </div>
-                <p class="text-strawhat-text text-sm font-medium">
-                  Response within 24 hours
-                </p>
-              </div>
-
-              <div class="relative">
-                <div
-                  class="bg-strawhat-yellow/60 absolute top-1.5 -left-6 size-1.5 rounded-full"
-                >
-                </div>
-                <p class="text-strawhat-text text-sm font-medium">
-                  Discovery call
-                </p>
-              </div>
-
-              <div class="relative">
-                <div
-                  class="bg-strawhat-yellow/30 absolute top-1.5 -left-6 size-1.5 rounded-full"
-                >
-                </div>
-                <p class="text-strawhat-text text-sm font-medium">
-                  Custom proposal
-                </p>
-              </div>
+              <p class="text-strawhat-text text-sm font-medium">
+                Response within 24 hours
+              </p>
             </div>
-          </div>
 
-          <!-- Alternative contact -->
-          <div class="space-y-3">
-            <p class="text-strawhat-text-light text-sm">Prefer email?</p>
-            <a
-              href="mailto:hello@strawhat.digital"
-              class="border-strawhat-yellow text-strawhat-yellow hover:border-strawhat-amber hover:text-strawhat-amber inline-block border-b pb-0.5 text-base font-light tracking-wide transition-all"
-            >
-              hello@strawhat.digital
-            </a>
+            <div class="relative">
+              <div
+                class="bg-strawhat-yellow/60 absolute top-1.5 -left-6 size-1.5 rounded-full"
+              >
+              </div>
+              <p class="text-strawhat-text text-sm font-medium">
+                Discovery call
+              </p>
+            </div>
+
+            <div class="relative">
+              <div
+                class="bg-strawhat-yellow/30 absolute top-1.5 -left-6 size-1.5 rounded-full"
+              >
+              </div>
+              <p class="text-strawhat-text text-sm font-medium">
+                Custom proposal
+              </p>
+            </div>
           </div>
         </div>
 
-        <!-- Right column - Form -->
-        <div id="contact-form" class="scroll-mt-24">
+        <!-- Form (mobile: 2nd, desktop: right col) -->
+        <div
+          id="contact-form"
+          class="order-2 scroll-mt-24 lg:col-start-2 lg:row-span-2 lg:row-start-1"
+        >
           <ContactForm client:visible />
+        </div>
+
+        <!-- Alternative contact (mobile: 3rd/last, desktop: left col row 2) -->
+        <div class="order-3 space-y-3 lg:col-start-1 lg:row-start-2">
+          <p class="text-strawhat-text-light text-sm">Prefer email?</p>
+          <a
+            href="mailto:hello@strawhat.digital"
+            class="border-strawhat-yellow text-strawhat-yellow hover:border-strawhat-amber hover:text-strawhat-amber inline-block border-b pb-0.5 text-base font-light tracking-wide transition-all"
+          >
+            hello@strawhat.digital
+          </a>
         </div>
       </div>
     </div>
