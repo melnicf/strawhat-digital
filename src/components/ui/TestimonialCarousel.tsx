@@ -7,6 +7,7 @@ interface Testimonial {
   company: string;
   quote: string;
   image?: string;
+  website?: string;
 }
 
 interface TestimonialCarouselProps {
@@ -183,7 +184,18 @@ export default function TestimonialCarousel({
                   {/* Name and role */}
                   <div>
                     <div className="text-strawhat-text font-medium">
-                      {testimonial.name}
+                      {testimonial.website ? (
+                        <a
+                          href={testimonial.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-strawhat-yellow decoration-strawhat-yellow/30 hover:decoration-strawhat-yellow underline underline-offset-2 transition-colors"
+                        >
+                          {testimonial.name}
+                        </a>
+                      ) : (
+                        testimonial.name
+                      )}
                     </div>
                     <div className="text-strawhat-text-light text-sm font-light">
                       {testimonial.role}

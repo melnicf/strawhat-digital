@@ -1,19 +1,47 @@
 ---
 import { getCollection } from "astro:content";
+import { getImage } from "astro:assets";
 import TestimonialCarousel from "./ui/TestimonialCarousel";
 
 // Get all testimonials, sorted by order
-const testimonials = (await getCollection("testimonials"))
+const allTestimonials = (await getCollection("testimonials"))
   .filter((t) => t.data.featured)
-  .sort((a, b) => a.data.order - b.data.order)
-  .map((t) => ({
-    id: t.id,
-    name: t.data.name,
-    role: t.data.role,
-    company: t.data.company,
-    quote: t.data.quote,
-    image: t.data.image,
-  }));
+  .sort((a, b) => a.data.order - b.data.order);
+
+// Process images with getImage() for optimization
+const testimonials = await Promise.all(
+  allTestimonials.map(async (t) => {
+    let optimizedImage: string | undefined = undefined;
+
+    if (t.data.image) {
+      try {
+        const result = await getImage({
+          src: t.data.image,
+          width: 112, // 2x size of 56px (size-14 = 3.5rem = 56px)
+          height: 112,
+          format: "webp",
+        });
+        optimizedImage = result.src;
+      } catch (error) {
+        // Gracefully handle missing images - testimonial will use fallback
+        console.warn(
+          `Could not load image for testimonial "${t.data.name}":`,
+          error
+        );
+      }
+    }
+
+    return {
+      id: t.id,
+      name: t.data.name,
+      role: t.data.role,
+      company: t.data.company,
+      quote: t.data.quote,
+      image: optimizedImage,
+      website: t.data.website,
+    };
+  })
+);
 ---
 
 <section id="testimonials" class="relative py-32 md:py-48">
