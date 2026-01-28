@@ -1,0 +1,255 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+
+const lastUpdated = "January 2025";
+---
+
+<Layout
+  title="Terms of Service"
+  description="Terms of Service for Straw Hat Digital"
+>
+  <Navbar />
+
+  <main class="pt-24 pb-16 md:pt-32 md:pb-24">
+    <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+      <!-- Header -->
+      <div class="mb-12 space-y-4">
+        <a
+          href="/"
+          class="group text-strawhat-text-light hover:text-strawhat-yellow inline-flex items-center gap-2 text-sm transition-colors"
+        >
+          <svg
+            class="size-4 transition-transform duration-300 group-hover:-translate-x-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M19 12H5M12 19l-7-7 7-7"></path>
+          </svg>
+          Back to home
+        </a>
+
+        <h1
+          class="text-strawhat-text text-3xl font-light tracking-tight md:text-4xl"
+        >
+          Terms of Service
+        </h1>
+        <p class="text-strawhat-text-light text-sm">
+          Last updated: {lastUpdated}
+        </p>
+      </div>
+
+      <!-- Content -->
+      <div class="legal-content space-y-8">
+        <section>
+          <h2>Agreement to Terms</h2>
+          <p>
+            By accessing or using the services provided by Straw Hat Digital
+            ("we", "our", or "us"), you agree to be bound by these Terms of
+            Service. If you do not agree to these terms, please do not use our
+            services.
+          </p>
+        </section>
+
+        <section>
+          <h2>Services</h2>
+          <p>
+            Straw Hat Digital provides product development, design, and
+            engineering services. The specific scope, deliverables, and terms of
+            each project will be defined in a separate agreement or statement of
+            work between you and Straw Hat Digital.
+          </p>
+        </section>
+
+        <section>
+          <h2>Client Responsibilities</h2>
+          <p>When engaging our services, you agree to:</p>
+          <ul>
+            <li>
+              Provide accurate and complete information necessary for the
+              project
+            </li>
+            <li>
+              Respond to requests for feedback and approvals in a timely manner
+            </li>
+            <li>
+              Ensure you have the rights to any content or materials you provide
+            </li>
+            <li>Make payments according to the agreed-upon schedule</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Intellectual Property</h2>
+          <p>Unless otherwise specified in a project agreement:</p>
+          <ul>
+            <li>
+              Upon full payment, you will own the final deliverables created
+              specifically for your project
+            </li>
+            <li>
+              We retain ownership of any pre-existing tools, frameworks, or
+              methodologies used in the project
+            </li>
+            <li>
+              We may use non-confidential aspects of the project in our
+              portfolio unless otherwise agreed
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Confidentiality</h2>
+          <p>
+            We agree to keep confidential any proprietary information you share
+            with us during our engagement. This includes business strategies,
+            technical specifications, and any information marked as
+            confidential. This obligation does not apply to information that is
+            publicly available or independently developed.
+          </p>
+        </section>
+
+        <section>
+          <h2>Payment Terms</h2>
+          <p>
+            Payment terms will be specified in your project agreement. Unless
+            otherwise stated:
+          </p>
+          <ul>
+            <li>A deposit may be required before work begins</li>
+            <li>Invoices are due within 14 days of receipt</li>
+            <li>Late payments may incur additional fees or work suspension</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Limitation of Liability</h2>
+          <p>
+            To the maximum extent permitted by law, Straw Hat Digital shall not
+            be liable for any indirect, incidental, special, consequential, or
+            punitive damages arising from your use of our services. Our total
+            liability shall not exceed the amount paid by you for the specific
+            services giving rise to the claim.
+          </p>
+        </section>
+
+        <section>
+          <h2>Warranties</h2>
+          <p>
+            We warrant that our services will be performed in a professional and
+            workmanlike manner. We do not warrant that deliverables will be
+            error-free or that they will meet all of your requirements unless
+            specifically stated in the project agreement.
+          </p>
+        </section>
+
+        <section>
+          <h2>Termination</h2>
+          <p>
+            Either party may terminate a project agreement with written notice.
+            Upon termination, you will be responsible for payment for all work
+            completed up to the termination date. Provisions regarding
+            intellectual property, confidentiality, and limitation of liability
+            shall survive termination.
+          </p>
+        </section>
+
+        <section>
+          <h2>Governing Law</h2>
+          <p>
+            These Terms of Service shall be governed by and construed in
+            accordance with applicable laws, without regard to conflict of law
+            principles.
+          </p>
+        </section>
+
+        <section>
+          <h2>Changes to Terms</h2>
+          <p>
+            We reserve the right to modify these Terms of Service at any time.
+            Changes will be effective upon posting to our website. Your
+            continued use of our services after changes constitutes acceptance
+            of the modified terms.
+          </p>
+        </section>
+
+        <section>
+          <h2>Contact</h2>
+          <p>
+            For questions about these Terms of Service, please contact us at:
+          </p>
+          <p>
+            <a href="mailto:legal@strawhat.digital">legal@strawhat.digital</a>
+          </p>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .legal-content h2 {
+    color: var(--strawhat-text);
+    font-size: 1.25rem;
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    margin-bottom: 0.75rem;
+  }
+
+  .legal-content p {
+    color: var(--strawhat-text-light);
+    font-size: 0.9375rem;
+    font-weight: 300;
+    line-height: 1.75;
+    margin-bottom: 1rem;
+  }
+
+  .legal-content ul {
+    color: var(--strawhat-text-light);
+    font-weight: 300;
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 1rem;
+  }
+
+  .legal-content li {
+    position: relative;
+    padding-left: 1.25rem;
+    line-height: 1.75;
+    font-size: 0.9375rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .legal-content li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--strawhat-text-light);
+    opacity: 0.4;
+  }
+
+  .legal-content strong {
+    color: var(--strawhat-text);
+    font-weight: 500;
+  }
+
+  .legal-content a {
+    color: var(--strawhat-yellow);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    transition: opacity 0.2s;
+  }
+
+  .legal-content a:hover {
+    opacity: 0.7;
+  }
+</style>

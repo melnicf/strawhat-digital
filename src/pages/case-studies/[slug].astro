@@ -3,6 +3,7 @@ import { getCollection, render, type CollectionEntry } from "astro:content";
 import { Image } from "astro:assets";
 import Layout from "../../layouts/Layout.astro";
 import Navbar from "../../components/Navbar.astro";
+import Footer from "../../components/Footer.astro";
 import CaseStudySlideshow from "../../components/ui/CaseStudySlideshow";
 import { resolveImage } from "../../utils/imageMap";
 
@@ -199,6 +200,8 @@ const resolvedMedia = study.data.media?.map((item) => {
       </div>
     </section>
   </article>
+
+  <Footer />
 </Layout>
 
 <style is:global>
