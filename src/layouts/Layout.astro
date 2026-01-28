@@ -3,6 +3,20 @@ import "../styles/global.css";
 import HatAnimation from "../components/ui/HatAnimation";
 import HeroBoldLazy from "../components/hero/HeroBoldLazy";
 import SmoothScroll from "../components/ui/SmoothScroll";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title: pageTitle, description: pageDescription } = Astro.props;
+
+const siteTitle = "Straw Hat Digital";
+const siteDescription =
+  "Expert execution. A product studio that builds and ships with you—direct partnership, end-to-end ownership, and agility without bureaucracy.";
+const title = pageTitle ? `${pageTitle} | ${siteTitle}` : siteTitle;
+const description = pageDescription ?? siteDescription;
+const canonicalUrl = Astro.url.href;
 ---
 
 <!doctype html>
@@ -13,10 +27,22 @@ import SmoothScroll from "../components/ui/SmoothScroll";
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
     <meta name="generator" content={Astro.generator} />
-    <title>Astro Basics</title>
+    <!-- Favicon: hat icon -->
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
     <script is:inline>
       // Set theme immediately to prevent flash
       (function () {
