@@ -3,24 +3,32 @@ import "../styles/global.css";
 import HatAnimation from "../components/ui/HatAnimation";
 import HeroBoldLazy from "../components/hero/HeroBoldLazy";
 import SmoothScroll from "../components/ui/SmoothScroll";
+import type { Locale } from "../utils/i18n";
+import { getTranslations } from "../utils/i18n";
 
 interface Props {
   title?: string;
   description?: string;
+  locale?: Locale;
 }
 
-const { title: pageTitle, description: pageDescription } = Astro.props;
+const {
+  title: pageTitle,
+  description: pageDescription,
+  locale: localeProp,
+} = Astro.props;
+const locale = localeProp ?? ("en" as Locale);
+const t = getTranslations(locale);
 
-const siteTitle = "Straw Hat Digital";
-const siteDescription =
-  "Expert execution. A product studio that builds and ships with you—direct partnership, end-to-end ownership, and agility without bureaucracy.";
+const siteTitle = t("site.name");
+const siteDescription = t("site.description");
 const title = pageTitle ? `${pageTitle} | ${siteTitle}` : siteTitle;
 const description = pageDescription ?? siteDescription;
 const canonicalUrl = Astro.url.href;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={locale}>
   <head>
     <meta charset="UTF-8" />
     <meta

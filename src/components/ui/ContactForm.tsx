@@ -3,6 +3,45 @@ import { actions } from "astro:actions";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
+export interface FormTranslations {
+  name: string;
+  namePlaceholder: string;
+  email: string;
+  emailPlaceholder: string;
+  projectType: string;
+  budgetRange: string;
+  budgetPlaceholder: string;
+  budgetUnder10k: string;
+  budget10k25k: string;
+  budget25k50k: string;
+  budget50k100k: string;
+  budgetOver100k: string;
+  budgetNotSure: string;
+  projectTypeWeb: string;
+  projectTypeMobile: string;
+  projectTypeApi: string;
+  projectTypeDesign: string;
+  projectTypeConsulting: string;
+  projectTypeOther: string;
+  tellMeAbout: string;
+  messagePlaceholder: string;
+  sendMessage: string;
+  messageSent: string;
+  thanksReachOut: string;
+  sendAnother: string;
+  privacyNote: string;
+  errorName: string;
+  errorNameMin: string;
+  errorEmail: string;
+  errorMessage: string;
+  errorMessageMin: string;
+  errorProjectType: string;
+  errorFillRequired: string;
+  errorTooMany: string;
+  errorServer: string;
+  errorGeneric: string;
+}
+
 interface FormData {
   name: string;
   email: string;
@@ -18,26 +57,74 @@ interface FieldErrors {
   message?: string;
 }
 
-const projectTypes = [
-  { value: "web-app", label: "Web Application" },
-  { value: "mobile-app", label: "Mobile App" },
-  { value: "api-backend", label: "API / Backend" },
-  { value: "ui-ux-design", label: "UI/UX Design" },
-  { value: "consulting", label: "Consulting" },
-  { value: "other", label: "Other" },
-];
+const defaultTranslations: FormTranslations = {
+  name: "Name",
+  namePlaceholder: "Your name",
+  email: "Email",
+  emailPlaceholder: "you@example.com",
+  projectType: "Project Type",
+  budgetRange: "Budget Range",
+  budgetPlaceholder: "Select budget range (optional)",
+  budgetUnder10k: "Under $10,000",
+  budget10k25k: "$10,000 - $25,000",
+  budget25k50k: "$25,000 - $50,000",
+  budget50k100k: "$50,000 - $100,000",
+  budgetOver100k: "Over $100,000",
+  budgetNotSure: "Not sure yet",
+  projectTypeWeb: "Web Application",
+  projectTypeMobile: "Mobile App",
+  projectTypeApi: "API / Backend",
+  projectTypeDesign: "UI/UX Design",
+  projectTypeConsulting: "Consulting",
+  projectTypeOther: "Other",
+  tellMeAbout: "Tell me about your project",
+  messagePlaceholder:
+    "What are you looking to build? What challenges are you facing?",
+  sendMessage: "Send message",
+  messageSent: "Message sent!",
+  thanksReachOut:
+    "Thanks for reaching out. I'll get back to you within 24 hours.",
+  sendAnother: "Send another message",
+  privacyNote: "Your information will never be shared with third parties.",
+  errorName: "Please enter your name",
+  errorNameMin: "Please enter your name (at least 2 characters).",
+  errorEmail: "Please enter a valid email address",
+  errorMessage:
+    "Please provide more details about your project (at least 10 characters)",
+  errorMessageMin:
+    "Please provide more details about your project (at least 10 characters).",
+  errorProjectType: "Please select a project type.",
+  errorFillRequired: "Please fill in all required fields correctly.",
+  errorTooMany: "Too many submissions. Please try again in an hour.",
+  errorServer: "Unable to send message right now. Please try again later.",
+  errorGeneric: "Something went wrong. Please try again.",
+};
 
-const budgetRanges = [
-  { value: "", label: "Select budget range (optional)" },
-  { value: "under-10k", label: "Under $10,000" },
-  { value: "10k-25k", label: "$10,000 - $25,000" },
-  { value: "25k-50k", label: "$25,000 - $50,000" },
-  { value: "50k-100k", label: "$50,000 - $100,000" },
-  { value: "over-100k", label: "Over $100,000" },
-  { value: "not-sure", label: "Not sure yet" },
-];
+interface ContactFormProps {
+  translations?: FormTranslations;
+}
 
-export default function ContactForm() {
+export default function ContactForm({
+  translations: t = defaultTranslations,
+}: ContactFormProps) {
+  const projectTypes = [
+    { value: "web-app", label: t.projectTypeWeb },
+    { value: "mobile-app", label: t.projectTypeMobile },
+    { value: "api-backend", label: t.projectTypeApi },
+    { value: "ui-ux-design", label: t.projectTypeDesign },
+    { value: "consulting", label: t.projectTypeConsulting },
+    { value: "other", label: t.projectTypeOther },
+  ];
+
+  const budgetRanges = [
+    { value: "", label: t.budgetPlaceholder },
+    { value: "under-10k", label: t.budgetUnder10k },
+    { value: "10k-25k", label: t.budget10k25k },
+    { value: "25k-50k", label: t.budget25k50k },
+    { value: "50k-100k", label: t.budget50k100k },
+    { value: "over-100k", label: t.budgetOver100k },
+    { value: "not-sure", label: t.budgetNotSure },
+  ];
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -68,17 +155,16 @@ export default function ContactForm() {
     const errors: FieldErrors = {};
 
     if (formData.name.trim().length < 2) {
-      errors.name = "Please enter your name";
+      errors.name = t.errorName;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email.trim())) {
-      errors.email = "Please enter a valid email address";
+      errors.email = t.errorEmail;
     }
 
     if (formData.message.trim().length < 10) {
-      errors.message =
-        "Please provide more details about your project (at least 10 characters)";
+      errors.message = t.errorMessage;
     }
 
     setFieldErrors(errors);
@@ -96,7 +182,7 @@ export default function ContactForm() {
 
     // Handle rate limiting
     if (err.code === "TOO_MANY_REQUESTS") {
-      return "Too many submissions. Please try again in an hour.";
+      return t.errorTooMany;
     }
 
     // Handle Zod validation errors - extract field-specific messages
@@ -106,46 +192,41 @@ export default function ContactForm() {
         err.message.includes("too_small") ||
         err.message.includes("invalid"))
     ) {
-      // Try to parse the validation issues from the message
       const messageStr = err.message;
 
-      // Check for specific field errors and return friendly messages
       if (
         messageStr.includes('"path":["name"]') ||
         messageStr.includes('"path": [ "name" ]')
       ) {
-        return "Please enter your name (at least 2 characters).";
+        return t.errorNameMin;
       }
       if (
         messageStr.includes('"path":["email"]') ||
         messageStr.includes('"path": [ "email" ]')
       ) {
-        return "Please enter a valid email address.";
+        return t.errorEmail;
       }
       if (
         messageStr.includes('"path":["message"]') ||
         messageStr.includes('"path": [ "message" ]')
       ) {
-        return "Please provide more details about your project (at least 10 characters).";
+        return t.errorMessageMin;
       }
       if (
         messageStr.includes('"path":["projectType"]') ||
         messageStr.includes('"path": [ "projectType" ]')
       ) {
-        return "Please select a project type.";
+        return t.errorProjectType;
       }
 
-      // Generic validation error
-      return "Please fill in all required fields correctly.";
+      return t.errorFillRequired;
     }
 
-    // Handle internal server errors
     if (err.code === "INTERNAL_SERVER_ERROR") {
-      return "Unable to send message right now. Please try again later.";
+      return t.errorServer;
     }
 
-    // Default error message - never show raw errors
-    return "Something went wrong. Please try again.";
+    return t.errorGeneric;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -188,7 +269,7 @@ export default function ContactForm() {
       setFieldErrors({});
     } catch {
       setStatus("error");
-      setErrorMessage("Something went wrong. Please try again.");
+      setErrorMessage(t.errorGeneric);
     }
   };
 
@@ -221,16 +302,16 @@ export default function ContactForm() {
           </svg>
         </div>
         <h3 className="mb-2 text-2xl font-light tracking-tight text-zinc-900 dark:text-zinc-100">
-          Message sent!
+          {t.messageSent}
         </h3>
         <p className="mb-6 text-zinc-600 dark:text-zinc-400">
-          Thanks for reaching out. I'll get back to you within 24 hours.
+          {t.thanksReachOut}
         </p>
         <button
           onClick={() => setStatus("idle")}
           className="text-strawhat-yellow hover:text-strawhat-amber text-sm font-medium transition-colors"
         >
-          Send another message
+          {t.sendAnother}
         </button>
       </div>
     );
@@ -257,7 +338,7 @@ export default function ContactForm() {
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
             <label htmlFor="name" className={labelClasses}>
-              Name
+              {t.name}
             </label>
             <input
               type="text"
@@ -265,7 +346,7 @@ export default function ContactForm() {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="Your name"
+              placeholder={t.namePlaceholder}
               className={inputClasses(!!fieldErrors.name)}
             />
             {fieldErrors.name && (
@@ -274,7 +355,7 @@ export default function ContactForm() {
           </div>
           <div>
             <label htmlFor="email" className={labelClasses}>
-              Email
+              {t.email}
             </label>
             <input
               type="email"
@@ -282,7 +363,7 @@ export default function ContactForm() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="you@example.com"
+              placeholder={t.emailPlaceholder}
               className={inputClasses(!!fieldErrors.email)}
             />
             {fieldErrors.email && (
@@ -295,7 +376,7 @@ export default function ContactForm() {
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
             <label htmlFor="projectType" className={labelClasses}>
-              Project Type
+              {t.projectType}
             </label>
             <select
               id="projectType"
@@ -304,16 +385,17 @@ export default function ContactForm() {
               onChange={handleChange}
               className={inputClasses(false)}
             >
-              {projectTypes.map((type) => (
-                <option key={type.value} value={type.value}>
-                  {type.label}
-                </option>
-              ))}
+              <option value="web-app">{t.projectTypeWeb}</option>
+              <option value="mobile-app">{t.projectTypeMobile}</option>
+              <option value="api-backend">{t.projectTypeApi}</option>
+              <option value="ui-ux-design">{t.projectTypeDesign}</option>
+              <option value="consulting">{t.projectTypeConsulting}</option>
+              <option value="other">{t.projectTypeOther}</option>
             </select>
           </div>
           <div>
             <label htmlFor="budget" className={labelClasses}>
-              Budget Range
+              {t.budgetRange}
             </label>
             <select
               id="budget"
@@ -322,11 +404,13 @@ export default function ContactForm() {
               onChange={handleChange}
               className={inputClasses(false)}
             >
-              {budgetRanges.map((range) => (
-                <option key={range.value} value={range.value}>
-                  {range.label}
-                </option>
-              ))}
+              <option value="">{t.budgetPlaceholder}</option>
+              <option value="under-10k">{t.budgetUnder10k}</option>
+              <option value="10k-25k">{t.budget10k25k}</option>
+              <option value="25k-50k">{t.budget25k50k}</option>
+              <option value="50k-100k">{t.budget50k100k}</option>
+              <option value="over-100k">{t.budgetOver100k}</option>
+              <option value="not-sure">{t.budgetNotSure}</option>
             </select>
           </div>
         </div>
@@ -334,7 +418,7 @@ export default function ContactForm() {
         {/* Message */}
         <div>
           <label htmlFor="message" className={labelClasses}>
-            Tell me about your project
+            {t.tellMeAbout}
           </label>
           <textarea
             id="message"
@@ -342,7 +426,7 @@ export default function ContactForm() {
             value={formData.message}
             onChange={handleChange}
             rows={4}
-            placeholder="What are you looking to build? What challenges are you facing?"
+            placeholder={t.messagePlaceholder}
             className={`${inputClasses(!!fieldErrors.message)} resize-none`}
           />
           {fieldErrors.message && (
@@ -364,7 +448,7 @@ export default function ContactForm() {
           className="group bg-strawhat-yellow hover:bg-strawhat-amber focus:ring-strawhat-yellow relative w-full overflow-hidden rounded-lg px-6 py-3.5 text-sm font-medium text-white transition-all duration-300 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
         >
           <span className={status === "submitting" ? "invisible" : ""}>
-            Send message
+            {t.sendMessage}
           </span>
           {status === "submitting" && (
             <span className="absolute inset-0 flex items-center justify-center">
@@ -392,9 +476,7 @@ export default function ContactForm() {
         </button>
 
         {/* Privacy note */}
-        <p className="text-center text-xs text-zinc-500">
-          Your information will never be shared with third parties.
-        </p>
+        <p className="text-center text-xs text-zinc-500">{t.privacyNote}</p>
       </form>
     </div>
   );

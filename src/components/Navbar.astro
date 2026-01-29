@@ -1,13 +1,38 @@
 ---
 import ThemeToggle from "./ui/ThemeToggle";
 import NavbarLogo from "./ui/NavbarLogo";
+import { getTranslations } from "../utils/i18n";
+import { basePath, SUPPORTED_LOCALES } from "../utils/i18n";
+import type { Locale } from "../utils/i18n";
+
+interface Props {
+  locale: Locale;
+  pathname?: string;
+}
+
+const { locale, pathname = "/" } = Astro.props;
+const t = getTranslations(locale);
+const base = basePath(locale);
+// Path without locale prefix for language switcher links
+const pathWithoutLocale =
+  pathname.replace(/^\/(it|ro)(\/|$)/, "$2").replace(/^$/, "/") || "/";
+
+const localeOptions = SUPPORTED_LOCALES.map((loc) => {
+  const href =
+    loc === "en"
+      ? pathWithoutLocale || "/"
+      : `/${loc}${pathWithoutLocale === "/" ? "" : pathWithoutLocale}`;
+  return { loc, href, label: t(`locale.${loc}`) };
+});
+
+const currentLocaleLabel = t(`locale.${locale}`);
 
 const navLinks = [
-  { href: "#hero", label: "Home", number: "01" },
-  { href: "#services", label: "Services", number: "02" },
-  { href: "#case-studies", label: "Work", number: "03" },
-  { href: "#why-us", label: "Why Us", number: "04" },
-  { href: "#founder", label: "About", number: "05" },
+  { href: "#hero", label: t("nav.home"), number: "01" },
+  { href: "#services", label: t("nav.services"), number: "02" },
+  { href: "#case-studies", label: t("nav.work"), number: "03" },
+  { href: "#why-us", label: t("nav.whyUs"), number: "04" },
+  { href: "#founder", label: t("nav.about"), number: "05" },
 ];
 ---
 
@@ -18,7 +43,7 @@ const navLinks = [
     <div class="flex h-14 items-center justify-between">
       <div class="h-full min-w-0 shrink-0 overflow-visible">
         <a
-          href="/"
+          href={base || "/"}
           class="flex h-full min-w-0 items-center overflow-visible transition-opacity hover:opacity-80"
         >
           <NavbarLogo client:load />
@@ -42,21 +67,119 @@ const navLinks = [
             href="#get-started"
             class="border-strawhat-yellow text-strawhat-yellow hover:border-strawhat-amber hover:text-strawhat-amber border-b pb-1 text-sm font-light tracking-wider transition-all"
           >
-            Get Started
+            {t("nav.getStarted")}
           </a>
         </div>
-        <ThemeToggle client:load />
+        <div class="flex items-center gap-3">
+          <div class="lang-dropdown relative" data-dropdown="desktop">
+            <button
+              type="button"
+              id="lang-dropdown-desktop"
+              class="border-strawhat-text/10 bg-strawhat-bg/60 text-strawhat-text hover:border-strawhat-text/20 hover:text-strawhat-yellow flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium tracking-wide transition-colors"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-label="Select language"
+            >
+              <span>{currentLocaleLabel}</span>
+              <svg
+                class="lang-dropdown-chevron size-3.5 transition-transform"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            <div
+              id="lang-dropdown-panel-desktop"
+              class="lang-dropdown-panel border-strawhat-text/10 bg-strawhat-bg pointer-events-none absolute top-full right-0 z-50 mt-1.5 w-full min-w-0 rounded-lg border opacity-0 shadow-lg backdrop-blur-xl transition-opacity duration-150"
+              role="listbox"
+              aria-label="Language options"
+            >
+              {
+                localeOptions.map((opt) => (
+                  <a
+                    href={opt.href}
+                    role="option"
+                    class={`block px-3 py-2.5 text-xs font-medium tracking-wide transition-colors first:rounded-t-lg last:rounded-b-lg ${
+                      opt.loc === locale
+                        ? "bg-strawhat-yellow/10 text-strawhat-yellow"
+                        : "text-strawhat-text-light hover:bg-strawhat-text/5 hover:text-strawhat-yellow"
+                    }`}
+                    aria-selected={opt.loc === locale}
+                  >
+                    {opt.label}
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+          <ThemeToggle client:load />
+        </div>
       </div>
 
-      <!-- Mobile Menu Button & Theme Toggle -->
-      <div class="flex items-center gap-4 md:hidden">
+      <!-- Mobile: Language dropdown & Theme Toggle -->
+      <div class="flex items-center gap-3 md:hidden">
+        <div class="lang-dropdown relative" data-dropdown="mobile">
+          <button
+            type="button"
+            id="lang-dropdown-mobile"
+            class="border-strawhat-text/10 bg-strawhat-bg/60 text-strawhat-text hover:border-strawhat-text/20 hover:text-strawhat-yellow flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium tracking-wide transition-colors"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            aria-label="Select language"
+          >
+            <span>{currentLocaleLabel}</span>
+            <svg
+              class="lang-dropdown-chevron size-4 transition-transform"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          <div
+            id="lang-dropdown-panel-mobile"
+            class="lang-dropdown-panel border-strawhat-text/10 bg-strawhat-bg pointer-events-none absolute top-full right-0 z-50 mt-1.5 min-w-[120px] rounded-lg border opacity-0 shadow-lg backdrop-blur-xl transition-opacity duration-150"
+            role="listbox"
+            aria-label="Language options"
+          >
+            {
+              localeOptions.map((opt) => (
+                <a
+                  href={opt.href}
+                  role="option"
+                  class={`block px-4 py-3 text-sm font-medium tracking-wide transition-colors first:rounded-t-lg last:rounded-b-lg ${
+                    opt.loc === locale
+                      ? "bg-strawhat-yellow/10 text-strawhat-yellow"
+                      : "text-strawhat-text-light hover:bg-strawhat-text/5 hover:text-strawhat-yellow"
+                  }`}
+                  aria-selected={opt.loc === locale}
+                >
+                  {opt.label}
+                </a>
+              ))
+            }
+          </div>
+        </div>
         <ThemeToggle client:load />
         <button
           id="mobile-menu-button"
           type="button"
           class="relative z-70 flex size-10 items-center justify-center focus:outline-none"
           aria-expanded="false"
-          aria-label="Toggle menu"
+          aria-label={t("nav.toggleMenu")}
         >
           <div class="hamburger-icon">
             <span class="hamburger-line hamburger-line-1"></span>
@@ -105,14 +228,14 @@ const navLinks = [
           <div class="bg-strawhat-yellow h-px w-8"></div>
           <span
             class="text-strawhat-yellow text-xs font-medium tracking-widest uppercase"
-            >Start a project</span
+            >{t("nav.startProject")}</span
           >
         </div>
         <a href="#get-started" class="group inline-flex items-center gap-4">
           <span
             class="text-strawhat-yellow group-hover:text-strawhat-amber text-3xl font-light tracking-tight transition-colors sm:text-4xl"
           >
-            Get Started
+            {t("nav.getStarted")}
           </span>
           <svg
             class="text-strawhat-yellow group-hover:text-strawhat-amber size-6 transition-all duration-300 group-hover:translate-x-2"
@@ -219,6 +342,11 @@ const navLinks = [
   :global(body.menu-open) {
     overflow: hidden;
   }
+
+  /* Language dropdown: chevron rotation when open */
+  .lang-dropdown-open .lang-dropdown-chevron {
+    transform: rotate(180deg);
+  }
 </style>
 
 <script>
@@ -308,4 +436,45 @@ const navLinks = [
       }
     });
   }
+
+  // Language dropdown toggle
+  document.querySelectorAll(".lang-dropdown").forEach((wrapper) => {
+    const btn = wrapper.querySelector("button");
+    const panel = wrapper.querySelector(".lang-dropdown-panel");
+    if (!btn || !panel) return;
+
+    const open = () => {
+      wrapper.classList.add("lang-dropdown-open");
+      panel.classList.remove("opacity-0", "pointer-events-none");
+      panel.classList.add("opacity-100", "pointer-events-auto");
+      btn.setAttribute("aria-expanded", "true");
+    };
+
+    const close = () => {
+      wrapper.classList.remove("lang-dropdown-open");
+      panel.classList.add("opacity-0", "pointer-events-none");
+      panel.classList.remove("opacity-100", "pointer-events-auto");
+      btn.setAttribute("aria-expanded", "false");
+    };
+
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = wrapper.classList.contains("lang-dropdown-open");
+      if (isOpen) close();
+      else open();
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!wrapper.contains(e.target as Node)) close();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (
+        e.key === "Escape" &&
+        wrapper.classList.contains("lang-dropdown-open")
+      ) {
+        close();
+      }
+    });
+  });
 </script>

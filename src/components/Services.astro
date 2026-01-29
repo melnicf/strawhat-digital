@@ -1,47 +1,50 @@
 ---
 // Services section component
+import { getTranslations } from "../utils/i18n";
+import type { Locale } from "../utils/i18n";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
 
 const services = [
   {
     number: "01",
-    title: "Web Development",
-    description:
-      "Modern, responsive web applications built with cutting-edge technologies and best practices.",
+    titleKey: "services.webDev",
+    descKey: "services.webDevDesc",
     icon: "globe",
   },
   {
     number: "02",
-    title: "Mobile Apps",
-    description:
-      "Native and cross-platform mobile applications that deliver exceptional user experiences.",
+    titleKey: "services.mobileApps",
+    descKey: "services.mobileAppsDesc",
     icon: "mobile",
   },
   {
     number: "03",
-    title: "API Development",
-    description:
-      "Scalable, secure APIs that power your applications and integrate seamlessly with existing systems.",
+    titleKey: "services.apiDev",
+    descKey: "services.apiDevDesc",
     icon: "api",
   },
   {
     number: "04",
-    title: "UI/UX Design",
-    description:
-      "Thoughtful, user-centered design that makes your product intuitive and delightful to use.",
+    titleKey: "services.uiUx",
+    descKey: "services.uiUxDesc",
     icon: "design",
   },
   {
     number: "05",
-    title: "Consulting",
-    description:
-      "Expert guidance on architecture, technology choices, and development best practices.",
+    titleKey: "services.consulting",
+    descKey: "services.consultingDesc",
     icon: "consulting",
   },
   {
     number: "06",
-    title: "Maintenance",
-    description:
-      "Ongoing support and updates to keep your software running smoothly and securely.",
+    titleKey: "services.maintenance",
+    descKey: "services.maintenanceDesc",
     icon: "maintenance",
   },
 ];
@@ -78,19 +81,18 @@ const services = [
           <div class="bg-strawhat-yellow h-px w-12"></div>
           <span
             class="text-strawhat-yellow text-sm font-medium tracking-widest uppercase"
-            >Services</span
+            >{t("services.label")}</span
           >
         </div>
         <h2
           class="text-strawhat-text text-4xl/tight font-light tracking-tight md:text-6xl"
         >
-          What we offer
+          {t("services.title")}
         </h2>
         <p
           class="text-strawhat-text-light max-w-2xl text-lg/relaxed font-light"
         >
-          Comprehensive software solutions tailored to your needs. Each service
-          is crafted with attention to detail and a commitment to excellence.
+          {t("services.intro")}
         </p>
       </div>
 
@@ -196,10 +198,10 @@ const services = [
                 {/* Content */}
                 <div class="flex flex-1 flex-col space-y-4">
                   <h3 class="text-strawhat-text text-xl font-medium tracking-tight">
-                    {service.title}
+                    {t(service.titleKey)}
                   </h3>
                   <p class="text-strawhat-text-light flex-1 text-sm/relaxed font-light">
-                    {service.description}
+                    {t(service.descKey)}
                   </p>
 
                   {/* Subtle bottom accent */}
@@ -218,14 +220,13 @@ const services = [
         class="border-strawhat-text/10 flex flex-col items-center justify-between gap-6 border-t pt-12 sm:flex-row"
       >
         <p class="text-strawhat-text-light text-center text-sm sm:text-left">
-          Looking for something specific? Let's discuss your unique
-          requirements.
+          {t("services.ctaQuestion")}
         </p>
         <a
           href="#contact"
           class="group text-strawhat-text hover:text-strawhat-yellow inline-flex items-center gap-2 text-sm font-medium transition-colors"
         >
-          Get in touch
+          {t("services.getInTouch")}
           <svg
             class="size-4 transition-transform duration-300 group-hover:translate-x-1"
             fill="none"

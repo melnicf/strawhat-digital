@@ -1,5 +1,13 @@
 ---
+import { getTranslations } from "../utils/i18n";
+import type { Locale } from "../utils/i18n";
 
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
 ---
 
 <section
@@ -21,27 +29,25 @@
       <h1
         class="text-strawhat-text text-5xl/tight font-light tracking-tight md:text-7xl"
       >
-        Your vision.
+        {t("hero.vision")}
         <br />
-        <span class="text-strawhat-yellow">Expert execution.</span>
+        <span class="text-strawhat-yellow">{t("hero.execution")}</span>
       </h1>
       <p class="text-strawhat-text-light max-w-2xl text-xl/relaxed font-light">
-        A boutique studio where you work directly with the founder. No account
-        managers, no handoffs—just focused expertise and software crafted with
-        care.
+        {t("hero.subtitle")}
       </p>
       <div class="flex gap-8">
         <a
           href="#get-started"
           class="border-strawhat-yellow text-strawhat-yellow hover:border-strawhat-amber hover:text-strawhat-amber border-b-2 pb-2 text-lg font-light tracking-wider transition-all"
         >
-          Start a project
+          {t("hero.startProject")}
         </a>
         <a
           href="#services"
           class="border-strawhat-red/50 text-strawhat-text-light hover:border-strawhat-red hover:text-strawhat-yellow border-b-2 pb-2 text-lg font-light tracking-wider transition-all"
         >
-          View services
+          {t("hero.viewServices")}
         </a>
       </div>
     </div>

@@ -1,24 +1,30 @@
 ---
 import { Image } from "astro:assets";
 import founderPhoto from "../assets/founder-photo.jpg";
+import { getTranslations } from "../utils/i18n";
+import type { Locale } from "../utils/i18n";
 
-// Meet the Founder section component
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+
+// Meet the Founder section component - name stays same across locales
 const founder = {
-  name: "Filip Melnic",
-  role: "Founder & Developer",
+  name: t("founder.name"),
+  role: t("founder.role"),
   image: founderPhoto,
-  intro:
-    "I'm a software developer who believes great work comes from genuine collaboration. After years of working in agencies and startups, I founded Strawhat Digital to do things differently—to build software with care, transparency, and a personal touch.",
-  philosophy:
-    "Every project I take on gets my full attention. I don't juggle dozens of clients or hand your work off to junior developers. When you work with Strawhat Digital, you work with me directly, from the first conversation to the final launch.",
-  personalTouch:
-    "When I'm not coding, you'll find me exploring new technologies, contributing to open source, or enjoying a good cup of coffee. The straw hat? It's a reminder not to take things too seriously—even when the work absolutely is.",
+  intro: t("founder.intro"),
+  philosophy: t("founder.philosophy"),
+  personalTouch: t("founder.personalTouch"),
   specialties: [
-    "Full-Stack",
-    "Mobile",
-    "Frontend",
-    "Backend",
-    "DevOps & Infrastructure",
+    t("founder.specialtyFullStack"),
+    t("founder.specialtyMobile"),
+    t("founder.specialtyFrontend"),
+    t("founder.specialtyBackend"),
+    t("founder.specialtyDevOps"),
   ],
 };
 ---
@@ -54,13 +60,13 @@ const founder = {
           <div class="bg-strawhat-yellow h-px w-12"></div>
           <span
             class="text-strawhat-yellow text-sm font-medium tracking-widest uppercase"
-            >Meet the Founder</span
+            >{t("founder.label")}</span
           >
         </div>
         <h2
           class="text-strawhat-text text-4xl/tight font-light tracking-tight md:text-6xl"
         >
-          The person behind<br />the pixels
+          {t("founder.title")}
         </h2>
       </div>
 

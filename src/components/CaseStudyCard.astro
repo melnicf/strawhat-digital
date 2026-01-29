@@ -1,6 +1,8 @@
 ---
 import { Image } from "astro:assets";
 import { resolveImage } from "../utils/imageMap";
+import { basePath } from "../utils/i18n";
+import type { Locale } from "../utils/i18n";
 
 interface Props {
   slug: string;
@@ -9,14 +11,24 @@ interface Props {
   description: string;
   image: string;
   tags: string[];
+  locale?: Locale;
 }
 
-const { slug, title, client, description, image, tags } = Astro.props;
+const {
+  slug,
+  title,
+  client,
+  description,
+  image,
+  tags,
+  locale = "en",
+} = Astro.props;
 const resolvedImage = resolveImage(image);
+const base = basePath(locale);
 ---
 
 <a
-  href={`/case-studies/${slug}`}
+  href={`${base}/case-studies/${slug}`}
   class="case-study-card group relative block"
   style="perspective: 1000px;"
 >

@@ -1,7 +1,17 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
 import CaseStudyCard from "./CaseStudyCard.astro";
+import { getTranslations } from "../utils/i18n";
+import { basePath } from "../utils/i18n";
+import type { Locale } from "../utils/i18n";
 
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+const base = basePath(locale);
 type CaseStudy = CollectionEntry<"case-studies">;
 
 // Get all featured case studies, sorted by order
@@ -42,19 +52,18 @@ const caseStudies = (await getCollection("case-studies"))
           <div class="bg-strawhat-yellow h-px w-12"></div>
           <span
             class="text-strawhat-yellow text-sm font-medium tracking-widest uppercase"
-            >Case Studies</span
+            >{t("caseStudies.label")}</span
           >
         </div>
         <h2
           class="text-strawhat-text text-4xl/tight font-light tracking-tight md:text-6xl"
         >
-          Selected work
+          {t("caseStudies.title")}
         </h2>
         <p
           class="text-strawhat-text-light max-w-2xl text-lg/relaxed font-light"
         >
-          A glimpse into some of our recent projects. Each one represents a
-          unique challenge and a tailored solution.
+          {t("caseStudies.intro")}
         </p>
       </div>
 
@@ -69,6 +78,7 @@ const caseStudies = (await getCollection("case-studies"))
               description={study.data.description}
               image={study.data.image}
               tags={study.data.tags}
+              locale={locale}
             />
           ))
         }
@@ -77,10 +87,10 @@ const caseStudies = (await getCollection("case-studies"))
       <!-- View all link -->
       <div class="flex justify-center">
         <a
-          href="/case-studies"
+          href={`${base}/case-studies`}
           class="group text-strawhat-text hover:text-strawhat-yellow inline-flex items-center gap-2 text-sm font-medium transition-colors"
         >
-          View all case studies
+          {t("caseStudies.viewAll")}
           <svg
             class="size-4 transition-transform duration-300 group-hover:translate-x-1"
             fill="none"

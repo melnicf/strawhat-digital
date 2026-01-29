@@ -1,11 +1,22 @@
 ---
+import { getTranslations } from "../utils/i18n";
+import { basePath } from "../utils/i18n";
+import type { Locale } from "../utils/i18n";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+const base = basePath(locale);
 const currentYear = new Date().getFullYear();
 
 const navLinks = [
-  { href: "#services", label: "Services" },
-  { href: "#case-studies", label: "Work" },
-  { href: "#why-us", label: "Why Us" },
-  { href: "#founder", label: "About" },
+  { href: "#services", label: t("nav.services") },
+  { href: "#case-studies", label: t("nav.work") },
+  { href: "#why-us", label: t("nav.whyUs") },
+  { href: "#founder", label: t("nav.about") },
 ];
 ---
 
@@ -17,13 +28,13 @@ const navLinks = [
       <!-- Logo & Tagline -->
       <div class="flex flex-col items-center gap-2 md:items-start">
         <a
-          href="/"
+          href={base || "/"}
           class="text-strawhat-text text-lg font-light tracking-wider transition-opacity hover:opacity-80"
         >
-          Straw Hat Digital
+          {t("site.name")}
         </a>
         <p class="text-strawhat-text-light text-sm font-light tracking-wide">
-          Expert execution. Direct partnership.
+          {t("site.tagline")}
         </p>
       </div>
 
@@ -53,7 +64,7 @@ const navLinks = [
           href="#get-started"
           class="text-strawhat-yellow hover:text-strawhat-amber text-sm font-light tracking-wider transition-colors"
         >
-          Get Started →
+          {t("footer.getStartedArrow")}
         </a>
       </div>
     </div>
@@ -63,20 +74,21 @@ const navLinks = [
       class="border-strawhat-text/5 mt-10 flex flex-col items-center justify-between gap-4 border-t pt-6 md:flex-row"
     >
       <p class="text-strawhat-text-light/60 text-xs font-light tracking-wider">
-        © {currentYear} Straw Hat Digital. All rights reserved.
+        © {currentYear}
+        {t("site.name")}. {t("footer.allRights")}
       </p>
       <div class="flex items-center gap-6">
         <a
-          href="/privacy"
+          href={`${base}/privacy`}
           class="text-strawhat-text-light/60 hover:text-strawhat-text-light text-xs font-light tracking-wider transition-colors"
         >
-          Privacy
+          {t("footer.privacy")}
         </a>
         <a
-          href="/terms"
+          href={`${base}/terms`}
           class="text-strawhat-text-light/60 hover:text-strawhat-text-light text-xs font-light tracking-wider transition-colors"
         >
-          Terms
+          {t("footer.terms")}
         </a>
       </div>
     </div>

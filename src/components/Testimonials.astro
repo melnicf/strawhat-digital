@@ -1,44 +1,75 @@
 ---
 import { getCollection } from "astro:content";
 import { getImage } from "astro:assets";
+import { marked } from "marked";
 import TestimonialCarousel from "./ui/TestimonialCarousel";
+import { getTranslations } from "../utils/i18n";
+import type { Locale } from "../utils/i18n";
+
+// Import testimonial images for optimization
+import steveRubensImg from "../assets/testimonials/steve-rubens.jpeg";
+import jamesKinneyImg from "../assets/testimonials/james-kinney.jpeg";
+
+// Image map for dynamic lookup
+const imageMap: Record<string, typeof steveRubensImg> = {
+  "steve-rubens.jpeg": steveRubensImg,
+  "james-kinney.jpeg": jamesKinneyImg,
+};
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
 
 // Get all testimonials, sorted by order
 const allTestimonials = (await getCollection("testimonials"))
-  .filter((t) => t.data.featured)
+  .filter((item) => item.data.featured)
   .sort((a, b) => a.data.order - b.data.order);
 
-// Process images with getImage() for optimization
+// Process images and render markdown content
 const testimonials = await Promise.all(
-  allTestimonials.map(async (t) => {
+  allTestimonials.map(async (testimonial) => {
     let optimizedImage: string | undefined = undefined;
 
-    if (t.data.image) {
+    if (testimonial.data.image) {
       try {
-        const result = await getImage({
-          src: t.data.image,
-          width: 112, // 2x size of 56px (size-14 = 3.5rem = 56px)
-          height: 112,
-          format: "webp",
-        });
-        optimizedImage = result.src;
+        // Extract filename from path like "../../assets/testimonials/steve-rubens.jpeg"
+        const filename = testimonial.data.image.split("/").pop() || "";
+        const imageSrc = imageMap[filename];
+
+        if (imageSrc) {
+          const result = await getImage({
+            src: imageSrc,
+            width: 112, // 2x size of 56px (size-14 = 3.5rem = 56px)
+            height: 112,
+            format: "webp",
+          });
+          optimizedImage = result.src;
+        }
       } catch (error) {
         // Gracefully handle missing images - testimonial will use fallback
         console.warn(
-          `Could not load image for testimonial "${t.data.name}":`,
+          `Could not load image for testimonial "${testimonial.data.name}":`,
           error
         );
       }
     }
 
+    // Render markdown body to HTML using marked
+    const contentHtml = testimonial.body
+      ? await marked.parse(testimonial.body)
+      : "";
+
     return {
-      id: t.id,
-      name: t.data.name,
-      role: t.data.role,
-      company: t.data.company,
-      quote: t.data.quote,
+      id: testimonial.id,
+      name: testimonial.data.name,
+      role: testimonial.data.role,
+      company: testimonial.data.company,
+      content: contentHtml,
       image: optimizedImage,
-      website: t.data.website,
+      website: testimonial.data.website,
     };
   })
 );
@@ -75,20 +106,19 @@ const testimonials = await Promise.all(
           <div class="bg-strawhat-yellow h-px w-12"></div>
           <span
             class="text-strawhat-yellow text-sm font-medium tracking-widest uppercase"
-            >Testimonials</span
+            >{t("testimonials.label")}</span
           >
           <div class="bg-strawhat-yellow hidden h-px w-12 md:block"></div>
         </div>
         <h2
           class="text-strawhat-text text-4xl/tight font-light tracking-tight md:text-6xl"
         >
-          What clients say
+          {t("testimonials.title")}
         </h2>
         <p
           class="text-strawhat-text-light max-w-2xl text-lg/relaxed font-light md:mx-auto"
         >
-          Don't just take my word for it—hear from the people who've experienced
-          working with Strawhat Digital firsthand.
+          {t("testimonials.intro")}
         </p>
       </div>
 
@@ -98,14 +128,14 @@ const testimonials = await Promise.all(
           <TestimonialCarousel
             testimonials={testimonials}
             client:visible
-            autoPlayInterval={6000}
+            autoPlayInterval={10000}
           />
         ) : (
           <div class="text-strawhat-text-light py-12 text-center">
             <p>
-              No testimonials yet. Add some to{" "}
+              {t("testimonials.noTestimonials")}{" "}
               <code class="rounded bg-zinc-100 px-2 py-1 text-sm dark:bg-zinc-800">
-                src/content/testimonials/
+                {t("testimonials.testimonialsPath")}
               </code>
             </p>
           </div>

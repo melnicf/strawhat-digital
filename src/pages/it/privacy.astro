@@ -1,12 +1,12 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Navbar from "../components/Navbar.astro";
-import Footer from "../components/Footer.astro";
-import { getTranslations } from "../utils/i18n";
-import { basePath } from "../utils/i18n";
-import type { Locale } from "../utils/i18n";
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import Footer from "../../components/Footer.astro";
+import { getTranslations } from "../../utils/i18n";
+import { basePath } from "../../utils/i18n";
+import type { Locale } from "../../utils/i18n";
 
-const locale = (Astro.currentLocale as Locale) ?? "en";
+const locale: Locale = "it";
 const t = getTranslations(locale);
 const base = basePath(locale);
 const lastUpdated = "January 2025";
@@ -37,7 +37,6 @@ const lastUpdated = "January 2025";
           </svg>
           {t("legal.backToHome")}
         </a>
-
         <h1
           class="text-strawhat-text text-3xl font-light tracking-tight md:text-4xl"
         >
@@ -48,96 +47,80 @@ const lastUpdated = "January 2025";
           {lastUpdated}
         </p>
       </div>
-
       <div class="legal-content space-y-8">
         <section>
-          <h2>{t("privacy.overview")}</h2>
-          <p>{t("privacy.overviewText")}</p>
+          <h2>{t("privacy.overview")}</h2><p>{t("privacy.overviewText")}</p>
         </section>
-
         <section>
-          <h2>{t("privacy.infoWeCollect")}</h2>
-          <p>{t("privacy.infoWeCollectIntro")}</p>
-          <ul>
+          <h2>{t("privacy.infoWeCollect")}</h2><p>
+            {t("privacy.infoWeCollectIntro")}
+          </p><ul>
             <li>
               <strong>{t("privacy.contactInfo")}</strong>
               {t("privacy.contactInfoText")}
-            </li>
-            <li>
+            </li><li>
               <strong>{t("privacy.projectInfo")}</strong>
               {t("privacy.projectInfoText")}
-            </li>
-            <li>
+            </li><li>
               <strong>{t("privacy.usageData")}</strong>
               {t("privacy.usageDataText")}
             </li>
           </ul>
         </section>
-
         <section>
-          <h2>{t("privacy.howWeUse")}</h2>
-          <p>{t("privacy.howWeUseIntro")}</p>
-          <ul>
-            <li>{t("privacy.howWeUse1")}</li>
-            <li>{t("privacy.howWeUse2")}</li>
-            <li>{t("privacy.howWeUse3")}</li>
-            <li>{t("privacy.howWeUse4")}</li>
+          <h2>{t("privacy.howWeUse")}</h2><p>{t("privacy.howWeUseIntro")}</p><ul
+          >
+            <li>{t("privacy.howWeUse1")}</li><li>
+              {t("privacy.howWeUse2")}
+            </li><li>{t("privacy.howWeUse3")}</li><li>
+              {t("privacy.howWeUse4")}
+            </li>
           </ul>
         </section>
-
         <section>
-          <h2>{t("privacy.sharing")}</h2>
-          <p>{t("privacy.sharingIntro")}</p>
-          <ul>
-            <li>{t("privacy.sharing1")}</li>
-            <li>{t("privacy.sharing2")}</li>
-            <li>{t("privacy.sharing3")}</li>
+          <h2>{t("privacy.sharing")}</h2><p>{t("privacy.sharingIntro")}</p><ul>
+            <li>{t("privacy.sharing1")}</li><li>{t("privacy.sharing2")}</li><li>
+              {t("privacy.sharing3")}
+            </li>
           </ul>
         </section>
-
         <section>
-          <h2>{t("privacy.security")}</h2>
-          <p>{t("privacy.securityText")}</p>
+          <h2>{t("privacy.security")}</h2><p>{t("privacy.securityText")}</p>
         </section>
-
         <section>
-          <h2>{t("privacy.cookies")}</h2>
-          <p>{t("privacy.cookiesText")}</p>
+          <h2>{t("privacy.cookies")}</h2><p>{t("privacy.cookiesText")}</p>
         </section>
-
         <section>
-          <h2>{t("privacy.yourRights")}</h2>
-          <p>{t("privacy.yourRightsIntro")}</p>
-          <ul>
-            <li>{t("privacy.yourRights1")}</li>
-            <li>{t("privacy.yourRights2")}</li>
-            <li>{t("privacy.yourRights3")}</li>
-            <li>{t("privacy.yourRights4")}</li>
+          <h2>{t("privacy.yourRights")}</h2><p>
+            {t("privacy.yourRightsIntro")}
+          </p><ul>
+            <li>{t("privacy.yourRights1")}</li><li>
+              {t("privacy.yourRights2")}
+            </li><li>{t("privacy.yourRights3")}</li><li>
+              {t("privacy.yourRights4")}
+            </li>
           </ul>
         </section>
-
         <section>
-          <h2>{t("privacy.contactUs")}</h2>
-          <p>{t("privacy.contactUsText")}</p>
-          <p>
+          <h2>{t("privacy.contactUs")}</h2><p>{t("privacy.contactUsText")}</p><p
+          >
             <a href="mailto:privacy@strawhat.digital"
               >privacy@strawhat.digital</a
             >
           </p>
         </section>
-
         <section>
-          <h2>{t("privacy.changesToPolicy")}</h2>
-          <p>{t("privacy.changesToPolicyText")}</p>
+          <h2>{t("privacy.changesToPolicy")}</h2><p>
+            {t("privacy.changesToPolicyText")}
+          </p>
         </section>
       </div>
     </div>
   </main>
-
   <Footer locale={locale} />
 </Layout>
 
-<style>
+<style is:global>
   .legal-content h2 {
     color: var(--strawhat-text);
     font-size: 1.25rem;
@@ -145,7 +128,6 @@ const lastUpdated = "January 2025";
     letter-spacing: -0.025em;
     margin-bottom: 0.75rem;
   }
-
   .legal-content p {
     color: var(--strawhat-text-light);
     font-size: 0.9375rem;
@@ -153,7 +135,6 @@ const lastUpdated = "January 2025";
     line-height: 1.75;
     margin-bottom: 1rem;
   }
-
   .legal-content ul {
     color: var(--strawhat-text-light);
     font-weight: 300;
@@ -161,7 +142,6 @@ const lastUpdated = "January 2025";
     padding-left: 0;
     margin-bottom: 1rem;
   }
-
   .legal-content li {
     position: relative;
     padding-left: 1.25rem;
@@ -169,7 +149,6 @@ const lastUpdated = "January 2025";
     font-size: 0.9375rem;
     margin-bottom: 0.5rem;
   }
-
   .legal-content li::before {
     content: "";
     position: absolute;
@@ -181,19 +160,16 @@ const lastUpdated = "January 2025";
     background: var(--strawhat-text-light);
     opacity: 0.4;
   }
-
   .legal-content strong {
     color: var(--strawhat-text);
     font-weight: 500;
   }
-
   .legal-content a {
     color: var(--strawhat-yellow);
     text-decoration: none;
     border-bottom: 1px solid currentColor;
     transition: opacity 0.2s;
   }
-
   .legal-content a:hover {
     opacity: 0.7;
   }

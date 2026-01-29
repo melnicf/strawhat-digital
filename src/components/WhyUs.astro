@@ -1,33 +1,38 @@
 ---
 // Why Us section component - Founder-led studio advantages
+import { getTranslations } from "../utils/i18n";
+import type { Locale } from "../utils/i18n";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
 
 const values = [
   {
     number: "01",
-    title: "Direct Partnership",
-    description:
-      "Work directly with the founder and decision-maker. No account managers, no telephone game—clear communication from start to finish.",
+    titleKey: "whyUs.directPartnership",
+    descKey: "whyUs.directPartnershipDesc",
     icon: "handshake",
   },
   {
     number: "02",
-    title: "Personal Investment",
-    description:
-      "Every project carries my reputation. You get the same dedication and attention to detail whether it's a small feature or a full product.",
+    titleKey: "whyUs.personalInvestment",
+    descKey: "whyUs.personalInvestmentDesc",
     icon: "heart",
   },
   {
     number: "03",
-    title: "End-to-End Ownership",
-    description:
-      "One expert sees your project from concept to completion. No handoffs between teams, no context lost in translation.",
+    titleKey: "whyUs.endToEnd",
+    descKey: "whyUs.endToEndDesc",
     icon: "compass",
   },
   {
     number: "04",
-    title: "Agility Without Bureaucracy",
-    description:
-      "Quick decisions, flexible scope, and real responsiveness. No committees to consult or processes to navigate.",
+    titleKey: "whyUs.agility",
+    descKey: "whyUs.agilityDesc",
     icon: "lightning",
   },
 ];
@@ -62,20 +67,18 @@ const values = [
           <div class="bg-strawhat-yellow h-px w-12"></div>
           <span
             class="text-strawhat-yellow text-sm font-medium tracking-widest uppercase"
-            >Why Us</span
+            >{t("whyUs.label")}</span
           >
         </div>
         <h2
           class="text-strawhat-text text-4xl/tight font-light tracking-tight md:text-6xl"
         >
-          The founder-led advantage
+          {t("whyUs.title")}
         </h2>
         <p
           class="text-strawhat-text-light max-w-2xl text-lg/relaxed font-light"
         >
-          When you work with a boutique studio, you get something larger
-          agencies can't offer—direct access, personal accountability, and the
-          agility to move fast.
+          {t("whyUs.intro")}
         </p>
       </div>
 
@@ -154,10 +157,10 @@ const values = [
                 {/* Content */}
                 <div class="flex flex-1 flex-col space-y-4">
                   <h3 class="text-strawhat-text text-xl font-medium tracking-tight">
-                    {value.title}
+                    {t(value.titleKey)}
                   </h3>
                   <p class="text-strawhat-text-light flex-1 text-sm/relaxed font-light">
-                    {value.description}
+                    {t(value.descKey)}
                   </p>
 
                   {/* Subtle bottom accent */}

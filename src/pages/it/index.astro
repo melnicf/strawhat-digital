@@ -1,0 +1,33 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import Hero from "../../components/Hero.astro";
+import Services from "../../components/Services.astro";
+import CaseStudies from "../../components/CaseStudies.astro";
+import WhyUs from "../../components/WhyUs.astro";
+import MeetTheFounder from "../../components/MeetTheFounder.astro";
+import Testimonials from "../../components/Testimonials.astro";
+import GetStarted from "../../components/GetStarted.astro";
+import Footer from "../../components/Footer.astro";
+import { getTranslations } from "../../utils/i18n";
+import type { Locale } from "../../utils/i18n";
+
+const locale: Locale = "it";
+const t = getTranslations(locale);
+---
+
+<Layout
+  locale={locale}
+  title={t("site.name")}
+  description={t("site.description")}
+>
+  <Navbar locale={locale} pathname={Astro.url.pathname} />
+  <Hero locale={locale} />
+  <Services locale={locale} />
+  <CaseStudies locale={locale} />
+  <WhyUs locale={locale} />
+  <MeetTheFounder locale={locale} />
+  <Testimonials locale={locale} />
+  <GetStarted locale={locale} />
+  <Footer locale={locale} />
+</Layout>

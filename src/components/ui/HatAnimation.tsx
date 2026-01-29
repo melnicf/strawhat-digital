@@ -291,7 +291,8 @@ export default function HatAnimation() {
       navbarPlaceholderRef.current = navbarPlaceholder;
 
       const landingElements = document.querySelectorAll("[data-hat-landing]");
-      const isHomePage = window.location.pathname === "/";
+      const path = window.location.pathname.replace(/\/$/, "") || "/";
+      const isHomePage = path === "/" || path === "/it" || path === "/ro";
 
       // On non-home pages, just position hat in navbar and keep it there
       if (landingElements.length === 0 || !isHomePage) {

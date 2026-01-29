@@ -1,6 +1,54 @@
 ---
 // Get Started / Contact section component
 import ContactForm from "./ui/ContactForm";
+import { getTranslations } from "../utils/i18n";
+import type { Locale } from "../utils/i18n";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+
+const formTranslations = {
+  name: t("form.name"),
+  namePlaceholder: t("form.namePlaceholder"),
+  email: t("form.email"),
+  emailPlaceholder: t("form.emailPlaceholder"),
+  projectType: t("form.projectType"),
+  budgetRange: t("form.budgetRange"),
+  budgetPlaceholder: t("form.budgetPlaceholder"),
+  budgetUnder10k: t("form.budgetUnder10k"),
+  budget10k25k: t("form.budget10k25k"),
+  budget25k50k: t("form.budget25k50k"),
+  budget50k100k: t("form.budget50k100k"),
+  budgetOver100k: t("form.budgetOver100k"),
+  budgetNotSure: t("form.budgetNotSure"),
+  projectTypeWeb: t("form.projectTypeWeb"),
+  projectTypeMobile: t("form.projectTypeMobile"),
+  projectTypeApi: t("form.projectTypeApi"),
+  projectTypeDesign: t("form.projectTypeDesign"),
+  projectTypeConsulting: t("form.projectTypeConsulting"),
+  projectTypeOther: t("form.projectTypeOther"),
+  tellMeAbout: t("form.tellMeAbout"),
+  messagePlaceholder: t("form.messagePlaceholder"),
+  sendMessage: t("form.sendMessage"),
+  messageSent: t("form.messageSent"),
+  thanksReachOut: t("form.thanksReachOut"),
+  sendAnother: t("form.sendAnother"),
+  privacyNote: t("form.privacyNote"),
+  errorName: t("form.errorName"),
+  errorNameMin: t("form.errorNameMin"),
+  errorEmail: t("form.errorEmail"),
+  errorMessage: t("form.errorMessage"),
+  errorMessageMin: t("form.errorMessageMin"),
+  errorProjectType: t("form.errorProjectType"),
+  errorFillRequired: t("form.errorFillRequired"),
+  errorTooMany: t("form.errorTooMany"),
+  errorServer: t("form.errorServer"),
+  errorGeneric: t("form.errorGeneric"),
+};
 ---
 
 <section id="get-started" class="relative py-32 md:py-48">
@@ -31,18 +79,18 @@ import ContactForm from "./ui/ContactForm";
           <div class="bg-strawhat-yellow h-px w-12"></div>
           <span
             class="text-strawhat-yellow text-sm font-medium tracking-widest uppercase"
-            >Get Started</span
+            >{t("getStarted.label")}</span
           >
         </div>
         <h2
           class="text-strawhat-text text-4xl/tight font-light tracking-tight md:text-6xl"
         >
-          Start a project
+          {t("getStarted.title")}
         </h2>
         <p
           class="text-strawhat-text-light max-w-2xl text-lg/relaxed font-light"
         >
-          Ready to bring your idea to life? Let's talk about how we can help.
+          {t("getStarted.intro")}
         </p>
       </div>
 
@@ -53,7 +101,7 @@ import ContactForm from "./ui/ContactForm";
         <!-- What to expect - simplified timeline (mobile: 1st, desktop: left col row 1) -->
         <div class="order-1 space-y-8 lg:col-start-1 lg:row-start-1">
           <h3 class="text-strawhat-text text-lg font-medium tracking-tight">
-            What happens next
+            {t("getStarted.whatNext")}
           </h3>
 
           <div class="relative space-y-6 pl-6">
@@ -69,7 +117,7 @@ import ContactForm from "./ui/ContactForm";
               >
               </div>
               <p class="text-strawhat-text text-sm font-medium">
-                Response within 24 hours
+                {t("getStarted.response24h")}
               </p>
             </div>
 
@@ -79,7 +127,7 @@ import ContactForm from "./ui/ContactForm";
               >
               </div>
               <p class="text-strawhat-text text-sm font-medium">
-                Discovery call
+                {t("getStarted.discoveryCall")}
               </p>
             </div>
 
@@ -89,7 +137,7 @@ import ContactForm from "./ui/ContactForm";
               >
               </div>
               <p class="text-strawhat-text text-sm font-medium">
-                Custom proposal
+                {t("getStarted.customProposal")}
               </p>
             </div>
           </div>
@@ -100,12 +148,14 @@ import ContactForm from "./ui/ContactForm";
           id="contact-form"
           class="order-2 scroll-mt-24 lg:col-start-2 lg:row-span-2 lg:row-start-1"
         >
-          <ContactForm client:visible />
+          <ContactForm client:visible translations={formTranslations} />
         </div>
 
         <!-- Alternative contact (mobile: 3rd/last, desktop: left col row 2) -->
         <div class="order-3 space-y-3 lg:col-start-1 lg:row-start-2">
-          <p class="text-strawhat-text-light text-sm">Prefer email?</p>
+          <p class="text-strawhat-text-light text-sm">
+            {t("getStarted.preferEmail")}
+          </p>
           <a
             href="mailto:hello@strawhat.digital"
             class="border-strawhat-yellow text-strawhat-yellow hover:border-strawhat-amber hover:text-strawhat-amber inline-block border-b pb-0.5 text-base font-light tracking-wide transition-all"
