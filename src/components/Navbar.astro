@@ -129,14 +129,14 @@ const navLinks = [
           <button
             type="button"
             id="lang-dropdown-mobile"
-            class="border-strawhat-text/10 bg-strawhat-bg/60 text-strawhat-text hover:border-strawhat-text/20 hover:text-strawhat-yellow flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium tracking-wide transition-colors"
+            class="border-strawhat-text/10 bg-strawhat-bg/60 text-strawhat-text hover:border-strawhat-text/20 hover:text-strawhat-yellow flex items-center gap-1 rounded-md border px-2 py-1.5 text-xs font-medium tracking-wide transition-colors"
             aria-haspopup="listbox"
             aria-expanded="false"
             aria-label="Select language"
           >
             <span>{currentLocaleLabel}</span>
             <svg
-              class="lang-dropdown-chevron size-4 transition-transform"
+              class="lang-dropdown-chevron size-3 transition-transform"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -151,7 +151,7 @@ const navLinks = [
           </button>
           <div
             id="lang-dropdown-panel-mobile"
-            class="lang-dropdown-panel border-strawhat-text/10 bg-strawhat-bg pointer-events-none absolute top-full right-0 z-50 mt-1.5 min-w-[120px] rounded-lg border opacity-0 shadow-lg backdrop-blur-xl transition-opacity duration-150"
+            class="lang-dropdown-panel border-strawhat-text/10 bg-strawhat-bg pointer-events-none absolute top-full right-0 z-50 mt-1 w-[90px] rounded-md border opacity-0 shadow-lg backdrop-blur-xl transition-opacity duration-150"
             role="listbox"
             aria-label="Language options"
           >
@@ -160,7 +160,7 @@ const navLinks = [
                 <a
                   href={opt.href}
                   role="option"
-                  class={`block px-4 py-3 text-sm font-medium tracking-wide transition-colors first:rounded-t-lg last:rounded-b-lg ${
+                  class={`block px-2.5 py-2 text-xs font-medium tracking-wide transition-colors first:rounded-t-md last:rounded-b-md ${
                     opt.loc === locale
                       ? "bg-strawhat-yellow/10 text-strawhat-yellow"
                       : "text-strawhat-text-light hover:bg-strawhat-text/5 hover:text-strawhat-yellow"

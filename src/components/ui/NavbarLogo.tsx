@@ -113,7 +113,7 @@ function NavbarLogoComponent() {
 
     const isMobile = isMobileRef.current;
     const hatWidth = isMobile ? 26 : 28;
-    const gapWidth = isMobile ? 28 : 32;
+    const gapWidth = isMobile ? 40 : 32;
 
     // Kill previous timeline to prevent conflicts
     if (timelineRef.current) {
@@ -162,7 +162,7 @@ function NavbarLogoComponent() {
 
   const gapStyle = useMemo(
     () => ({
-      width: initialIsMobile ? 28 : 32,
+      width: initialIsMobile ? 40 : 32,
       willChange: "width" as const,
     }),
     [initialIsMobile]

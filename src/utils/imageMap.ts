@@ -53,6 +53,7 @@ import invntIphoneSpace from "../assets/invnt/iphone/space-phone.png";
 
 // Other images
 import hatLogo from "../assets/hat_logo.png";
+import hatLogoDark from "../assets/hat_logo_dark.png";
 
 // Map of public paths to imported images
 const imageMap: Record<string, any> = {
@@ -108,6 +109,7 @@ const imageMap: Record<string, any> = {
   "/invnt/iphone/space-phone.png": invntIphoneSpace,
   // Other
   "/hat_logo.png": hatLogo,
+  "/hat_logo_dark.png": hatLogoDark,
 };
 
 /**
