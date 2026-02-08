@@ -1,8 +1,7 @@
 import { useEffect, useRef, useCallback, memo, useMemo, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import hatLogo from "../../assets/hat_logo.png";
-import hatLogoDark from "../../assets/hat_logo_dark.png";
+import hatLogo from "../../assets/hat_logo_dark.png";
 
 // Register GSAP plugin once at module level
 gsap.registerPlugin(ScrollTrigger);
@@ -215,18 +214,6 @@ export default function HatAnimation() {
   // Use refs for animation state to avoid re-renders during scroll
   const isMobileRef = useRef(getIsMobile());
   const impactEffectRef = useRef({ active: false, x: 0, y: 0 });
-
-  // Theme-aware logo: use dark variant when data-theme="dark"
-  // Initial state is false so SSR/hydration matches; we sync from DOM in useEffect
-  const [isDark, setIsDark] = useState(false);
-  useEffect(() => {
-    const el = document.documentElement;
-    const getIsDark = () => el.getAttribute("data-theme") === "dark";
-    setIsDark(getIsDark());
-    const observer = new MutationObserver(() => setIsDark(getIsDark()));
-    observer.observe(el, { attributes: true, attributeFilter: ["data-theme"] });
-    return () => observer.disconnect();
-  }, []);
 
   // Single state to trigger impact star renders - minimizes re-renders
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -689,7 +676,7 @@ export default function HatAnimation() {
 
       <img
         ref={hatRef}
-        src={isDark ? hatLogoDark.src : hatLogo.src}
+        src={hatLogo.src}
         alt=""
         className="pointer-events-none fixed top-0 left-0 z-50 object-contain"
         style={hatStyle}

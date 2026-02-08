@@ -242,41 +242,46 @@ export default function CaseStudySlideshow({ media }: CaseStudySlideshowProps) {
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
-            {media.map((item, index) => (
-              <div
-                key={index}
-                className={`absolute inset-0 transition-opacity duration-500 ${
-                  index === currentIndex
-                    ? "opacity-100"
-                    : "pointer-events-none opacity-0"
-                }`}
-              >
-                {item.type === "video" ? (
-                  <video
-                    controls
-                    muted
-                    preload="metadata"
-                    playsInline
-                    poster={item.poster}
-                    className="slideshow-video size-full object-contain"
-                    onPlay={handleVideoPlay}
-                    onPause={handleVideoPause}
-                    onEnded={handleVideoEnded}
-                  >
-                    <source src={currentMediaSrc} type="video/mp4" />
-                  </video>
-                ) : (
-                  <img
-                    src={currentMediaSrc}
-                    alt={item.alt}
-                    loading={index === 0 ? "eager" : "lazy"}
-                    fetchPriority={index === 0 ? "high" : "auto"}
-                    decoding="async"
-                    className="size-full object-contain"
-                  />
-                )}
-              </div>
-            ))}
+            {media.map((item, index) => {
+              const mobileSrc = item.srcMobile ?? item.src;
+              return (
+                <div
+                  key={index}
+                  className={`absolute inset-0 transition-opacity duration-500 ${
+                    index === currentIndex
+                      ? "opacity-100"
+                      : "pointer-events-none opacity-0"
+                  }`}
+                >
+                  {item.type === "video" ? (
+                    <video
+                      key={`mobile-video-${index}`}
+                      controls
+                      muted
+                      playsInline
+                      preload={index === currentIndex ? "auto" : "metadata"}
+                      poster={item.poster}
+                      className="slideshow-video size-full object-contain"
+                      onPlay={handleVideoPlay}
+                      onPause={handleVideoPause}
+                      onEnded={handleVideoEnded}
+                      src={mobileSrc}
+                    >
+                      <source src={mobileSrc} type="video/mp4" />
+                    </video>
+                  ) : (
+                    <img
+                      src={mobileSrc}
+                      alt={item.alt}
+                      loading={index === 0 ? "eager" : "lazy"}
+                      fetchPriority={index === 0 ? "high" : "auto"}
+                      decoding="async"
+                      className="size-full object-contain"
+                    />
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
