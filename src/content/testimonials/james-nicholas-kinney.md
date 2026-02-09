@@ -8,4 +8,4 @@ featured: true
 order: 0
 ---
 
-One of the biggest things that I've learned about building technology is that imagination and creativity must always be first. When I'm working with Strawhat Digital I always feel like we approach things with no limits and find solutions that match the dream.
+One of the biggest things that I've learned about building technology is that imagination and creativity must always be first. When I'm working with Filip, I always feel like we approach things with no limits and find solutions that match the dream.

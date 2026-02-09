@@ -27,13 +27,20 @@ const localeOptions = SUPPORTED_LOCALES.map((loc) => {
 
 const currentLocaleLabel = t(`locale.${locale}`);
 
+// When not on home, nav links must go to home + hash so the section exists
+const homeUrl = base || "/";
+const isHomePage = pathWithoutLocale === "/" || pathWithoutLocale === "";
+const toSection = (hash: string) =>
+  isHomePage ? `#${hash}` : `${homeUrl}#${hash}`;
+
 const navLinks = [
-  { href: "#hero", label: t("nav.home"), number: "01" },
-  { href: "#services", label: t("nav.services"), number: "02" },
-  { href: "#case-studies", label: t("nav.work"), number: "03" },
-  { href: "#why-us", label: t("nav.whyUs"), number: "04" },
-  { href: "#founder", label: t("nav.about"), number: "05" },
+  { href: toSection("hero"), label: t("nav.home"), number: "01" },
+  { href: toSection("services"), label: t("nav.services"), number: "02" },
+  { href: toSection("case-studies"), label: t("nav.work"), number: "03" },
+  { href: toSection("why-us"), label: t("nav.whyUs"), number: "04" },
+  { href: toSection("founder"), label: t("nav.about"), number: "05" },
 ];
+const getStartedHref = toSection("get-started");
 ---
 
 <nav
@@ -64,7 +71,7 @@ const navLinks = [
             ))
           }
           <a
-            href="#get-started"
+            href={getStartedHref}
             class="border-strawhat-yellow text-strawhat-yellow hover:border-strawhat-amber hover:text-strawhat-amber border-b pb-1 text-sm font-light tracking-wider transition-all"
           >
             {t("nav.getStarted")}
@@ -231,7 +238,7 @@ const navLinks = [
             >{t("nav.startProject")}</span
           >
         </div>
-        <a href="#get-started" class="group inline-flex items-center gap-4">
+        <a href={getStartedHref} class="group inline-flex items-center gap-4">
           <span
             class="text-strawhat-yellow group-hover:text-strawhat-amber text-3xl font-light tracking-tight transition-colors sm:text-4xl"
           >

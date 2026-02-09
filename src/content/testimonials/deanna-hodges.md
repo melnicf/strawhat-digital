@@ -8,4 +8,4 @@ featured: true
 order: 3
 ---
 
-Filip was great. I would highly recommend him. He delivered the product we asked for and communicated well. He was very pleasant to work with.
+Working with Filip was great. I would highly recommend him. He delivered the product we asked for and communicated well. He was very pleasant to work with.
